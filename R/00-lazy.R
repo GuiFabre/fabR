@@ -206,7 +206,8 @@ add_index                      <- function(tibble, name_index = "index"){
 #'
 #' xxx xxx xxx.
 #'
-#' @param data_dict xxx xxx xxx
+#' @param map_list xxx xxx xxx
+#' @param .obj xxx xxx xxx
 #'
 #' @return xxx xxx xxx.
 #'
