@@ -15,8 +15,6 @@
 
 * New feature:
 
-  * valueType_apply :  Apply all the valueTypes of a data dictionary to a dataset
-
 * Deprecation:
 
 * General:

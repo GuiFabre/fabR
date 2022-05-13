@@ -173,7 +173,8 @@ read_csv_any_formats <- function(csv_name){
 #'
 #' xxx xxx xxx.
 #'
-#' @param data_dict xxx xxx xxx
+#' @param tibble xxx xxx xxx
+#' @param name_index xxx xxx xxx
 #'
 #' @return xxx xxx xxx.
 #'
