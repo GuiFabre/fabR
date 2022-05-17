@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{summary_category}
 \alias{summary_category}
-\title{Create summary table of one (possibly grouped) category-type column in a dataset}
+\title{Create summary table of one (possibly grouped) category-type column in a tbl}
 \usage{
 summary_category(
-  dataset = "iris",
+  tbl = "iris",
   col = "col",
   filter = "c()",
   negate = FALSE,
@@ -15,7 +15,7 @@ summary_category(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string of a column of interest}
 
@@ -32,7 +32,7 @@ values will not be exclud from counting, but will be separated from valid values
 DT renders a datatable using DT library, code gives the code in a string (usable
 directly with eval/parse functions) and cat provides indented code in the console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -53,7 +53,7 @@ The user can download the content of the datatable in csv format.
 summary_category()
 
 # Example 2: summary table of Petal.Length
-summary_category(dataset = iris,col = "Species", out = "DT")
+summary_category(tbl = iris, col = "Species", out = "DT")
 
 }
 

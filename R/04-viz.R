@@ -1,4 +1,4 @@
-#' Draw bar plot of one (possibly grouped) open-text column in a dataset
+#' Draw bar plot of one (possibly grouped) open-text column in a tbl
 #'
 #' This function draws a bar plot of the values of open text column. This
 #' plot shows the x-th first most cited words in a column having open text content using
@@ -7,7 +7,7 @@
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -21,7 +21,7 @@
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -33,22 +33,24 @@
 #' plot_main_word()
 #'
 #' # Example 2: words contains in Species
-#' plot_main_word(dataset = dataset,col = "Species",out = "ggplot2")
+#' plot_main_word(tbl = tbl, col = "Species", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2 tidytext
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()', max = 10,     out = "ggplot2", group_by = NULL){
+plot_main_word        <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()', max = 10, out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                              ,"\n",
+    tbl_name," %>% "                                                              ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                             ,"\n",
     "  filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>% "              ,"\n",
     "  group_by(",group_by,") %>%"                                                    ,"\n",
@@ -59,7 +61,7 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
     "  mutate(word = reorder(word, n)) %>%"                                           ,"\n",
     "  slice(1:min(",max,",nrow(.))) "                                                     )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                                         ,"\n",
       "  ggplot(aes(word, n)) +"                                                           ,"\n",
@@ -73,7 +75,7 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
       "plotly::ggplotly(", plot," %>% "                                                 ,"\n",
       "  ggplot(aes(word, n)) +"                                                        ,"\n",
@@ -87,8 +89,8 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -96,14 +98,14 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
 }
 
 
-#' Draw histogram of one (possibly grouped) column in a dataset
+#' Draw histogram of one (possibly grouped) column in a tbl
 #'
 #' This function draws a histogram plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -116,7 +118,7 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -128,47 +130,49 @@ plot_main_word        <- function(dataset = "iris", col = "Species", filter = 'c
 #' plot_histogram()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_histogram(dataset = dataset,col = "Petal.Length",out = "ggplot2")
+#' plot_histogram(tbl = tbl, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_histogram        <- function(dataset = "airquality", col = "Ozone", filter = 'c()', negate = FALSE, missing_values = 'c()',out = "ggplot2", group_by = NULL){
+plot_histogram        <- function(tbl = "airquality", col = "Ozone", filter = 'c()', negate = FALSE, missing_values = 'c()',out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                       ,"\n",
+    tbl_name," %>% "                                                       ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                             ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  ))  "                                     )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                                               ,"\n",
-      "  ggplot(aes(x = ",col,ifelse(!is.null(group_by),paste0(", fill = ",group_by),""),")) +"  ,"\n",
+      "  ggplot(aes(x = ", col, ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +"  ,"\n",
       "  geom_histogram(color = '#e9ecef',alpha = 0.9, stat = 'count') +"                        ,"\n",
       "  ggtitle('distribution of ",col,"') +"                         ,"\n",
       "  theme(plot.title = element_text(size = 15))",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                                                         ,"\n",
-      "  ggplot(aes(x = ",col,ifelse(!is.null(group_by),paste0(", fill = ",group_by),""),")) +"  ,"\n",
+      "plotly::ggplotly(", plot, " %>% "                                                         ,"\n",
+      "  ggplot(aes(x = ", col, ifelse(!is.null(group_by),paste0(", fill = ", group_by),""),")) +"  ,"\n",
       "  geom_histogram(color = '#e9ecef',alpha = 0.9, stat = 'count') +"                        ,"\n",
       "  ggtitle('distribution of ",col,"') +"                         ,"\n",
       "  theme(plot.title = element_text(size = 15))",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) "                   )
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -176,14 +180,14 @@ plot_histogram        <- function(dataset = "airquality", col = "Ozone", filter 
 }
 
 
-#' Draw box plot of one (possibly grouped) column in a dataset
+#' Draw box plot of one (possibly grouped) column in a tbl
 #'
 #' This function draws a box plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -196,7 +200,7 @@ plot_histogram        <- function(dataset = "airquality", col = "Ozone", filter 
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -208,27 +212,29 @@ plot_histogram        <- function(dataset = "airquality", col = "Ozone", filter 
 #' plot_box()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_box(dataset = dataset,col = "Petal.Length",out = "ggplot2")
+#' plot_box(tbl = tbl, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr tibble ggplot2
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_box              <- function(dataset = "airquality", col = "Month", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_box              <- function(tbl = "airquality", col = "Month", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                       ,"\n",
+    tbl_name," %>% "                                                       ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                         ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  )) %>% "                         ,"\n",
-    "  add_column(participants = 'participants')"                                      )
+    "  tibble::add_column(participants = 'participants')"                                      )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                    ,"\n",
       "  ggplot(aes(x = ",group_by,", y = ",col,", fill = ",group_by,")) +"         ,"\n",
@@ -240,7 +246,7 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
       "  xlab('')"                                                                       )
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
       "plotly::ggplotly(", plot," %>% "                                                     ,"\n",
       "  ggplot(aes(x = ",group_by,", y = ",col,", fill = ",group_by,")) +"         ,"\n",
@@ -252,8 +258,8 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
       "  xlab('') )"                                                                     )
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -261,7 +267,7 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
 }
 
 
-#' Draw lollipop plot of one (possibly grouped) time-related column in a dataset
+#' Draw lollipop plot of one (possibly grouped) time-related column in a tbl
 #'
 #' This function draws a lollipop plot of the values of time related column.
 #' the 'time' parameter uses lubridate synthax to specify the period of time to consider.
@@ -269,7 +275,7 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -284,7 +290,7 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -297,31 +303,33 @@ plot_box              <- function(dataset = "airquality", col = "Month", filter 
 #'
 #' # Example 2: graph of
 #'
-#' dataset = read_csv_any_formats("study_TOKYO.csv")
-#' plot_date(dataset, col = "dob", out = "ggplot2",time = "year")
-#' plot_date(dataset, col = "dob", out = "ggplot2",time = "month")
+#' tbl = read_csv_any_formats("study_TOKYO.csv")
+#' plot_date(tbl, col = "dob", out = "ggplot2",time = "year")
+#' plot_date(tbl, col = "dob", out = "ggplot2",time = "month")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2 lubridate
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_date             <- function(dataset = "airquality", col = "Day", filter = 'c()', negate = FALSE, missing_values = 'c()', time = "day", out = "ggplot2", group_by = NULL){
+plot_date             <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = FALSE, missing_values = 'c()', time = "day", out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                      ,"\n",
+    tbl_name," %>% "                                                      ,"\n",
     "  mutate(",col," = ",time,"(as.Date(",col,"))) %>%"                ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                     ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  )) %>% "                     ,"\n",
     "  group_by(",col,",",group_by,") %>%"                                    ,"\n",
     "  tally "                                                                     )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                              ,"\n",
       "  ggplot(aes(x = ",col,", y = n", ifelse(!is.null(group_by),paste0(", color = ",group_by),""),")) +" ,"\n",
@@ -337,7 +345,7 @@ plot_date             <- function(dataset = "airquality", col = "Day", filter = 
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
       "plotly::ggplotly(", plot," %>% "                                            ,"\n",
       "  ggplot(aes(x = ",col,", y = n", ifelse(!is.null(group_by),paste0(", color = ",group_by),""),")) +" ,"\n",
@@ -353,8 +361,8 @@ plot_date             <- function(dataset = "airquality", col = "Day", filter = 
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," )"      )
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -362,14 +370,14 @@ plot_date             <- function(dataset = "airquality", col = "Day", filter = 
 }
 
 
-#' Draw bar plot of one (possibly grouped) column in a dataset
+#' Draw bar plot of one (possibly grouped) column in a tbl
 #'
 #' This function draws a bar plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -382,7 +390,7 @@ plot_date             <- function(dataset = "airquality", col = "Day", filter = 
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -394,48 +402,50 @@ plot_date             <- function(dataset = "airquality", col = "Day", filter = 
 #' plot_bar()
 #'
 #' # Example 2: graph of Species
-#' plot_bar(dataset = dataset,col = "Species",out = "ggplot2")
+#' plot_bar(tbl = tbl, col = "Species", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2 viridis
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_bar              <- function(dataset = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_bar              <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                       ,"\n",
+    tbl_name," %>% "                                                       ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                      ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  )) %>% "                      ,"\n",
     "  mutate(",col," = ",col," %>% as.character ) "                                )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                             ,"\n",
       "  ggplot(aes(x = ",col,", fill =  ",col," )) + "                        ,"\n",
       "  geom_bar() + "                                                        ,"\n",
-      "  scale_fill_viridis(discrete = TRUE) + "                               ,"\n",
+      "  viridis::scale_fill_viridis(discrete = TRUE) + "                               ,"\n",
       "  theme(legend.position = 'right') ",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
       "plotly::ggplotly(", plot," %>% "                        ,"\n",
       "  ggplot(aes(x = ",col,", fill =  ",col," )) + "        ,"\n",
       "  geom_bar() + "                                        ,"\n",
-      "  scale_fill_viridis(discrete = TRUE) + "               ,"\n",
+      "  viridis::scale_fill_viridis(discrete = TRUE) + "               ,"\n",
       "  theme(legend.position = 'right')",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -443,14 +453,14 @@ plot_bar              <- function(dataset = "iris", col = "Species", filter = 'c
 }
 
 
-#' Draw density plot of one (possibly grouped) column in a dataset
+#' Draw density plot of one (possibly grouped) column in a tbl
 #'
 #' This function draws a density line plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -463,7 +473,7 @@ plot_bar              <- function(dataset = "iris", col = "Species", filter = 'c
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -475,46 +485,48 @@ plot_bar              <- function(dataset = "iris", col = "Species", filter = 'c
 #' plot_density()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_density(dataset = dataset,col = "Petal.Length",out = "ggplot2")
+#' plot_density(tbl = tbl, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_density          <- function(dataset = "iris", col = "Sepal.Length", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "ggplot2", group_by = NULL){
+plot_density          <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                                                        ,"\n",
+    tbl_name," %>% "                                                                                        ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                                                       ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  )) "                                                            )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                                                                ,"\n",
-      "  ggplot(aes(x = ",col,ifelse(!is.null(group_by),paste0(", fill = ",group_by),""),")) +"                   ,"\n",
+      "  ggplot(aes(x = ", col, ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +"                   ,"\n",
       "  geom_density( color = '#e9ecef'", ifelse(!is.null(group_by),"",", fill = '#69b3a2'"),", alpha = 0.8) + " ,"\n",
       "  theme(legend.position = 'right') " ,
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
     plot <- paste0(
       "plotly::ggplotly(", plot," %>% "                                               ,"\n",
-      "  ggplot(aes(x = ",col,ifelse(!is.null(group_by),paste0(", fill = ",group_by),""),")) +"  ,"\n",
+      "  ggplot(aes(x = ", col, ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +"  ,"\n",
       "  geom_density( color = '#e9ecef'", ifelse(!is.null(group_by),"",", fill = '#69b3a2'"),", alpha = 0.8) + " ,"\n",
       "  theme(legend.position = 'right')",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
 
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -522,14 +534,14 @@ plot_density          <- function(dataset = "iris", col = "Sepal.Length", filter
 }
 
 
-#' Draw pie chart of one (possibly grouped) column in a dataset
+#' Draw pie chart of one (possibly grouped) column in a tbl
 #'
 #' This function draws a pie plot of the values of column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -542,7 +554,7 @@ plot_density          <- function(dataset = "iris", col = "Sepal.Length", filter
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -554,45 +566,47 @@ plot_density          <- function(dataset = "iris", col = "Sepal.Length", filter
 #' plot_pie()
 #'
 #' # Example 2: graph of Species
-#' plot_pie(dataset = dataset,col = "Species",out = "ggplot2")
+#' plot_pie(tbl = tbl, col = "Species", out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2 viridis
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_pie              <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                   ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                  ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  )) %>% "                  ,"\n",
-    "  mutate(",col," = ",col," %>% as.character ) %>%  "                  ,"\n",
+    tbl_name," %>% "                                                   ,"\n",
+    "  filter(", negate, "(",col," %in% ", filter, ")) %>% "                  ,"\n",
+    "  filter(!(" , col, " %in% ", missing_values,"  )) %>% "                  ,"\n",
+    "  mutate(", col, " = ", col, " %>% as.character ) %>%  "                  ,"\n",
     "  mutate(group_by = ",group_by,") %>% "                               ,"\n",
     "  group_by(",col,",group_by) %>% "                                    ,"\n",
     "  tally "                                                                  )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                           ,"\n",
       "  ggplot(aes(x = '', y = n, fill = ",col,")) +"                       ,"\n",
       "  geom_bar(stat='identity', width = 1, position = position_fill()) + "  ,"\n",
       "  coord_polar('y', start=0) + "                                       ,"\n",
       "  theme_void() + "                                                    ,"\n",
-      "  scale_fill_viridis(discrete = TRUE) + "                             ,"\n",
+      "  viridis::scale_fill_viridis(discrete = TRUE) + "                             ,"\n",
       "  theme(legend.position = 'right') ",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~group_by)"),""))
 
   }
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
 
-    count_category = c(0:(eval(parse(text = str_squish(plot))) %>% pull(group_by) %>% unique %>% length))
+    count_category = c(0:(eval(parse(text = stringr::str_squish(plot))) %>% pull(group_by) %>% unique %>% length))
 
     plot <- paste0(
       "plotly::plot_ly() %>%"                                                    ,"\n",
@@ -609,8 +623,8 @@ plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) ")
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -618,7 +632,7 @@ plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c
 }
 
 
-#' Draw pie chart of one (possibly grouped) column in a dataset (valid, non-valid and missing values)
+#' Draw pie chart of one (possibly grouped) column in a tbl (valid, non-valid and missing values)
 #'
 #' This function draws a pie plot of the values of a column separating valid,
 #' non-valid and missing values.
@@ -626,7 +640,7 @@ plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -639,7 +653,7 @@ plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c
 #' gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
 #' (usable directly with eval/parse functions) and cat provides indented code in the
 #' console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -652,25 +666,27 @@ plot_pie              <- function(dataset = "iris", col = "Species", filter = 'c
 #' # Example 2: graph of Species (virginica is associated to missing values for the
 #' # purpose of example)
 #' plot_pie_valid_value(
-#'   dataset = dataset,
+#'   tbl = tbl,
 #'   col = "Species",
 #'   missing_values = "'virginica'" ,
 #'   out = "ggplot2")
 #'
 #' }
 #'
-#' @import dplyr magrittr ggplot2 viridis
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = "'versicolor'", out = "ggplot2", group_by = NULL){
+plot_pie_valid_value  <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = "'versicolor'", out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
   #
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   plot <- paste0(
-    dataset_name," %>% "                                                     ,"\n",
+    tbl_name," %>% "                                                     ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                    ,"\n",
     "  mutate(",col," = ",col," %>% as.character )  %>% "                    ,"\n",
     "  mutate( "                                                             ,"\n",
@@ -682,23 +698,23 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
     "  group_by(",col,",group_by)               %>% "                        ,"\n",
     "  tally "                                                                )
 
-  if(str_detect(out,"ggplot2")){
+  if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
       plot," %>% "                                                           ,"\n",
       "  ggplot(aes(x = '', y = n, fill = ",col,")) +"                       ,"\n",
       "  geom_bar(stat='identity', width = 1, position = position_fill()) + "  ,"\n",
       "  coord_polar('y', start=0) + "                                       ,"\n",
       "  theme_void() + "                                                    ,"\n",
-      "  scale_fill_viridis(discrete = TRUE) + "                             ,"\n",
+      "  viridis::scale_fill_viridis(discrete = TRUE) + "                             ,"\n",
       "  theme(legend.position = 'right') ",
       ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~group_by)"),""))
 
   }
 
 
-  if(str_detect(out,"plotly")){
+  if(stringr::str_detect(out,"plotly")){
 
-    count_category = c(0:(eval(parse(text = str_squish(plot))) %>% pull(group_by) %>% unique %>% length))
+    count_category = c(0:(eval(parse(text = stringr::str_squish(plot))) %>% pull(group_by) %>% unique %>% length))
 
     plot <- paste0(
       "plotly::plot_ly() %>%","\n",
@@ -715,8 +731,8 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)) ")
   }
 
-  if(str_detect(out,"code"))                  { return(plot)
-  }else if(str_detect(out,"cat"))             { return(plot %>% cat)
+  if(stringr::str_detect(out,"code"))                  { return(plot)
+  }else if(stringr::str_detect(out,"cat"))             { return(plot %>% cat)
   }else if(out == "plotly" | out == "ggplot2"){ return(plot %>% parceval)
   }else                                       { return(message("Valide 'out' attributes are 'ggplot2', 'plotly',",
                                                                "'ggplot2-code', 'plotly-code',",
@@ -724,7 +740,7 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
 }
 
 
-#' Create summary table of one (possibly grouped) text-type column in a dataset
+#' Create summary table of one (possibly grouped) text-type column in a tbl
 #'
 #' This function creates a datatable of the values of a column with separate valid,
 #' non-valid and missing values.
@@ -733,7 +749,7 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #' The user can download the content of the datatable in csv format.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -744,7 +760,7 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
 #' @param out parameter that specifies the output expected: can be either 'DT', 'DT-code' and 'DT-cat'.
 #' DT renders a datatable using DT library, code gives the code in a string (usable
 #' directly with eval/parse functions) and cat provides indented code in the console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -756,45 +772,47 @@ plot_pie_valid_value  <- function(dataset = "iris", col = "Species", filter = 'c
 #' summary_text()
 #'
 #' # Example 2: summary table of Species
-#' summary_text(dataset = iris,col = "Species", out = "DT")
+#' summary_text(tbl = iris, col = "Species", out = "DT")
 #'
 #' }
 #'
-#' @import dplyr magrittr DT janitor
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-summary_text          <- function(dataset = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   summary <- paste0(
-    dataset_name," %>% "                                                   ,"\n",
+    tbl_name," %>% "                                                   ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                  ,"\n",
-    "  filter(!(",col," %in% ",missing_values,")) %>% "                    ,"\n",
-    "  mutate(",col," = as.character(",col,")) %>% "                       ,"\n",
-    "  group_by(",col,",",group_by,") %>% count %>% "                      ,"\n",
-    "  select(2,3,1) %>% mutate(",col," = replace_na(",col,",'-')) %>% "   ,"\n",
+    "  filter(!(", col," %in% ", missing_values,")) %>% "                    ,"\n",
+    "  mutate(", col," = as.character(",col, ")) %>% "                       ,"\n",
+    "  group_by(", col,",", group_by,") %>% count %>% "                      ,"\n",
+    "  select(2, 3, 1) %>% mutate(", col, " = replace_na(", col, ", '-')) %>% "   ,"\n",
     "  rename(`Content` = 1, `Number of answers` = 2) %>% "                ,"\n",
     "  arrange(`Content`,desc(`Number of answers`)) %>% "                  ,"\n",
     "  mutate(`Content` = na_if(`Content`,'')) %>%"                        ,"\n",
     "    remove_empty(which = 'cols') %>%"                                 ,"\n",
-    "  datatable( "                                                        ,"\n",
+    "  DT::datatable( "                                                        ,"\n",
     "    class = 'cell-border stripe', rownames = FALSE,"                  ,"\n",
     "    filter = 'top', editable = FALSE, extensions = 'Buttons', "       ,"\n",
     "    options = list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('csv') ))"                  )
 
-  if(str_detect(out,"code"))     { return(summary)
-  }else if(str_detect(out,"cat")){ return(summary %>% cat)
+  if(stringr::str_detect(out,"code"))     { return(summary)
+  }else if(stringr::str_detect(out,"cat")){ return(summary %>% cat)
   }else if(out == "DT")          { return(summary %>% parceval)
   }else                          { return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
 
 }
 
 
-#' Create summary table of one (possibly grouped) numerical-type column in a dataset
+#' Create summary table of one (possibly grouped) numerical-type column in a tbl
 #'
 #' This function creates datatable of the values of a column separating valid,
 #' non-valid and missing values.
@@ -803,7 +821,7 @@ summary_text          <- function(dataset = "iris", col = "col", filter = 'c()',
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #' The user can download the content of the datatable in csv format.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
 #' @param filter A character string specifying the values to filter. (equivalent of 'values in')
 #' This determines which values should be retained. It can be applied to both grouped
@@ -812,7 +830,7 @@ summary_text          <- function(dataset = "iris", col = "col", filter = 'c()',
 #' @param missing_values Vector listing values to exclude from valid values. These
 #' values will not be excluded from counting - but will be displayed separately from valid values.
 #'
-#' @param dataset A character string or tibble
+#' @param tbl A character string or tibble
 #' @param col A character string of a column of interest
 #' @param filter A character string to subset the rows, applying the expressions in ...
 #' to the column values to determine which rows should be retained. It can be applied
@@ -823,7 +841,7 @@ summary_text          <- function(dataset = "iris", col = "col", filter = 'c()',
 #' @param out parameter that specifies the output expected: can be either 'DT', 'DT-code' and 'DT-cat'.
 #' DT renders a datatable using DT library, code gives the code in a string (usable
 #' directly with eval/parse functions) and cat provides indented code in the console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -835,22 +853,24 @@ summary_text          <- function(dataset = "iris", col = "col", filter = 'c()',
 #' summary_numerical()
 #'
 #' # Example 2: summary table of Petal.Length
-#' summary_numerical(dataset = iris,col = "Petal.Length", out = "DT")
+#' summary_numerical(tbl = iris, col = "Petal.Length", out = "DT")
 #'
 #' }
 #'
-#' @import dplyr magrittr DT
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_numerical     <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   summary <- paste0(
-    dataset_name," %>% "                                                   ,"\n",
+    tbl_name," %>% "                                                   ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                  ,"\n",
     "  group_by(",group_by,") %>% "                                        ,"\n",
     "  select(",col,") %>% "                                               ,"\n",
@@ -869,7 +889,7 @@ summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()',
     "  tidyr::pivot_wider(names_from = group, "                            ,"\n",
     "  names_glue = '{group}<br>(all answers)') %>%"                       ,"\n",
     " full_join(     "                                                     ,"\n",
-    dataset_name," %>% "                                                   ,"\n",
+    tbl_name," %>% "                                                   ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                  ,"\n",
     "  filter(!(",col," %in% ",missing_values,"| is.na(",col,"))) %>% "    ,"\n",
     "  group_by(",group_by,") %>% "                                        ,"\n",
@@ -888,21 +908,21 @@ summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()',
     "  tidyr::pivot_longer(!group) %>% "                                   ,"\n",
     "  tidyr::pivot_wider(names_from = group, "                            ,"\n",
     "  names_glue = '{group}<br>(only valid answers)')) %>%"               ,"\n",
-    "  select(' ' = name,order(colnames(.))) %>% "                         ,"\n",
-    "  mutate_at(.vars = -1,~round(.,2)) %>% "                             ,"\n",
-    "  datatable( "                                                        ,"\n",
+    "  select(' ' = name, order(colnames(.))) %>% "                         ,"\n",
+    "  mutate_at(.vars = -1, ~ round(., 2)) %>% "                             ,"\n",
+    "  DT::datatable( "                                                        ,"\n",
     "    class = 'cell-border stripe', rownames = TRUE,"                   ,"\n",
     "    editable = FALSE, extensions = 'Buttons',"                        ,"\n",
     "    options = list(scrollX = TRUE, dom = 'Brtip', buttons = c('csv')), escape = FALSE )"   )
 
-  if(str_detect(out,"code"))     { return(summary)
-  }else if(str_detect(out,"cat")){ return(summary %>% cat)
+  if(stringr::str_detect(out,"code"))     { return(summary)
+  }else if(stringr::str_detect(out,"cat")){ return(summary %>% cat)
   }else if(out == "DT")          { return(summary %>% parceval)
   }else                          { return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
 
 }
 
-#' Create summary table of one (possibly grouped) category-type column in a dataset
+#' Create summary table of one (possibly grouped) category-type column in a tbl
 #'
 #' This function creates datatable of the values of a column separating valid,
 #' non-valid and missing values.
@@ -911,7 +931,7 @@ summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()',
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
 #' The user can download the content of the datatable in csv format.
 #'
-#' @param dataset A character string or tibble specifying the input dataset
+#' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string of a column of interest
 #' @param filter A character string to subset the rows, applying the expressions in ...
 #' to the column values to determine which rows should be retained. It can be applied
@@ -922,7 +942,7 @@ summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()',
 #' @param out parameter that specifies the output expected: can be either 'DT', 'DT-code' and 'DT-cat'.
 #' DT renders a datatable using DT library, code gives the code in a string (usable
 #' directly with eval/parse functions) and cat provides indented code in the console.
-#' @param group_by A character string of one column in the dataset that can be
+#' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
@@ -934,34 +954,36 @@ summary_numerical     <- function(dataset = "iris", col = "col", filter = 'c()',
 #' summary_category()
 #'
 #' # Example 2: summary table of Petal.Length
-#' summary_category(dataset = iris,col = "Species", out = "DT")
+#' summary_category(tbl = iris, col = "Species", out = "DT")
 #'
 #' }
 #'
-#' @import dplyr magrittr DT janitor stringr tibble
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
-summary_category      <- function(dataset = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_category      <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
 
-  dataset_name <- if(class(dataset)[1] == "character") {dataset}else{as.character(substitute(dataset)) }
-  dataset      <- if(class(dataset)[1] == "character") { parceval(dataset) }else{ dataset}
+  tbl_name <- if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
+  tbl      <- if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
 
   summary <- paste0(
-    dataset_name," %>% "                                                        ,"\n",
+    tbl_name," %>% "                                                        ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                       ,"\n",
     "  group_by(",col,", group_by = ",group_by,") %>% count %>% "               ,"\n",
-    "  add_column(prop_no_mis = NA_real_) %>% "                                 ,"\n",
+    "  tibble::add_column(prop_no_mis = NA_real_) %>% "                                 ,"\n",
     "  group_by(group_by) %>% "                                                 ,"\n",
     "  select(group_by, everything()) %>% "                                     ,"\n",
     "  mutate(prop_no_mis = paste0(round(n/sum(n), digits = 2)*100,'%')) %>%"   ,"\n",
     "  full_join( "                                                             ,"\n",
-    dataset_name," %>% "                                                        ,"\n",
+    tbl_name," %>% "                                                        ,"\n",
     "    filter(",negate,"(",col," %in% ",filter, ")) %>% "                     ,"\n",
     "    filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>% "      ,"\n",
     "      group_by(",col,", group_by = ",group_by,") %>% count %>% "           ,"\n",
-    "      add_column(prop_tot = NA_real_) %>% "                                ,"\n",
+    "      tibble::add_column(prop_tot = NA_real_) %>% "                                ,"\n",
     "      group_by(group_by) %>% "                                             ,"\n",
     "      select(group_by, everything()) %>% "                                 ,"\n",
     "      mutate(prop_tot = paste0(round(n/sum(n), digits = 2)*100,'%')))%>% " ,"\n",
@@ -971,17 +993,17 @@ summary_category      <- function(dataset = "iris", col = "col", filter = 'c()',
     "          `Number of answers` = 3 ,"                                       ,"\n",
     "          `Proportion - all` = 4 , "                                       ,"\n",
     "          `Proportion - valid values` = 5) %>% "                           ,"\n",
-    "  select(1,2,3,4,5) %>% "                                                  ,"\n",
+    "  select(1, 2, 3, 4, 5) %>% "                                                  ,"\n",
     "  mutate(`Grouping variable` = na_if(`Grouping variable`,'')) %>% "        ,"\n",
     "  arrange(`Grouping variable`,`Category code`) %>% "                       ,"\n",
     "    remove_empty('cols') %>% "                                             ,"\n",
-    "  datatable( "                                                             ,"\n",
+    "  DT::datatable( "                                                             ,"\n",
     "    class = 'cell-border stripe', rownames = FALSE,"                       ,"\n",
     "    filter = 'top', editable = FALSE, extensions = 'Buttons', "            ,"\n",
     "    options = list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('csv') ))"       )
 
-  if(str_detect(out,"code"))     { return(summary)
-  }else if(str_detect(out,"cat")){ return(summary %>% cat)
+  if(stringr::str_detect(out,"code"))     { return(summary)
+  }else if(stringr::str_detect(out,"cat")){ return(summary %>% cat)
   }else if(out == "DT")          { return(summary %>% parceval)
   }else                          { return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
 
@@ -1007,7 +1029,9 @@ summary_category      <- function(dataset = "iris", col = "col", filter = 'c()',
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr ggplot2
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 template_visual_report    <- function(to = getwd()){
 
@@ -1088,7 +1112,7 @@ pre { /* Code block - determines code spacing between lines */
    margin-right: auto;
 }
 
-') %>% readr::write_lines(file = paste0(.data$to,"/temp_bookdown_report/file/bookdown-template-master/style.css"), append = FALSE)
+') %>% readr::write_lines(file = paste0(to,"/temp_bookdown_report/file/bookdown-template-master/style.css"), append = FALSE)
 
   paste0(
     '---
@@ -1098,6 +1122,6 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-') %>% readr::write_lines(file = paste0(.data$to,"/temp_bookdown_report/file/bookdown-template-master/index.Rmd"), append = FALSE)
+') %>% readr::write_lines(file = paste0(to,"/temp_bookdown_report/file/bookdown-template-master/index.Rmd"), append = FALSE)
 
 }

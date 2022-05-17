@@ -4,10 +4,10 @@
 \alias{get_duplicated_rows}
 \title{xxx xxx xxx}
 \usage{
-get_duplicated_rows(dataset)
+get_duplicated_rows(tbl)
 }
 \arguments{
-\item{dataset}{xxx xxx xxx}
+\item{tbl}{xxx xxx xxx}
 }
 \value{
 xxx xxx xxx.

@@ -2,19 +2,19 @@
 % Please edit documentation in R/05-check_table_content.R
 \name{get_all_na_cols}
 \alias{get_all_na_cols}
-\title{Extract columns that are all 'NA' from a dataset}
+\title{Extract columns that are all 'NA' from a tbl}
 \usage{
-get_all_na_cols(dataset)
+get_all_na_cols(tbl)
 }
 \arguments{
-\item{dataset}{A character string or tibble of the input dataset}
+\item{tbl}{A character string or tibble of the input tbl}
 }
 \value{
-A vector string indicating either that the dataset does not have empty
+A vector string indicating either that the tbl does not have empty
 columns or the names of the empty columns.
 }
 \description{
-This helper function extracts the names of the columns in a dataset having NA
+This helper function extracts the names of the columns in a tbl having NA
 values for all observations.
 }
 \examples{

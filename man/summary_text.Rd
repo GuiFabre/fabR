@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{summary_text}
 \alias{summary_text}
-\title{Create summary table of one (possibly grouped) text-type column in a dataset}
+\title{Create summary table of one (possibly grouped) text-type column in a tbl}
 \usage{
 summary_text(
-  dataset = "iris",
+  tbl = "iris",
   col = "col",
   filter = "c()",
   negate = FALSE,
@@ -15,7 +15,7 @@ summary_text(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string specifying a column of interest}
 
@@ -32,7 +32,7 @@ values will not be excluded from counting - but will be displayed separately fro
 DT renders a datatable using DT library, code gives the code in a string (usable
 directly with eval/parse functions) and cat provides indented code in the console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -53,7 +53,7 @@ The user can download the content of the datatable in csv format.
 summary_text()
 
 # Example 2: summary table of Species
-summary_text(dataset = iris,col = "Species", out = "DT")
+summary_text(tbl = iris, col = "Species", out = "DT")
 
 }
 

@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{plot_main_word}
 \alias{plot_main_word}
-\title{Draw bar plot of one (possibly grouped) open-text column in a dataset}
+\title{Draw bar plot of one (possibly grouped) open-text column in a tbl}
 \usage{
 plot_main_word(
-  dataset = "iris",
+  tbl = "iris",
   col = "Species",
   filter = "c()",
   negate = FALSE,
@@ -16,7 +16,7 @@ plot_main_word(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string specifying a column of interest}
 
@@ -37,7 +37,7 @@ gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a st
 (usable directly with eval/parse functions) and cat provides indented code in the
 console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -58,7 +58,7 @@ grouped by another column. The output can be editable (using plotly library) or 
 plot_main_word()
 
 # Example 2: words contains in Species
-plot_main_word(dataset = dataset,col = "Species",out = "ggplot2")
+plot_main_word(tbl = tbl, col = "Species", out = "ggplot2")
 
 }
 

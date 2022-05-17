@@ -14,6 +14,9 @@
 #'
 #' }
 #'
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 message_on_prompt <- function(...){
   invisible(readline(cat(prompt = paste(...))))
@@ -36,6 +39,9 @@ message_on_prompt <- function(...){
 #'
 #' }
 #'
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 silently_run <- function(...){
   return(suppressWarnings(suppressMessages(try(...,silent = TRUE))))
@@ -58,10 +64,12 @@ silently_run <- function(...){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 parceval <- function(...){
-  eval(parse(text = str_squish(...) %>% str_remove_all("\\\r")))
+  eval(parse(text = stringr::str_squish(...) %>% stringr::str_remove_all("\\\r")))
 }
 
 #' Read all Excel sheets using readxl::read_excel recursively
@@ -83,23 +91,29 @@ parceval <- function(...){
 #'
 #' }
 #'
-#' @import readxl dplyr magrittr tibble
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 read_excel_allsheets <- function(filename, sheets = "") {
 
   if(toString(sheets) == ""){
-    sheets_name <- excel_sheets(filename)
+    sheets_name <- readxl::excel_sheets(filename)
   }else{
-    sheets_name <- excel_sheets(filename) %>% as_tibble %>% filter(.data$value %in% c(sheets)) %>% pull(.data$value)
+    sheets_name <-
+      readxl::excel_sheets(filename) %>%
+      as_tibble %>% filter(.data$value %in% c(sheets)) %>%
+      pull(.data$value)
+
     if(length(sheets_name) != length(sheets)){
       message("{",sheets[!(sheets %in% sheets_name)] %>% toString, "} sheet name(s) not found in the excel file")}}
 
   if(purrr::is_empty(sheets_name)){message("The sheet name(s) you provided do not exist")}else{
     x <- lapply(sheets_name,
-                function(X) read_excel(
+                function(X) readxl::read_excel(
                   path      = filename,
                   sheet     = X,
-                  guess_max = suppressWarnings(read_excel(filename,sheet = X) %>% nrow)))
+                  guess_max = suppressWarnings(readxl::read_excel(filename, sheet = X) %>% nrow)))
     names(x) <- sheets_name
     if(length(x) == 1){return(x[[1]])}else{return(x)}
   }
@@ -121,7 +135,9 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' # Example 1: xxx
 #' }
 #'
-#' @import writexl fs stringr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 write_excel_allsheets <- function (filename, list){
 
@@ -130,14 +146,14 @@ write_excel_allsheets <- function (filename, list){
 
   if(is.null(objnames)) {
     objnames <-
-      as.character(fargs[3]) %>%
-      str_remove("^list\\(") %>%
-      str_remove("\\)$") %>%
-      str_split(", ") %>% unlist
+      as.character(fargs[['expand.dots']]) %>%
+      stringr::str_remove("^list\\(") %>%
+      stringr::str_remove("\\)$") %>%
+      stringr::str_split(", ") %>% unlist
     names(list) <- objnames}
 
-  dir_create(dirname(filename))
-  write_xlsx(x = list, path = filename)
+  fs::dir_create(dirname(filename))
+  writexl::write_xlsx(x = list, path = filename)
 
   }
 
@@ -157,11 +173,15 @@ write_excel_allsheets <- function (filename, list){
 #' # Example 1: xxx
 #' }
 #'
-#' @import readr dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 read_csv_any_formats <- function(csv_name){
-  guess_max <- suppressMessages(suppressWarnings(read_csv(csv_name, progress = FALSE))) %>% nrow
-  csv <- read_delim(file = csv_name, guess_max = guess_max)
+  guess_max <-
+    suppressMessages(suppressWarnings(readr::read_csv(csv_name, progress = FALSE))) %>% nrow
+
+  csv <- readr::read_delim(file = csv_name, guess_max = guess_max)
   return(csv)
 }
 
@@ -182,18 +202,20 @@ read_csv_any_formats <- function(csv_name){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 add_index <- function(tibble, name_index = "index"){
 
-  tibble <- tibble %>% add_column(!!! name_index) %>%
+  tibble <- tibble %>% tibble::add_column(!!! name_index) %>%
     select(last_col(), everything())
 
-  repair_name <- tibble %>% ungroup() %>% select(1) %>% clean_names() %>% names
+  repair_name <- tibble %>% ungroup() %>% select(1) %>% janitor::clean_names() %>% names
   tibble_name <- tibble %>% ungroup() %>% select(-1) %>% names
 
   tibble <-
-    stats::setNames(tibble, c(repair_name,tibble_name)) %>%
+    stats::setNames(tibble, c(repair_name, tibble_name)) %>%
     mutate(across(all_of(name_index), ~ row_number()))
   return(tibble)  }
 
@@ -215,7 +237,9 @@ add_index <- function(tibble, name_index = "index"){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 get_index_list     <- function(.obj, map_list = NULL){
 
@@ -235,7 +259,7 @@ get_index_list     <- function(.obj, map_list = NULL){
 
   }else{
 
-    while(str_detect(map_list$map_list$leaf_class %>% toString, "list")){
+    while(stringr::str_detect(map_list$map_list$leaf_class %>% toString, "list")){
 
       map_list$map_list <-
         map_list$map_list %>%
@@ -278,30 +302,32 @@ get_index_list     <- function(.obj, map_list = NULL){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 make_name_list <- function(args_list, list_elem){
 
   name_list <-
     args_list %>%
-    str_squish() %>%
-    str_split(",") %>%
+    stringr::str_squish() %>%
+    stringr::str_split(",") %>%
     unlist %>%
-    str_remove_all("\\(\\)") %>%
-    str_remove("\\=.*") %>%
-    str_remove("\\%\\>\\%.*") %>%
-    str_remove(".*\\([\\`]+") %>%
-    str_remove("[\\`]+\\).*") %>%
-    str_remove("\\[.*") %>%
-    str_remove_all("\\`") %>%
-    str_remove(".*\\(") %>%
-    str_remove("\\).*") %>%
-    str_remove("\\$.*") %>%
-    str_squish()
+    stringr::str_remove_all("\\(\\)") %>%
+    stringr::str_remove("\\=.*") %>%
+    stringr::str_remove("\\%\\>\\%.*") %>%
+    stringr::str_remove(".*\\([\\`]+") %>%
+    stringr::str_remove("[\\`]+\\).*") %>%
+    stringr::str_remove("\\[.*") %>%
+    stringr::str_remove_all("\\`") %>%
+    stringr::str_remove(".*\\(") %>%
+    stringr::str_remove("\\).*") %>%
+    stringr::str_remove("\\$.*") %>%
+    stringr::str_squish()
 
   if(length(list_elem) != length(name_list)) {
     warning(
-      "\nThe names of your elements in your list might have been wrongly parsed. Please
+"\nThe names of your elements in your list might have been wrongly parsed. Please
 verify the names of your elements and reparse.\n", call. = FALSE)
   }
 

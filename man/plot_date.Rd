@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{plot_date}
 \alias{plot_date}
-\title{Draw lollipop plot of one (possibly grouped) time-related column in a dataset}
+\title{Draw lollipop plot of one (possibly grouped) time-related column in a tbl}
 \usage{
 plot_date(
-  dataset = "airquality",
+  tbl = "airquality",
   col = "Day",
   filter = "c()",
   negate = FALSE,
@@ -16,7 +16,7 @@ plot_date(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string specifying a column of interest}
 
@@ -38,7 +38,7 @@ gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a st
 (usable directly with eval/parse functions) and cat provides indented code in the
 console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -59,9 +59,9 @@ plot_date()
 
 # Example 2: graph of
 
-dataset = read_csv_any_formats("study_TOKYO.csv")
-plot_date(dataset, col = "dob", out = "ggplot2",time = "year")
-plot_date(dataset, col = "dob", out = "ggplot2",time = "month")
+tbl = read_csv_any_formats("study_TOKYO.csv")
+plot_date(tbl, col = "dob", out = "ggplot2",time = "year")
+plot_date(tbl, col = "dob", out = "ggplot2",time = "month")
 
 }
 

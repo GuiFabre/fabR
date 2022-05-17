@@ -25,7 +25,9 @@
 #' # Example 1: xxx
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
 
@@ -41,9 +43,9 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
     to_eval = NA_character_)
 
   all_files_list <-
-    str_subset(
+    stringr::str_subset(
       list.files(folder, full.names = TRUE, recursive = TRUE),
-      pattern = pattern,negate = negate)
+      pattern = pattern, negate = negate)
 
   if(purrr::is_empty(all_files_list)){
     message("Your folder is empty or do not exists.")
@@ -89,7 +91,7 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
     # visualization of the dir tree
     temporary_folder <- fs::path_temp() %>% basename
     fs::dir_create(temporary_folder)
-    folder_tp <- stringr::str_remove(string = index$file_path,pattern = dirname(index$folder_path))
+    folder_tp <- stringr::str_remove(string = index$file_path, pattern = dirname(index$folder_path))
     for(i in folder_tp){
       fs::dir_create(paste0(temporary_folder,"/",dirname(i)))
       fs::file_create(paste0(temporary_folder,"/",i))}
@@ -128,7 +130,9 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
 #' # Example 1: xxx
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 file_index_search <- function(index = tibble(), file_path = "", file_name = "", extension = "", file_type = "", .fs_tree = TRUE){
 
@@ -142,16 +146,16 @@ file_index_search <- function(index = tibble(), file_path = "", file_name = "", 
 
   index <-
     index %>%
-    filter(str_detect(string = file_path,  pattern = temp.file_path)) %>%
-    filter(str_detect(string = file_name,  pattern = temp.file_name))  %>%
-    filter(str_detect(string = file_type,  pattern = temp.file_type))  %>%
-    filter(str_detect(string = extension,  pattern = temp.extension))
+    filter(stringr::str_detect(string = file_path,  pattern = temp.file_path)) %>%
+    filter(stringr::str_detect(string = file_name,  pattern = temp.file_name))  %>%
+    filter(stringr::str_detect(string = file_type,  pattern = temp.file_type))  %>%
+    filter(stringr::str_detect(string = extension,  pattern = temp.extension))
 
   if(.fs_tree == TRUE){
     # visualization of the dir tree
     temporary_folder <- fs::path_temp() %>% basename
     fs::dir_create(temporary_folder)
-    folder_tp <- str_remove(string = index$file_path,pattern = dirname(index$folder_path))
+    folder_tp <- stringr::str_remove(string = index$file_path, pattern = dirname(index$folder_path))
     for(i in folder_tp){
       fs::dir_create(paste0(temporary_folder,"/",dirname(i)))
       fs::file_create(paste0(temporary_folder,"/",i))}
@@ -195,10 +199,12 @@ file_index_search <- function(index = tibble(), file_path = "", file_name = "", 
 #' # Example 1: xxx
 #' }
 #'
-#' @import dplyr magrittr tools
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 file_index_read <- function(
-  index = tibble(),
+  index = tibble::tibble(),
   file_path = "",
   file_name = "",
   extension = "",
@@ -224,7 +230,7 @@ file_index_read <- function(
 
     for(i in 1:nrow(index)){
 
-      if(str_detect(index$to_eval[i], "^source\\('|^utils::browseURL\\('|^usethis::edit_file\\('|^load\\('")){
+      if(stringr::str_detect(index$to_eval[i], "^source\\('|^utils::browseURL\\('|^usethis::edit_file\\('|^load\\('")){
         index$to_eval[i] %>% parceval()
         message("the file: ",basename(index$file_path[i])," has been sourced, loaded or opened in your environnement")
 
@@ -233,14 +239,14 @@ file_index_read <- function(
         if(assign == TRUE){
 
           try({assign(
-            x = file_path_sans_ext(index$file_name[i]),
+            x = tools::file_path_sans_ext(index$file_name[i]),
             value = index$to_eval[i] %>% parceval(),
             envir = .envir)
             message("the R object: ",index$file_name[i]," has been created")})
 
         }else{
 
-          file_name <- file_path_sans_ext(index$file_name[i])
+          file_name <- tools::file_path_sans_ext(index$file_name[i])
           files_append[[file_name]] <- index$to_eval[i] %>% parceval()
 
         }

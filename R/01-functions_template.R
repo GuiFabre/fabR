@@ -14,7 +14,9 @@
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 get_args           <- function(...){
 
@@ -41,7 +43,9 @@ get_args           <- function(...){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 cast_error_fargs           <- function(...){
 
@@ -69,7 +73,9 @@ cast_error_fargs           <- function(...){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 set_template           <- function(attributes, version = NULL){
 
@@ -78,7 +84,7 @@ set_template           <- function(attributes, version = NULL){
   appen_fargs <- as.list(match.call(expand.dots = TRUE))
 
   # trasform to tibble
-  fargs <- get_args(args,appen_fargs) %>%
+  fargs <- get_args(args, appen_fargs) %>%
     mutate(order = 0)
 
   # test validity of user input
@@ -104,7 +110,9 @@ set_template           <- function(attributes, version = NULL){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 add_template           <- function(.fargs){
 
@@ -116,10 +124,10 @@ add_template           <- function(.fargs){
   args$.fargs = NULL
 
   # trasform to tibble
-  args <- get_args(args,appen_fargs)
+  args <- get_args(args, appen_fargs)
   max_order = fargs %>% pull(order) %>% max
   fargs <- fargs %>% bind_rows(args) %>%
-    mutate(order = tidyr::replace_na(order,max_order + 1))
+    mutate(order = tidyr::replace_na(order, max_order + 1))
 
   # test validity of user input
   cast_error_fargs(fargs)
@@ -144,7 +152,9 @@ add_template           <- function(.fargs){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 prep_template          <- function(.fargs){
 
@@ -156,10 +166,10 @@ prep_template          <- function(.fargs){
   args$.fargs = NULL
 
   # trasform to tibble
-  args <- get_args(args,appen_fargs)
+  args <- get_args(args, appen_fargs)
   max_order = fargs %>% pull(order) %>% max
   fargs <- fargs %>% bind_rows(args) %>%
-    mutate(order = tidyr::replace_na(order,max_order + 1))
+    mutate(order = tidyr::replace_na(order, max_order + 1))
 
   # test validity of user input
   cast_error_fargs(fargs)
@@ -185,7 +195,9 @@ prep_template          <- function(.fargs){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 set_template_run       <- function(attributes){
 
@@ -212,7 +224,9 @@ set_template_run       <- function(attributes){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 add_template_run       <- function(obj, append_obj){
 
@@ -221,7 +235,7 @@ add_template_run       <- function(obj, append_obj){
   appen_fargs <- as.list(match.call(expand.dots = TRUE))
 
   # trasform to tibble
-  fargs <- get_args(args,appen_fargs)
+  fargs <- get_args(args, appen_fargs)
 
   append_obj_name <- fargs %>%
     filter(.data$key == "append_obj") %>% pull(.data$value)
@@ -234,6 +248,27 @@ add_template_run       <- function(obj, append_obj){
 
   return(obj)
 }
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param obj xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @export
 prep_template_run      <- function(obj){
 
   message("Manipulate the way you want the want, and return obj")
@@ -258,13 +293,15 @@ prep_template_run      <- function(obj){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 show_pipeline          <- function(.fargs){
 
   .fargs %>%
     group_by(.data$order,.data$function_name) %>% slice(1) %>%
-   tidyr::unite(order,.data$function_name, col = .data$process, sep = " - ") %>%
+   tidyr::unite(.data$order,.data$function_name, col = "process", sep = " - ") %>%
     pull(.data$process) %>% paste0("\n") %>% message
 }
 
@@ -284,19 +321,21 @@ show_pipeline          <- function(.fargs){
 #'
 #' }
 #'
-#' @import dplyr magrittr
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 show_template           <- function(.fargs){
 
   show_pipeline(.fargs)
 
   pipeline <- .fargs %>%
-    tidyr::unite(.data$key, .data$value, col = args, sep = " = ") %>%
+    tidyr::unite(.data$key, .data$value, col = "args", sep = " = ") %>%
     group_by(.data$order,.data$function_name) %>%
     summarise(across(c(args), ~ paste0(.,collapse = ", ")), .groups = "drop") %>%
     mutate(
-      function_name = paste0(.data$function_name, "_run(",args,")"),
-      function_name = str_remove(.data$function_name, "(.fargs = NULL, |.fargs = NULL)")) %>%
+      function_name = paste0(.data$function_name, "_run(", args,")"),
+      function_name = stringr::str_remove(.data$function_name, "(.fargs = NULL, |.fargs = NULL)")) %>%
     summarise(across(c(.data$function_name), ~ paste0(.,collapse = " %>% \n")), .groups = "drop") %>%
     pull(.data$function_name)
 

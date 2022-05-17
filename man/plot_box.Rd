@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{plot_box}
 \alias{plot_box}
-\title{Draw box plot of one (possibly grouped) column in a dataset}
+\title{Draw box plot of one (possibly grouped) column in a tbl}
 \usage{
 plot_box(
-  dataset = "airquality",
+  tbl = "airquality",
   col = "Month",
   filter = "c()",
   negate = FALSE,
@@ -15,7 +15,7 @@ plot_box(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string specifying a column of interest}
 
@@ -34,7 +34,7 @@ gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a st
 (usable directly with eval/parse functions) and cat provides indented code in the
 console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -53,7 +53,7 @@ grouped by another column. The output can be editable (using plotly library) or 
 plot_box()
 
 # Example 2: graph of Petal.Length
-plot_box(dataset = dataset,col = "Petal.Length",out = "ggplot2")
+plot_box(tbl = tbl, col = "Petal.Length", out = "ggplot2")
 
 }
 

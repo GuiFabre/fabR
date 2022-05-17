@@ -4,10 +4,10 @@
 \alias{get_duplicated_cols}
 \title{xxx xxx xxx}
 \usage{
-get_duplicated_cols(dataset)
+get_duplicated_cols(tbl)
 }
 \arguments{
-\item{dataset}{xxx xxx xxx}
+\item{tbl}{xxx xxx xxx}
 }
 \value{
 xxx xxx xxx.

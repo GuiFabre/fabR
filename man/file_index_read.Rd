@@ -5,7 +5,7 @@
 \title{Read, source and open objects from an index of files}
 \usage{
 file_index_read(
-  index = tibble(),
+  index = tibble::tibble(),
   file_path = "",
   file_name = "",
   extension = "",

@@ -2,10 +2,10 @@
 % Please edit documentation in R/04-viz.R
 \name{plot_pie_valid_value}
 \alias{plot_pie_valid_value}
-\title{Draw pie chart of one (possibly grouped) column in a dataset (valid, non-valid and missing values)}
+\title{Draw pie chart of one (possibly grouped) column in a tbl (valid, non-valid and missing values)}
 \usage{
 plot_pie_valid_value(
-  dataset = "iris",
+  tbl = "iris",
   col = "Species",
   filter = "c()",
   negate = FALSE,
@@ -15,7 +15,7 @@ plot_pie_valid_value(
 )
 }
 \arguments{
-\item{dataset}{A character string or tibble specifying the input dataset}
+\item{tbl}{A character string or tibble specifying the input tbl}
 
 \item{col}{A character string specifying a column of interest}
 
@@ -34,7 +34,7 @@ gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a st
 (usable directly with eval/parse functions) and cat provides indented code in the
 console.}
 
-\item{group_by}{A character string of one column in the dataset that can be
+\item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
@@ -55,7 +55,7 @@ grouped by another column. The output can be editable (using plotly library) or 
 # Example 2: graph of Species (virginica is associated to missing values for the
 # purpose of example)
 plot_pie_valid_value(
-  dataset = dataset,
+  tbl = tbl,
   col = "Species",
   missing_values = "'virginica'" ,
   out = "ggplot2")
