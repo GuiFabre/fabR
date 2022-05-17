@@ -1,4 +1,4 @@
-Package: fabR
+Package: utilizR
 Type: Package
 Title: Wrapper Functions For Lazy Person I Am 
 Version: 1.0.1
@@ -15,16 +15,27 @@ Description: More about what it does (maybe more than one line)
 License: GPL-3
 LazyData: true
 Depends: R (>= 3.4)
-Imports: dplyr, 
+Imports: dplyr,
+    magrittr, 
+    stats,
     readxl, 
     tibble, 
-    rlang,  
     writexl, 
+    purrr,
+    tidyr,
     fs, 
     stringr, 
-    readr
-Remotes:
-    GuiFabre/fabR
+    readr,
+    tools,
+    utils,
+    lubridate,
+    janitor,
+    digest,
+    ggplot2,
+    tidytext,
+    viridis,
+    DT,
+    knitr
 URL: https://github.com/GuiFabre/fabR/
 BugReports: https://github.com/GuiFabre/fabR/issues
 RoxygenNote: 7.1.2

@@ -1,5 +1,76 @@
-#### TEMPLATE FONCTIONS #########################################################
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param ... xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
+get_args           <- function(...){
 
+  # get arguments of function and inputs
+  args <- as.list(args(get_args))
+
+  # add to pipeline
+  invisible(args)
+}
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param ... xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
+cast_error_fargs           <- function(...){
+
+  # get arguments of function and inputs
+  args <- as.list(args(get_args))
+
+  # add to pipeline
+  invisible(args)
+}
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param attributes xxx xxx xxx
+#' @param version xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
 set_template           <- function(attributes, version = NULL){
 
   # get arguments of function and inputs
@@ -16,6 +87,25 @@ set_template           <- function(attributes, version = NULL){
   # add to pipeline
   invisible(fargs)
 }
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param .fargs xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
 add_template           <- function(.fargs){
 
   # get arguments of function and inputs
@@ -29,7 +119,7 @@ add_template           <- function(.fargs){
   args <- get_args(args,appen_fargs)
   max_order = fargs %>% pull(order) %>% max
   fargs <- fargs %>% bind_rows(args) %>%
-    mutate(order = replace_na(order,max_order + 1))
+    mutate(order = tidyr::replace_na(order,max_order + 1))
 
   # test validity of user input
   cast_error_fargs(fargs)
@@ -37,6 +127,25 @@ add_template           <- function(.fargs){
   # add to pipeline
   invisible(fargs)
 }
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param .fargs xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
 prep_template          <- function(.fargs){
 
   # get arguments of function and inputs
@@ -50,7 +159,7 @@ prep_template          <- function(.fargs){
   args <- get_args(args,appen_fargs)
   max_order = fargs %>% pull(order) %>% max
   fargs <- fargs %>% bind_rows(args) %>%
-    mutate(order = replace_na(order,max_order + 1))
+    mutate(order = tidyr::replace_na(order,max_order + 1))
 
   # test validity of user input
   cast_error_fargs(fargs)
@@ -60,6 +169,24 @@ prep_template          <- function(.fargs){
 
 }
 
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param attributes xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
 set_template_run       <- function(attributes){
 
   obj <- list()
@@ -67,6 +194,26 @@ set_template_run       <- function(attributes){
 
   return(obj)
 }
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param obj xxx xxx xxx
+#' @param append_obj xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
 add_template_run       <- function(obj, append_obj){
 
   # get arguments of function and inputs
@@ -76,7 +223,8 @@ add_template_run       <- function(obj, append_obj){
   # trasform to tibble
   fargs <- get_args(args,appen_fargs)
 
-  append_obj_name <- fargs %>% filter(key == "append_obj") %>% .$value
+  append_obj_name <- fargs %>%
+    filter(.data$key == "append_obj") %>% pull(.data$value)
   append_obj <- get(x = append_obj_name, envir = parent.frame())
 
   if(is.null(obj$append_obj)){
@@ -94,27 +242,67 @@ prep_template_run      <- function(obj){
 
 }
 
-show_template          <- function(.fargs){
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param .fargs xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
+show_pipeline          <- function(.fargs){
 
   .fargs %>%
-    group_by(order,function_name) %>% slice(1) %>%
-    unite(order,function_name, col = process, sep = " - ") %>%
-    pull(process) %>% paste0("\n") %>% message
+    group_by(.data$order,.data$function_name) %>% slice(1) %>%
+   tidyr::unite(order,.data$function_name, col = .data$process, sep = " - ") %>%
+    pull(.data$process) %>% paste0("\n") %>% message
 }
-run_template           <- function(.fargs){
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param .fargs xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
+show_template           <- function(.fargs){
 
   show_pipeline(.fargs)
 
   pipeline <- .fargs %>%
-    unite(key, value, col = args, sep = " = ") %>%
-    group_by(order,function_name) %>%
+    tidyr::unite(.data$key, .data$value, col = args, sep = " = ") %>%
+    group_by(.data$order,.data$function_name) %>%
     summarise(across(c(args), ~ paste0(.,collapse = ", ")), .groups = "drop") %>%
     mutate(
-      function_name = paste0(function_name, "_run(",args,")"),
-      function_name = str_remove(function_name, "(.fargs = NULL, |.fargs = NULL)")) %>%
-    summarise(across(c(function_name), ~ paste0(.,collapse = " %>% \n")), .groups = "drop") %>%
-    pull(function_name)
+      function_name = paste0(.data$function_name, "_run(",args,")"),
+      function_name = str_remove(.data$function_name, "(.fargs = NULL, |.fargs = NULL)")) %>%
+    summarise(across(c(.data$function_name), ~ paste0(.,collapse = " %>% \n")), .groups = "drop") %>%
+    pull(.data$function_name)
 
   parceval(pipeline)
 
 }
+
+
+

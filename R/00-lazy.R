@@ -3,10 +3,8 @@
 #' xxx
 #'
 #' @param ... String character to put in a message
-#' @param sheets A vector containing only the sheets to be read.
 #'
-#' @return A list of tibbles corresponding to the sheets read, or a single tibble
-#' if the number of sheets is one.
+#' @return xxx
 #'
 #' @examples
 #' \dontrun{
@@ -26,7 +24,6 @@ message_on_prompt <- function(...){
 #' xxx
 #'
 #' @param ... String character to put in a message
-#' @param sheets A vector containing only the sheets to be read.
 #'
 #' @return A list of tibbles corresponding to the sheets read, or a single tibble
 #' if the number of sheets is one.
@@ -49,7 +46,6 @@ silently_run <- function(...){
 #' xxx
 #'
 #' @param ... String character to put in a message
-#' @param sheets A vector containing only the sheets to be read.
 #'
 #' @return A list of tibbles corresponding to the sheets read, or a single tibble
 #' if the number of sheets is one.
@@ -62,7 +58,7 @@ silently_run <- function(...){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr magrittr
 #' @export
 parceval <- function(...){
   eval(parse(text = str_squish(...) %>% str_remove_all("\\\r")))
@@ -87,18 +83,18 @@ parceval <- function(...){
 #'
 #' }
 #'
-#' @import readxl dplyr tibble rlang
+#' @import readxl dplyr magrittr tibble
 #' @export
 read_excel_allsheets <- function(filename, sheets = "") {
 
   if(toString(sheets) == ""){
     sheets_name <- excel_sheets(filename)
   }else{
-    sheets_name <- excel_sheets(filename) %>% as_tibble %>% filter(value %in% c(sheets)) %>% pull(value)
+    sheets_name <- excel_sheets(filename) %>% as_tibble %>% filter(.data$value %in% c(sheets)) %>% pull(.data$value)
     if(length(sheets_name) != length(sheets)){
       message("{",sheets[!(sheets %in% sheets_name)] %>% toString, "} sheet name(s) not found in the excel file")}}
 
-  if(is_empty(sheets_name)){message("The sheet name(s) you provided do not exist")}else{
+  if(purrr::is_empty(sheets_name)){message("The sheet name(s) you provided do not exist")}else{
     x <- lapply(sheets_name,
                 function(X) read_excel(
                   path      = filename,
@@ -116,13 +112,13 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 #'
 #' @param filename A character string of the path of the Excel file.
-#' @param ... R objects, coma separated.
+#' @param list R objects, coma separated.
 #'
 #'
 #' @examples
 #' \dontrun{
 #'
-#'
+#' # Example 1: xxx
 #' }
 #'
 #' @import writexl fs stringr
@@ -135,8 +131,8 @@ write_excel_allsheets <- function (filename, list){
   if(is.null(objnames)) {
     objnames <-
       as.character(fargs[3]) %>%
-      str_remove(.,"^list\\(") %>%
-      str_remove(.,"\\)$") %>%
+      str_remove("^list\\(") %>%
+      str_remove("\\)$") %>%
       str_split(", ") %>% unlist
     names(list) <- objnames}
 
@@ -158,10 +154,10 @@ write_excel_allsheets <- function (filename, list){
 #' @examples
 #' \dontrun{
 #'
-#'
+#' # Example 1: xxx
 #' }
 #'
-#' @import readr dplyr
+#' @import readr dplyr magrittr
 #' @export
 read_csv_any_formats <- function(csv_name){
   guess_max <- suppressMessages(suppressWarnings(read_csv(csv_name, progress = FALSE))) %>% nrow
@@ -186,9 +182,9 @@ read_csv_any_formats <- function(csv_name){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr magrittr
 #' @export
-add_index                      <- function(tibble, name_index = "index"){
+add_index <- function(tibble, name_index = "index"){
 
   tibble <- tibble %>% add_column(!!! name_index) %>%
     select(last_col(), everything())
@@ -197,7 +193,7 @@ add_index                      <- function(tibble, name_index = "index"){
   tibble_name <- tibble %>% ungroup() %>% select(-1) %>% names
 
   tibble <-
-    setNames(tibble, c(repair_name,tibble_name)) %>%
+    stats::setNames(tibble, c(repair_name,tibble_name)) %>%
     mutate(across(all_of(name_index), ~ row_number()))
   return(tibble)  }
 
@@ -219,7 +215,7 @@ add_index                      <- function(tibble, name_index = "index"){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr magrittr
 #' @export
 get_index_list     <- function(.obj, map_list = NULL){
 
@@ -228,7 +224,7 @@ get_index_list     <- function(.obj, map_list = NULL){
     map_list <-
       tibble(root_name = quote(.obj) %>% as.character()) %>%
       mutate(
-        leaf_class = eval(parse(text = paste0(root_name," %>% class %>% toString()"))))
+        leaf_class = eval(parse(text = paste0(.data$root_name," %>% class %>% toString()"))))
 
     map_list <- list(
       map_list = map_list,
@@ -245,15 +241,15 @@ get_index_list     <- function(.obj, map_list = NULL){
         map_list$map_list %>%
         rowwise() %>%
         mutate(
-          leaf_name = names(eval(parse(text = root_name))) %>% toString()) %>%
-        separate_rows(leaf_name, sep = ", ") %>%
+          leaf_name = names(eval(parse(text = .data$root_name))) %>% toString()) %>%
+        tidyr::separate_rows(.data$leaf_name, sep = ", ") %>%
         rowwise() %>%
         mutate(
-          leaf_class2  = eval(parse(text = paste0(root_name,"[[",shQuote(leaf_name),"]] %>% class %>% toString()"))),
-          leaf_name   = ifelse(leaf_class2 == "list", paste0("[[",shQuote(leaf_name),"]]"),paste0("[",shQuote(leaf_name),"]")),
-          root_name   = ifelse(leaf_class == "list",  paste0(root_name,leaf_name),root_name),
-          leaf_class = leaf_class2) %>%
-        select(root_name, leaf_class)
+          leaf_class2  = eval(parse(text = paste0(.data$root_name,"[[",shQuote(.data$leaf_name),"]] %>% class %>% toString()"))),
+          leaf_name   = ifelse(.data$leaf_class2 == "list", paste0("[[",shQuote(.data$leaf_name),"]]"),paste0("[",shQuote(.data$leaf_name),"]")),
+          root_name   = ifelse(.data$leaf_class == "list",  paste0(.data$root_name,.data$leaf_name),.data$root_name),
+          leaf_class = .data$leaf_class2) %>%
+        select(.data$root_name, .data$leaf_class)
 
       map_list$big_list <-
         map_list$big_list %>%
@@ -263,5 +259,53 @@ get_index_list     <- function(.obj, map_list = NULL){
       return(get_index_list(.obj, map_list))}}
 
   return(map_list$big_list)
+}
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param args_list xxx xxx xxx
+#' @param list_elem xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#' # Example 1: xxx
+#'
+#' }
+#'
+#' @import dplyr magrittr
+#' @export
+make_name_list <- function(args_list, list_elem){
+
+  name_list <-
+    args_list %>%
+    str_squish() %>%
+    str_split(",") %>%
+    unlist %>%
+    str_remove_all("\\(\\)") %>%
+    str_remove("\\=.*") %>%
+    str_remove("\\%\\>\\%.*") %>%
+    str_remove(".*\\([\\`]+") %>%
+    str_remove("[\\`]+\\).*") %>%
+    str_remove("\\[.*") %>%
+    str_remove_all("\\`") %>%
+    str_remove(".*\\(") %>%
+    str_remove("\\).*") %>%
+    str_remove("\\$.*") %>%
+    str_squish()
+
+  if(length(list_elem) != length(name_list)) {
+    warning(
+      "\nThe names of your elements in your list might have been wrongly parsed. Please
+verify the names of your elements and reparse.\n", call. = FALSE)
+  }
+
+  return(name_list[c(1:length(list_elem))])
+
 }
 
