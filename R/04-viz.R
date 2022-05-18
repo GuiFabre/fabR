@@ -1066,7 +1066,7 @@ language:
     'body{ /* Normal  */
       font-size: 14px;
   }
-td {  /* Table  */
+td {  /* table  */
   font-size: 12px;
 }
 h1.title {

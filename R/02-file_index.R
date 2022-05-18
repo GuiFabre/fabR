@@ -139,17 +139,17 @@ file_index_search <- function(index = tibble(), file_path = "", file_name = "", 
   index      <- if(purrr::is_empty(index)) {
     file_index_create(folder = getwd())
     }else{index}
-  temp.file_path  <- file_path
-  temp.file_name  <- file_name
-  temp.extension  <- extension
-  temp.file_type  <- file_type
+  file_path  <- file_path
+  file_name  <- file_name
+  extension  <- extension
+  file_type  <- file_type
 
   index <-
     index %>%
-    filter(stringr::str_detect(string = file_path,  pattern = temp.file_path)) %>%
-    filter(stringr::str_detect(string = file_name,  pattern = temp.file_name))  %>%
-    filter(stringr::str_detect(string = file_type,  pattern = temp.file_type))  %>%
-    filter(stringr::str_detect(string = extension,  pattern = temp.extension))
+    filter(stringr::str_detect(string = file_path,  pattern = file_path)) %>%
+    filter(stringr::str_detect(string = file_name,  pattern = file_name))  %>%
+    filter(stringr::str_detect(string = file_type,  pattern = file_type))  %>%
+    filter(stringr::str_detect(string = extension,  pattern = extension))
 
   if(.fs_tree == TRUE){
     # visualization of the dir tree
