@@ -776,7 +776,7 @@ plot_pie_valid_value  <- function(tbl = "iris", col = "Species", filter = 'c()',
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr ggplot2 DT
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -857,7 +857,7 @@ summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr ggplot2 DT
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -958,7 +958,7 @@ summary_numerical     <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr ggplot2 DT
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
