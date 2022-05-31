@@ -13,7 +13,7 @@
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr lubridate
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -35,12 +35,12 @@ guess_date_format <- function(tbl, col = NULL){
                         filter(!is.na(.data$var)) %>%
                         rowwise() %>%
                         mutate(
-                          dmy = lubridate::dmy(.data$var, quiet = TRUE),
-                          dym = lubridate::dym(.data$var, quiet = TRUE),
-                          ymd = lubridate::ymd(.data$var, quiet = TRUE),
-                          ydm = lubridate::ydm(.data$var, quiet = TRUE),
-                          mdy = lubridate::mdy(.data$var, quiet = TRUE),
-                          myd = lubridate::myd(.data$var, quiet = TRUE)) %>%
+                          dmy = dmy(.data$var, quiet = TRUE),
+                          dym = dym(.data$var, quiet = TRUE),
+                          ymd = ymd(.data$var, quiet = TRUE),
+                          ydm = ydm(.data$var, quiet = TRUE),
+                          mdy = mdy(.data$var, quiet = TRUE),
+                          myd = myd(.data$var, quiet = TRUE)) %>%
                         ungroup %>%
                         summarise(across(c(.data$dmy,.data$dym,.data$ymd,.data$ydm,.data$mdy,.data$myd), ~ n_distinct(., na.rm = TRUE))) %>%
                         tidyr::pivot_longer(cols = everything(), names_to = "Date format", values_to = "nb_values") %>%
@@ -77,7 +77,7 @@ guess_date_format <- function(tbl, col = NULL){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr lubridate
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -93,12 +93,12 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd")){
     else{
 
       test[i] <-
-        c(if("dmy" %in% format & !is.na(lubridate::dmy(x[i], quiet = TRUE))) "dmy",
-          if("dym" %in% format & !is.na(lubridate::dym(x[i], quiet = TRUE))) "dym",
-          if("ymd" %in% format & !is.na(lubridate::ymd(x[i], quiet = TRUE))) "ymd",
-          if("ydm" %in% format & !is.na(lubridate::ydm(x[i], quiet = TRUE))) "ydm",
-          if("mdy" %in% format & !is.na(lubridate::mdy(x[i], quiet = TRUE))) "mdy",
-          if("myd" %in% format & !is.na(lubridate::myd(x[i], quiet = TRUE))) "myd") %>% toString }}
+        c(if("dmy" %in% format & !is.na(dmy(x[i], quiet = TRUE))) "dmy",
+          if("dym" %in% format & !is.na(dym(x[i], quiet = TRUE))) "dym",
+          if("ymd" %in% format & !is.na(ymd(x[i], quiet = TRUE))) "ymd",
+          if("ydm" %in% format & !is.na(ydm(x[i], quiet = TRUE))) "ydm",
+          if("mdy" %in% format & !is.na(mdy(x[i], quiet = TRUE))) "mdy",
+          if("myd" %in% format & !is.na(myd(x[i], quiet = TRUE))) "myd") %>% toString }}
 
   test <- test %>% na_if("")
 
@@ -121,7 +121,7 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd")){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr lubridate
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -131,19 +131,19 @@ as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd")){
 
   for(i in 1:length(date)){
 
-    if(is.na(date[i])) {date[i] <- lubridate::NA_Date_}
+    if(is.na(date[i])) {date[i] <- NA_Date_}
 
     else{if(stringr::str_detect(date[i], ",")) {
-      warning(paste0("Ambiguous date format (",date[i],"). Please provide format in parameters")) ; date[i] <- lubridate::NA_Date_}
+      warning(paste0("Ambiguous date format (",date[i],"). Please provide format in parameters")) ; date[i] <- NA_Date_}
 
       else{
         date[i] <- do.call(date[i], list(x[i])) %>% as.character()
       }}
 
-    date[i] <- ifelse(is.na(date[i]), lubridate::as_date(x[i]) %>% as.character(), date[i])
+    date[i] <- ifelse(is.na(date[i]), as_date(x[i]) %>% as.character(), date[i])
   }
 
-  date = lubridate::ymd(date)
+  date = ymd(date)
 
   return(date)
 }

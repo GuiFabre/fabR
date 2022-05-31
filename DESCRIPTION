@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions For Lazy Person I Am 
-Version: 1.0.1
+Version: 1.0.2
 Author: Guillaume Fabre
 Authors@R: 
     c(person(given = "Guillaume",
