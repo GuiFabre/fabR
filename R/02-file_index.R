@@ -130,7 +130,7 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
 #' # Example 1: xxx
 #' }
 #'
-#' @import dplyr
+#' @import dplyr fs
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -139,32 +139,30 @@ file_index_search <- function(index = tibble(), file_path = "", file_name = "", 
   index      <- if(purrr::is_empty(index)) {
     file_index_create(folder = getwd())
     }else{index}
-  file_path  <- file_path
-  file_name  <- file_name
-  extension  <- extension
-  file_type  <- file_type
+  temp_file_path  <- file_path
+  temp_file_name  <- file_name
+  temp_extension  <- extension
+  temp_file_type  <- file_type
 
   index <-
     index %>%
-    filter(stringr::str_detect(string = file_path,  pattern = file_path)) %>%
-    filter(stringr::str_detect(string = file_name,  pattern = file_name))  %>%
-    filter(stringr::str_detect(string = file_type,  pattern = file_type))  %>%
-    filter(stringr::str_detect(string = extension,  pattern = extension))
+    filter(stringr::str_detect(string = .data$file_path,  pattern = temp_file_path)) %>%
+    filter(stringr::str_detect(string = .data$file_name,  pattern = file_name)) %>%
+    filter(stringr::str_detect(string = .data$file_type,  pattern = file_type)) %>%
+    filter(stringr::str_detect(string = .data$extension,  pattern = extension))
 
   if(.fs_tree == TRUE){
     # visualization of the dir tree
-    temporary_folder <- fs::path_temp() %>% basename
-    fs::dir_create(temporary_folder)
+    temporary_folder <- path_temp() %>% basename
+    dir_create(temporary_folder)
     folder_tp <- stringr::str_remove(string = index$file_path, pattern = dirname(index$folder_path))
     for(i in folder_tp){
-      fs::dir_create(paste0(temporary_folder,"/",dirname(i)))
-      fs::file_create(paste0(temporary_folder,"/",i))}
-    fs::dir_tree(paste0(temporary_folder))
-    fs::dir_delete(temporary_folder)
+      dir_create(paste0(temporary_folder,"/",dirname(i)))
+      file_create(paste0(temporary_folder,"/",i))}
+    dir_tree(paste0(temporary_folder))
+    dir_delete(temporary_folder)
   }
-
   return(index)
-
 }
 
 #' Read, source and open objects from an index of files
