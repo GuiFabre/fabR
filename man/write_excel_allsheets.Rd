@@ -4,12 +4,12 @@
 \alias{write_excel_allsheets}
 \title{Write all Excel sheets using xlsx::write.xlsx recursively}
 \usage{
-write_excel_allsheets(filename, list)
+write_excel_allsheets(list, filename)
 }
 \arguments{
-\item{filename}{A character string of the path of the Excel file.}
-
 \item{list}{R objects, coma separated.}
+
+\item{filename}{A character string of the path of the Excel file.}
 }
 \description{
 The R objects are read and the content is placed in separated sheets.

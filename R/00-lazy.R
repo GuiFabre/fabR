@@ -125,8 +125,8 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' This function is inspired by the function proposed in
 #' https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 #'
-#' @param filename A character string of the path of the Excel file.
 #' @param list R objects, coma separated.
+#' @param filename A character string of the path of the Excel file.
 #'
 #'
 #' @examples
@@ -139,7 +139,7 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-write_excel_allsheets <- function (filename, list){
+write_excel_allsheets <- function (list, filename){
 
   objnames <- list %>% names
   fargs <- as.list(match.call(expand.dots = TRUE))

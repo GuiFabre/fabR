@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions For the Lazy Person I Am 
-Version: 1.0.2
+Version: 1.0.3
 Author: Guillaume Fabre
 Authors@R: 
     c(person(given = "Guillaume",
@@ -9,9 +9,8 @@ Authors@R:
              role = c("aut", "cre"),
              email = "guijoseph.fabre@gmail.com"))
 Maintainer: Guillaume Fabre <guijoseph.fabre@gmail.com> 
-Description: More about what it does (maybe more than one line)
-    The goal of this package is to provide wrapper functions in the data cleaning 
-    and cleansing process.
+Description: The goal of this package is to provide wrapper functions in the data
+cleaning and cleansing process.
 License: GPL-3
 LazyData: true
 Depends: R (>= 3.4)
