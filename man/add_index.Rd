@@ -2,26 +2,39 @@
 % Please edit documentation in R/00-lazy.R
 \name{add_index}
 \alias{add_index}
-\title{xxx xxx xxx}
+\title{Add an index column at the first place of a tibble}
 \usage{
-add_index(tibble, name_index = "index")
+add_index(tbl, name_index = "index", .force = FALSE)
 }
 \arguments{
-\item{tibble}{xxx xxx xxx}
+\item{tbl}{tibble or data frame}
 
-\item{name_index}{xxx xxx xxx}
+\item{name_index}{A character string of the name of the column.}
+
+\item{.force}{TRUE or FALSE, that parameter indicates wheter or not the column
+is created if already exists. FALSE by default.}
 }
 \value{
-xxx xxx xxx.
+A tibble or a data frame containing one extra first column 'index' or
+any given name.
 }
 \description{
-xxx xxx xxx.
+Add an index, possibly by group, at the first place of a data frame or a tibble
+The name by default is 'index' but can be named. If 'index' already exists, or
+the given name, the column can be forced to be created, and replace the other
+one
 }
 \examples{
 \dontrun{
 
-# Example 1: xxx xxx xxx.
+tbl = tibble(iris)
+name_index = "Species"
+.force = FALSE
+.force = TRUE
 
+tibble(iris) \%>\% add_index
+add_index(tibble(iris), name_index = 'Species')
+add_index(tibble(iris), name_index = name_index, .force = TRUE)
 
 }
 

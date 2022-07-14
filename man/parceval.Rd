@@ -2,25 +2,65 @@
 % Please edit documentation in R/00-lazy.R
 \name{parceval}
 \alias{parceval}
-\title{xxx}
+\title{Shortcut to turn String character into R code}
 \usage{
 parceval(...)
 }
 \arguments{
-\item{...}{String character to put in a message}
-}
-\value{
-A list of tibbles corresponding to the sheets read, or a single tibble
-if the number of sheets is one.
+\item{...}{String character to be parsed and evaluated}
 }
 \description{
-xxx
+Shortcut to [base::parse()] and [base::eval()]uate content of a character string,
+and turn it into runable R code. This function is targeted for interaction with
+external files (where content is stored in text format) ; for tidy elements where
+code content is generated using [tidyr::mutate()], combined with [base::paste0()] ;
+in for while, map, etc. loops where character string content can be indexed or
+iteratively generated and evaluated ; objects to be created (using assign, <- or
+<<- obj) where the name of the content is stored in a string. Some issues may occur
+when parceval is used in a different environment, such as in a function.
+Prefer eval(parse(text = ...) instead.
 }
 \examples{
 \dontrun{
 # example xxx
 
-xxx
+
+# Simple assignation will assignate 'b' in parceval environment (which is associated
+# to a function and different from .GlobalEnv, by definition).
+# Double assignation will put 'b' in .GlobalEnv.
+# (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
+a <- 1
+parceval("b <<- 1")
+print(a)
+print(b)
+
+parceval("b <<- b + a")
+print(b)
+
+my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
+parceval(my_code)
+
+# use rowwise to directly use parceval in a tibble, or use a for loop.
+as_tibble(cars) \%>\%
+mutate(
+  to_eval = paste0(speed,"/",dist)) \%>\%
+rowwise() \%>\%
+mutate(
+  eval = parceval(to_eval))
+
+# parceval can be parcevaled itself!
+
+code_R <-
+'as_tibble(cars) \%>\%
+  mutate(
+    to_eval = paste0(speed,"/",dist)) \%>\%
+  rowwise() \%>\%
+  mutate(
+    eval = parceval(to_eval))'
+
+code_R \%>\% cat
+code_R \%>\% parceval
+
 
 }
 

@@ -2,25 +2,23 @@
 % Please edit documentation in R/00-lazy.R
 \name{silently_run}
 \alias{silently_run}
-\title{xxx}
+\title{Shortcut to silently run a code chunk avoiding error (with try), messages and warnings}
 \usage{
 silently_run(...)
 }
 \arguments{
-\item{...}{String character to put in a message}
-}
-\value{
-A list of tibbles corresponding to the sheets read, or a single tibble
-if the number of sheets is one.
+\item{...}{R code}
 }
 \description{
-xxx
+Shortcut avoiding user to get messages, warnings and being stopped by an error.
+The usage is very similar to [base::suppressWarnings()]. This function is targeted
+for function creators where user experience enhancement is sought.
 }
 \examples{
 \dontrun{
 # example xxx
 
-xxx
+silently_run()
 
 }
 

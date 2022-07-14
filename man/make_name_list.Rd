@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-lazy.R
 \name{make_name_list}
 \alias{make_name_list}
-\title{xxx xxx xxx}
+\title{Shortcut to create beautiful names in a list}
 \usage{
 make_name_list(args_list, list_elem)
 }
@@ -15,13 +15,41 @@ make_name_list(args_list, list_elem)
 xxx xxx xxx.
 }
 \description{
-xxx xxx xxx.
+Generate a name for an element in a list. This function is targeted for functions
+creations which handle lists. Those lists may need names to go through each elements.
+This function works with [stats::setNames()] and allows the user to provide name
+shorter, more user-friendly in their lists.
 }
 \examples{
 \dontrun{
 
-# Example 1: xxx xxx xxx.
-# Example 1: xxx
+# make_name_list generates names that are informative through a line of code or
+function. tibble(iris), iris \%>\% tibble and list(iris = tibble(mytibble) \%>\% select(Species))
+will have 'iris' as name,
+
+list(tibble(iris), tibble(mtcars)) \%>\%
+  setNames(
+    make_name_list(.,
+       args_list = c(
+          "IRIS \%>\% complicated_code",
+          "complicated_function(MTCARS)")))
+
+
+make_name_list can be used when a function uses arguments provided by the user
+to generate a list. The name is simplified and given to the list itself
+my_function <- function(df){
+
+  .fargs <- as.list(match.call(expand.dots = TRUE))
+
+  list_df <-
+    list(df) \%>\%
+    stats::setNames(make_name_list(.,as.character(.fargs['df'])))
+
+  return(list_df)
+}
+
+my_function(iris \%>\% as_tibble \%>\% select(Species))
+my_function(iris \%>\% as_tibble \%>\% select(Species))
 
 }
 

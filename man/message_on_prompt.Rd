@@ -2,24 +2,24 @@
 % Please edit documentation in R/00-lazy.R
 \name{message_on_prompt}
 \alias{message_on_prompt}
-\title{xxx}
+\title{Shortcut to display a message and acceptation on prompt}
 \usage{
 message_on_prompt(...)
 }
 \arguments{
 \item{...}{String character to put in a message}
 }
-\value{
-xxx
-}
 \description{
-xxx
+Shortcut allowing to provide user a prompt and a message that is to be read and
+validated before pursuing process. This function is targeted for function creators
+where user interaction is required.
 }
 \examples{
 \dontrun{
 # example xxx
 
-xxx
+message_on_prompt("Do you want continue? Press \dontrun{[enter]} to continue or
+\dontrun{[esc]} to skip this part" )
 
 }
 

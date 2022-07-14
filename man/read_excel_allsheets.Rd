@@ -18,10 +18,11 @@ if the number of sheets is one.
 \description{
 The Excel file is read and the content is placed in a list of tibbles, with each
 sheet in a separate element in the list. If the Excel file has only one sheet,
-the output is a single tibble.
+the output is a single tibble. See [readxl::read_excel()]
 }
 \examples{
 \dontrun{
+
 # xxx
 
 
