@@ -1,16 +1,17 @@
-#' xxx
+#' Shortcut to display a message and acceptation on prompt
 #'
-#' xxx
+#' Shortcut allowing to provide user a prompt and a message that is to be read and
+#' validated before pursuing process. This function is targeted for function creators
+#' where user interaction is required.
 #'
 #' @param ... String character to put in a message
-#'
-#' @return xxx
 #'
 #' @examples
 #' \dontrun{
 #' # example xxx
 #'
-#' xxx
+#' message_on_prompt("Do you want continue? Press \dontrun{[enter]} to continue or
+#' \dontrun{[esc]} to skip this part" )
 #'
 #' }
 #'
@@ -22,20 +23,20 @@ message_on_prompt <- function(...){
   invisible(readline(cat(prompt = paste(...))))
 }
 
-#' xxx
+#' Shortcut to silently run a code chunk avoiding error (with try), messages and warnings
 #'
-#' xxx
+#' Shortcut avoiding user to get messages, warnings and being stopped by an error.
+#' The usage is very similar to [base::suppressWarnings()]. This function is targeted
+#' for function creators where user experience enhancement is sought.
 #'
-#' @param ... String character to put in a message
+#' @param ... R code
 #'
-#' @return A list of tibbles corresponding to the sheets read, or a single tibble
-#' if the number of sheets is one.
 #'
 #' @examples
 #' \dontrun{
 #' # example xxx
 #'
-#' xxx
+#' silently_run()
 #'
 #' }
 #'
@@ -47,20 +48,62 @@ silently_run <- function(...){
   return(suppressWarnings(suppressMessages(try(...,silent = TRUE))))
 }
 
-#' xxx
+#' Shortcut to turn String character into R code
 #'
-#' xxx
+#' Shortcut to [base::parse()] and [base::eval()]uate content of a character string,
+#' and turn it into runable R code. This function is targeted for interaction with
+#' external files (where content is stored in text format) ; for tidy elements where
+#' code content is generated using [tidyr::mutate()], combined with [base::paste0()] ;
+#' in for while, map, etc. loops where character string content can be indexed or
+#' iteratively generated and evaluated ; objects to be created (using assign, <- or
+#' <<- obj) where the name of the content is stored in a string. Some issues may occur
+#' when parceval is used in a different environment, such as in a function.
+#' Prefer eval(parse(text = ...) instead.
 #'
-#' @param ... String character to put in a message
+#' @param ... String character to be parsed and evaluated
 #'
-#' @return A list of tibbles corresponding to the sheets read, or a single tibble
-#' if the number of sheets is one.
 #'
 #' @examples
 #' \dontrun{
 #' # example xxx
 #'
-#' xxx
+#'
+#' # Simple assignation will assignate 'b' in parceval environment (which is associated
+#' # to a function and different from .GlobalEnv, by definition).
+#' # Double assignation will put 'b' in .GlobalEnv.
+#' # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
+#' a <- 1
+#' parceval("b <<- 1")
+#' print(a)
+#' print(b)
+#'
+#' parceval("b <<- b + a")
+#' print(b)
+#'
+#' my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
+#' parceval(my_code)
+#'
+#' # use rowwise to directly use parceval in a tibble, or use a for loop.
+#' as_tibble(cars) %>%
+#' mutate(
+#'   to_eval = paste0(speed,"/",dist)) %>%
+#' rowwise() %>%
+#' mutate(
+#'   eval = parceval(to_eval))
+#'
+#' # parceval can be parcevaled itself!
+#'
+#' code_R <-
+#' 'as_tibble(cars) %>%
+#'   mutate(
+#'     to_eval = paste0(speed,"/",dist)) %>%
+#'   rowwise() %>%
+#'   mutate(
+#'     eval = parceval(to_eval))'
+#'
+#' code_R %>% cat
+#' code_R %>% parceval
+#'
 #'
 #' }
 #'
@@ -76,7 +119,7 @@ parceval <- function(...){
 #'
 #' The Excel file is read and the content is placed in a list of tibbles, with each
 #' sheet in a separate element in the list. If the Excel file has only one sheet,
-#' the output is a single tibble.
+#' the output is a single tibble. See [readxl::read_excel()]
 #'
 #' @param filename A character string of the path of the Excel file.
 #' @param sheets A vector containing only the sheets to be read.
@@ -86,6 +129,7 @@ parceval <- function(...){
 #'
 #' @examples
 #' \dontrun{
+#'
 #' # xxx
 #'
 #'
@@ -185,20 +229,32 @@ read_csv_any_formats <- function(csv_name){
   return(csv)
 }
 
-#' xxx xxx xxx
+#' Add an index column at the first place of a tibble
 #'
-#' xxx xxx xxx.
+#' Add an index, possibly by group, at the first place of a data frame or a tibble
+#' The name by default is 'index' but can be named. If 'index' already exists, or
+#' the given name, the column can be forced to be created, and replace the other
+#' one
 #'
-#' @param tibble xxx xxx xxx
-#' @param name_index xxx xxx xxx
+#' @param tbl tibble or data frame
+#' @param name_index A character string of the name of the column.
+#' @param .force TRUE or FALSE, that parameter indicates wheter or not the column
+#' is created if already exists. FALSE by default.
 #'
-#' @return xxx xxx xxx.
+#' @return A tibble or a data frame containing one extra first column 'index' or
+#' any given name.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
+#' tbl = tibble(iris)
+#' name_index = "Species"
+#' .force = FALSE
+#' .force = TRUE
 #'
+#' tibble(iris) %>% add_index
+#' add_index(tibble(iris), name_index = 'Species')
+#' add_index(tibble(iris), name_index = name_index, .force = TRUE)
 #'
 #' }
 #'
@@ -206,34 +262,60 @@ read_csv_any_formats <- function(csv_name){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-add_index <- function(tibble, name_index = "index"){
+add_index <- function(tbl, name_index = "index", .force = FALSE){
 
-  tibble <- tibble %>% tibble::add_column(!!! name_index) %>%
-    select(last_col(), everything())
+  if(.force == FALSE){
 
-  repair_name <- tibble %>% ungroup() %>% select(1) %>% janitor::clean_names() %>% names
-  tibble_name <- tibble %>% ungroup() %>% select(-1) %>% names
+    if(name_index %in% (tbl %>% names)){
+      stop(paste0("\n\nThe column ",name_index," already exists.\n",
+                  "Please specifie another name or use .force = TRUE\n"))}
 
-  tibble <-
-    stats::setNames(tibble, c(repair_name, tibble_name)) %>%
-    mutate(across(all_of(name_index), ~ row_number()))
-  return(tibble)  }
+    tbl <-
+      tbl %>%
+      tibble::add_column(!! name_index,.before = TRUE) %>%
+      rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
+      mutate(across(all_of(name_index), ~ row_number()))
+    }
+
+  if(.force == TRUE){
+    tbl <-
+      tbl %>%
+      select(-any_of(name_index)) %>%
+      tibble::add_column(!! name_index,.before = TRUE) %>%
+      rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
+      mutate(across(all_of(name_index), ~ row_number()))
+    }
+
+  return(tbl)
+}
 
 
-#' xxx xxx xxx
+#' Get the paths of branches in a list
 #'
-#' xxx xxx xxx.
+#' Function that recursively go through a list object and store in a tibble the path
+#' of each element in the list. The paths can be after that edited and accessed using
+#' [fabR::parceval()] for example.
 #'
-#' @param map_list xxx xxx xxx
-#' @param .obj xxx xxx xxx
+#' @param list_obj R list object to be evaluated
+#' @param .map_list non usable parameter. This parameter is only there to ensure
+#' recursivity. Any modification of this object returns NULL
 #'
-#' @return xxx xxx xxx.
+#' @return A tibble containing all the paths of each element of the list and the
+#' class of each leaf (can be a list, or R objects).
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
+#' MyList <-
+#' list(
+#'   My_iris = tibble(iris),
+#'   My_car = list(
+#'     car_data = tibble(cars),
+#'     model_data = tibble(mtcars)
+#'     )
+#' )
 #'
+#' get_path_list(MyList)#'
 #'
 #' }
 #'
@@ -241,28 +323,28 @@ add_index <- function(tibble, name_index = "index"){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-get_index_list     <- function(.obj, map_list = NULL){
+get_path_list     <- function(list_obj, .map_list = NULL){
 
-  if(is.null(map_list)){
+  if(is.null(.map_list)){
 
-    map_list <-
-      tibble(root_name = quote(.obj) %>% as.character()) %>%
+    .map_list <-
+      tibble(root_name = quote(list_obj) %>% as.character()) %>%
       mutate(
         leaf_class = eval(parse(text = paste0(.data$root_name," %>% class %>% toString()"))))
 
-    map_list <- list(
-      map_list = map_list,
-      big_list = map_list
+    .map_list <- list(
+      map_list = .map_list,
+      big_list = .map_list
     )
 
-    return(get_index_list(.obj, map_list))
+    return(get_path_list(list_obj, .map_list))
 
   }else{
 
-    while(stringr::str_detect(map_list$map_list$leaf_class %>% toString, "list")){
+    while(stringr::str_detect(.map_list$map_list$leaf_class %>% toString, "list")){
 
-      map_list$map_list <-
-        map_list$map_list %>%
+      .map_list$map_list <-
+        .map_list$map_list %>%
         rowwise() %>%
         mutate(
           leaf_name = names(eval(parse(text = .data$root_name))) %>% toString()) %>%
@@ -275,19 +357,23 @@ get_index_list     <- function(.obj, map_list = NULL){
           leaf_class = .data$leaf_class2) %>%
         select(.data$root_name, .data$leaf_class)
 
-      map_list$big_list <-
-        map_list$big_list %>%
-        bind_rows(map_list$map_list) %>%
+      .map_list$big_list <-
+        .map_list$big_list %>%
+        bind_rows(.map_list$map_list) %>%
         distinct
 
-      return(get_index_list(.obj, map_list))}}
+      return(get_path_list(list_obj, .map_list))}}
 
-  return(map_list$big_list)
+  return(.map_list$big_list)
 }
 
-#' xxx xxx xxx
+
+#' Shortcut to create beautiful names in a list
 #'
-#' xxx xxx xxx.
+#' Generate a name for an element in a list. This function is targeted for functions
+#' creations which handle lists. Those lists may need names to go through each elements.
+#' This function works with [stats::setNames()] and allows the user to provide name
+#' shorter, more user-friendly in their lists.
 #'
 #' @param args_list xxx xxx xxx
 #' @param list_elem xxx xxx xxx
@@ -297,8 +383,33 @@ get_index_list     <- function(.obj, map_list = NULL){
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
-#' # Example 1: xxx
+#' # make_name_list generates names that are informative through a line of code or
+#' function. tibble(iris), iris %>% tibble and list(iris = tibble(mytibble) %>% select(Species))
+#' will have 'iris' as name,
+#'
+#' list(tibble(iris), tibble(mtcars)) %>%
+#'   setNames(
+#'     make_name_list(.,
+#'        args_list = c(
+#'           "IRIS %>% complicated_code",
+#'           "complicated_function(MTCARS)")))
+#'
+#'
+#' make_name_list can be used when a function uses arguments provided by the user
+#' to generate a list. The name is simplified and given to the list itself
+#' my_function <- function(df){
+#'
+#'   .fargs <- as.list(match.call(expand.dots = TRUE))
+#'
+#'   list_df <-
+#'     list(df) %>%
+#'     stats::setNames(make_name_list(.,as.character(.fargs['df'])))
+#'
+#'   return(list_df)
+#' }
+#'
+#' my_function(iris %>% as_tibble %>% select(Species))
+#' my_function(iris %>% as_tibble %>% select(Species))
 #'
 #' }
 #'
