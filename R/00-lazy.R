@@ -238,6 +238,7 @@ read_csv_any_formats <- function(csv_name){
 #'
 #' @param tbl tibble or data frame
 #' @param name_index A character string of the name of the column.
+#' @param start integer indicating firt index number. 1 by default.
 #' @param .force TRUE or FALSE, that parameter indicates wheter or not the column
 #' is created if already exists. FALSE by default.
 #'
@@ -262,7 +263,7 @@ read_csv_any_formats <- function(csv_name){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-add_index <- function(tbl, name_index = "index", .force = FALSE){
+add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
   if(.force == FALSE){
 
@@ -274,7 +275,7 @@ add_index <- function(tbl, name_index = "index", .force = FALSE){
       tbl %>%
       tibble::add_column(!! name_index,.before = TRUE) %>%
       rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
-      mutate(across(all_of(name_index), ~ row_number()))
+      mutate(across(all_of(name_index), ~ row_number() + start - 1))
     }
 
   if(.force == TRUE){
@@ -283,7 +284,7 @@ add_index <- function(tbl, name_index = "index", .force = FALSE){
       select(-any_of(name_index)) %>%
       tibble::add_column(!! name_index,.before = TRUE) %>%
       rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
-      mutate(across(all_of(name_index), ~ row_number()))
+      mutate(across(all_of(name_index), ~ row_number() + start - 1))
     }
 
   return(tbl)

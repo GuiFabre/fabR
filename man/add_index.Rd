@@ -4,12 +4,14 @@
 \alias{add_index}
 \title{Add an index column at the first place of a tibble}
 \usage{
-add_index(tbl, name_index = "index", .force = FALSE)
+add_index(tbl, name_index = "index", start = 1, .force = FALSE)
 }
 \arguments{
 \item{tbl}{tibble or data frame}
 
 \item{name_index}{A character string of the name of the column.}
+
+\item{start}{integer indicating firt index number. 1 by default.}
 
 \item{.force}{TRUE or FALSE, that parameter indicates wheter or not the column
 is created if already exists. FALSE by default.}
