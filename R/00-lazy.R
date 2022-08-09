@@ -50,13 +50,13 @@ silently_run <- function(...){
 
 #' Shortcut to turn String character into R code
 #'
-#' Shortcut to [base::parse()] and [base::eval()]uate content of a character string,
+#' Shortcut to [base::parse()] and [base::eval()]uate R expression in a character string,
 #' and turn it into runable R code. This function is targeted for interaction with
-#' external files (where content is stored in text format) ; for tidy elements where
-#' code content is generated using [tidyr::mutate()], combined with [base::paste0()] ;
-#' in for while, map, etc. loops where character string content can be indexed or
+#' external files (where expression is stored in text format) ; for tidy elements where
+#' code expression is generated using [tidyr::mutate()], combined with [base::paste0()] ;
+#' in for while, map, etc. loops where character string expression can be indexed or
 #' iteratively generated and evaluated ; objects to be created (using assign, <- or
-#' <<- obj) where the name of the content is stored in a string. Some issues may occur
+#' <<- obj) where the name of the R object is stored in a string. Some issues may occur
 #' when parceval is used in a different environment, such as in a function.
 #' Prefer eval(parse(text = ...) instead.
 #'
@@ -117,7 +117,7 @@ parceval <- function(...){
 
 #' Read all Excel sheets using readxl::read_excel recursively
 #'
-#' The Excel file is read and the content is placed in a list of tibbles, with each
+#' The Excel file is read and the values are placed in a list of tibbles, with each
 #' sheet in a separate element in the list. If the Excel file has only one sheet,
 #' the output is a single tibble. See [readxl::read_excel()]
 #'
@@ -165,7 +165,7 @@ read_excel_allsheets <- function(filename, sheets = "") {
 
 #' Write all Excel sheets using xlsx::write.xlsx recursively
 #'
-#' The R objects are read and the content is placed in separated sheets.
+#' The R objects are read and the values are placed in separated sheets.
 #' This function is inspired by the function proposed in
 #' https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 #'

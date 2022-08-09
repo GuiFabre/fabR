@@ -45,7 +45,7 @@ non-valid and missing values.
 Missing values can be given as input to non-valid and valid values separately, or
 grouped by another column. The output can be editable (using plotly library) or static
 (using ggplot2 library). The R-code is also editable for coding recycling purpose.
-The user can download the content of the datatable in csv format.
+The user can download the datatable in csv format.
 }
 \examples{
 \dontrun{

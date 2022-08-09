@@ -13,7 +13,7 @@ the current folder is the default}
 \item{pattern}{A character string defining a pattern to sub-select within folder.
 Can be useful for excluding certain folders from indexing (matching by regex is supported).}
 
-\item{negate}{If TRUE, return non-matching elements.}
+\item{negate}{logical. If TRUE, return non-matching elements.}
 }
 \value{
 A tibble with folder_path, file_path, file_name, extension, file_type

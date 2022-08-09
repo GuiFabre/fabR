@@ -12,7 +12,7 @@ write_excel_allsheets(list, filename)
 \item{filename}{A character string of the path of the Excel file.}
 }
 \description{
-The R objects are read and the content is placed in separated sheets.
+The R objects are read and the values are placed in separated sheets.
 This function is inspired by the function proposed in
 https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 }

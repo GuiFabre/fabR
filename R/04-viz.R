@@ -1,7 +1,7 @@
 #' Draw bar plot of one (possibly grouped) open-text column in a tbl
 #'
 #' This function draws a bar plot of the values of open text column. This
-#' plot shows the x-th first most cited words in a column having open text content using
+#' plot shows the x-th first most cited words in a column having open text values using
 #' tidytext library.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -747,7 +747,7 @@ plot_pie_valid_value  <- function(tbl = "iris", col = "Species", filter = 'c()',
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
-#' The user can download the content of the datatable in csv format.
+#' The user can download the datatable in csv format.
 #'
 #' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
@@ -795,9 +795,9 @@ summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', neg
     "  mutate(", col," = as.character(",col, ")) %>% "                       ,"\n",
     "  group_by(", col,",", group_by,") %>% count %>% "                      ,"\n",
     "  select(2, 3, 1) %>% mutate(", col, " = replace_na(", col, ", '-')) %>% "   ,"\n",
-    "  rename(`Content` = 1, `Number of answers` = 2) %>% "                ,"\n",
-    "  arrange(`Content`,desc(`Number of answers`)) %>% "                  ,"\n",
-    "  mutate(`Content` = na_if(`Content`,'')) %>%"                        ,"\n",
+    "  rename(`Values` = 1, `Number of answers` = 2) %>% "                ,"\n",
+    "  arrange(`Values`,desc(`Number of answers`)) %>% "                  ,"\n",
+    "  mutate(`Values` = na_if(`Values`,'')) %>%"                        ,"\n",
     "    remove_empty(which = 'cols') %>%"                                 ,"\n",
     "  DT::datatable( "                                                        ,"\n",
     "    class = 'cell-border stripe', rownames = FALSE,"                  ,"\n",
@@ -819,7 +819,7 @@ summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
-#' The user can download the content of the datatable in csv format.
+#' The user can download the datatable in csv format.
 #'
 #' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string specifying a column of interest
@@ -929,7 +929,7 @@ summary_numerical     <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
 #' (using ggplot2 library). The R-code is also editable for coding recycling purpose.
-#' The user can download the content of the datatable in csv format.
+#' The user can download the datatable in csv format.
 #'
 #' @param tbl A character string or tibble specifying the input tbl
 #' @param col A character string of a column of interest

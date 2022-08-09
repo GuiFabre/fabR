@@ -16,7 +16,7 @@ A list of tibbles corresponding to the sheets read, or a single tibble
 if the number of sheets is one.
 }
 \description{
-The Excel file is read and the content is placed in a list of tibbles, with each
+The Excel file is read and the values are placed in a list of tibbles, with each
 sheet in a separate element in the list. If the Excel file has only one sheet,
 the output is a single tibble. See [readxl::read_excel()]
 }

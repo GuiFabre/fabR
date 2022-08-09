@@ -10,13 +10,13 @@ parceval(...)
 \item{...}{String character to be parsed and evaluated}
 }
 \description{
-Shortcut to [base::parse()] and [base::eval()]uate content of a character string,
+Shortcut to [base::parse()] and [base::eval()]uate R expression in a character string,
 and turn it into runable R code. This function is targeted for interaction with
-external files (where content is stored in text format) ; for tidy elements where
-code content is generated using [tidyr::mutate()], combined with [base::paste0()] ;
-in for while, map, etc. loops where character string content can be indexed or
+external files (where expression is stored in text format) ; for tidy elements where
+code expression is generated using [tidyr::mutate()], combined with [base::paste0()] ;
+in for while, map, etc. loops where character string expression can be indexed or
 iteratively generated and evaluated ; objects to be created (using assign, <- or
-<<- obj) where the name of the content is stored in a string. Some issues may occur
+<<- obj) where the name of the R object is stored in a string. Some issues may occur
 when parceval is used in a different environment, such as in a function.
 Prefer eval(parse(text = ...) instead.
 }

@@ -46,7 +46,7 @@ bar plot object
 }
 \description{
 This function draws a bar plot of the values of open text column. This
-plot shows the x-th first most cited words in a column having open text content using
+plot shows the x-th first most cited words in a column having open text values using
 tidytext library.
 Missing values can be given as input to non-valid and valid values separately, or
 grouped by another column. The output can be editable (using plotly library) or static

@@ -14,7 +14,7 @@
 #' the current folder is the default
 #' @param pattern A character string defining a pattern to sub-select within folder.
 #' Can be useful for excluding certain folders from indexing (matching by regex is supported).
-#' @param negate If TRUE, return non-matching elements.
+#' @param negate logical. If TRUE, return non-matching elements.
 #'
 #' @return A tibble with folder_path, file_path, file_name, extension, file_type
 #' columns and a last column to_eval which is R code in a character vector to read
