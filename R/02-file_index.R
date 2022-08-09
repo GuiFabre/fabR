@@ -65,15 +65,16 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
         extension = tools::file_ext(.data$file_path),
         extension = ifelse(nchar(.data$extension) == 0,.data$file_name,.data$extension),
         to_eval = case_when(
-          extension == "spss"      ~ paste0("haven::read_spss('",.data$file_path,"')"),
-          extension == "sav"       ~ paste0("haven::read_spss('",.data$file_path,"')"),
-          extension == "dta"       ~ paste0("haven::read_dta('",.data$file_path,"')"),
-          extension == "sas7bdat"  ~ paste0("haven::read_sas('",.data$file_path,"')"),
-          extension == "sas"       ~ paste0("haven::read_sas('",.data$file_path,"')"),
-          extension == "xlsx"      ~ paste0("read_excel_allsheets('",.data$file_path,"')"),
-          extension == "csv"       ~ paste0("suppressMessages(read_csv_any_formats('",.data$file_path,"'))"),
-          extension == "R"         ~ paste0("source('",.data$file_path,"')"),
-          TRUE                     ~ NA_character_),
+          extension == "spss"         ~ paste0("haven::read_spss('",.data$file_path,"')"),
+          extension %in%c("Rmd","md") ~ paste0("readLines('",.data$file_path,"') %>% as_tibble()"),
+          extension == "sav"          ~ paste0("haven::read_spss('",.data$file_path,"')"),
+          extension == "dta"          ~ paste0("haven::read_dta('",.data$file_path,"')"),
+          extension == "sas7bdat"     ~ paste0("haven::read_sas('",.data$file_path,"')"),
+          extension == "sas"          ~ paste0("haven::read_sas('",.data$file_path,"')"),
+          extension == "xlsx"         ~ paste0("read_excel_allsheets('",.data$file_path,"')"),
+          extension == "csv"          ~ paste0("suppressMessages(read_csv_any_formats('",.data$file_path,"'))"),
+          extension == "R"            ~ paste0("source('",.data$file_path,"')"),
+          TRUE                        ~ NA_character_),
         file_type = case_when(
           extension %in%c("R","r")                            ~ "R script",
           extension %in%c("Rmd","md")                         ~ "Markdown file",
@@ -136,22 +137,14 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-file_index_search <- function(index = tibble(), file_path = "", file_name = "", extension = "", file_type = "", .fs_tree = TRUE){
-
-  index      <- if(purrr::is_empty(index)) {
-    file_index_create(folder = getwd())
-    }else{index}
-  temp_file_path  <- file_path
-  temp_file_name  <- file_name
-  temp_extension  <- extension
-  temp_file_type  <- file_type
+file_index_search <- function(index, file_path = "", file_name = "", extension = "", file_type = "", .fs_tree = TRUE){
 
   index <-
     index %>%
-    filter(stringr::str_detect(string = .data$file_path,  pattern = temp_file_path)) %>%
-    filter(stringr::str_detect(string = .data$file_name,  pattern = file_name)) %>%
-    filter(stringr::str_detect(string = .data$file_type,  pattern = file_type)) %>%
-    filter(stringr::str_detect(string = .data$extension,  pattern = extension))
+    filter(stringr::str_detect(string = .data$file_path,  pattern = !! file_path)) %>%
+    filter(stringr::str_detect(string = .data$file_name,  pattern = !! file_name)) %>%
+    filter(stringr::str_detect(string = .data$file_type,  pattern = !! file_type)) %>%
+    filter(stringr::str_detect(string = .data$extension,  pattern = !! extension))
 
   if(.fs_tree == TRUE){
     # visualization of the dir tree
@@ -204,7 +197,7 @@ file_index_search <- function(index = tibble(), file_path = "", file_name = "", 
 #' @importFrom rlang .data
 #' @export
 file_index_read <- function(
-  index = tibble::tibble(),
+  index,
   file_path = "",
   file_name = "",
   extension = "",
