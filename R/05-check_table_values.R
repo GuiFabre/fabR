@@ -1,20 +1,28 @@
-#' xxx xxx xxx
+#' Extract columns that have same values in a tibble
 #'
-#' xxx xxx xxx.
+#' This helper function extracts the names of the columns in a tibble having
+#' identical values for all observations.
 #'
-#' @param tbl xxx xxx xxx
+#' @param tbl R object(dataframe or tibble) of the input tbl
 #'
-#' @return xxx xxx xxx.
+#' @return A tibble indicating which columns which values is the same in
+#' the tibble
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
+#' mtcars_duplicated <-
+#'  mtcars %>%
+#'  mutate(
+#'   cyl_2 = cyl,
+#'   cyl_3 = cyl,
+#'   mpg_2 = mpg)
 #'
+#'  get_duplicated_cols(mtcars_duplicated)
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -52,32 +60,71 @@ get_duplicated_cols <- function(tbl){
 }
 
 
-#' xxx xxx xxx
+#' Extract observations(rows) that have same values in a tibble
 #'
-#' xxx xxx xxx.
+#' This helper function extracts the row number (or first column value) in a
+#' tibble having identical values for all columns. This function can be used
+#' either on the whole columns or excluding the first column (id) (which can be
+#' useful to identify repeated observation across different ids)
 #'
-#' @param tbl xxx xxx xxx
+#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param id_col A character string specifying the column to ignore in
+#' identification of repeated observations. If NULL (by default), all of the
+#' columns will be taken in account for repeated observation identification.
+#' The row number will be used to identify those observations.
 #'
-#' @return xxx xxx xxx.
+#' @return A tibble indicating which row which values is the same in
+#' the tibble
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
+#' # the row number is returned to identify which observations have repeated
+#' # values
+#' mtcars_duplicated <-
+#'   mtcars %>%
+#'   bind_rows(.,mtcars %>% slice(1)) %>%
+#'   as_tibble
 #'
+#' get_duplicated_rows(mtcars_duplicated)
+#'
+#' # the first column is returned to identify which observations have repeated
+#' values (Excluding the first column itseft)
+#'
+#' mtcars_duplicated <-
+#'   mtcars %>%
+#'   mutate(id_obs = rownames(mtcars)) %>%
+#'   bind_rows(.,
+#'             mtcars %>%
+#'               slice(1) %>%
+#'               mutate(id_obs = "new_observation")) %>%
+#'   select(id_obs, everything()) %>%
+#'   as_tibble()
+#'
+#' get_duplicated_rows(tbl = mtcars_duplicated, id_col = "id_obs")
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-get_duplicated_rows <- function(tbl){
+get_duplicated_rows <- function(tbl, id_col = NULL){
 
-  test <- tibble(condition = as.character(), name_var = as.character() )
+  test <- tibble(condition = as.character(), name_var = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
   test <- tbl %>% janitor::remove_empty("cols")
+
+  if(is.null(id_col)) {
+    tbl <- tbl %>% ungroup %>% add_index("__Mlstr_index__")
+    test <- test %>% add_index("__Mlstr_index__")
+  }else{
+
+    tbl  <- tbl %>% ungroup %>% select(!! id_col, everything())
+    test <- tbl %>% ungroup %>% select(!! id_col, everything())
+  }
+
   test <-
     test %>%
     select(sample(2:length(test), 50, replace = TRUE)) %>%
@@ -103,7 +150,7 @@ get_duplicated_rows <- function(tbl){
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
-#' @param tbl A character string or tibble of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tbl
 #'
 #' @return A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
@@ -117,7 +164,7 @@ get_duplicated_rows <- function(tbl){
 #' get_all_na_cols(iris %>% mutate(new_col = NA))
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -139,7 +186,7 @@ get_all_na_cols <- function(tbl){
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
-#' @param tbl A character string or tibble of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tbl
 #'
 #' @return A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
@@ -153,7 +200,7 @@ get_all_na_cols <- function(tbl){
 #' get_all_na_cols(iris %>% mutate(new_col = NA))
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -178,7 +225,7 @@ get_all_na_rows <- function(tbl){
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
-#' @param tbl A character string or tibble of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tbl
 #'
 #' @return A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
@@ -192,7 +239,7 @@ get_all_na_rows <- function(tbl){
 #' get_all_na_cols(iris %>% mutate(new_col = NA))
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
