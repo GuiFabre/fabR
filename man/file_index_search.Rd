@@ -5,7 +5,7 @@
 \title{Search an index of files}
 \usage{
 file_index_search(
-  index = tibble(),
+  index,
   file_path = "",
   file_name = "",
   extension = "",
