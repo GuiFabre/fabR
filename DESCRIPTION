@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions For the Lazy Person I Am 
-Version: 1.0.3
+Version: 1.0.4
 Author: Guillaume Fabre
 Authors@R: 
     c(person(given = "Guillaume",
@@ -30,6 +30,7 @@ Imports: dplyr,
     tibble,
     tidyr,
     writexl,
+    crayon,
     DT
 URL: https://github.com/GuiFabre/fabR/
 BugReports: https://github.com/GuiFabre/fabR/issues

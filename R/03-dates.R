@@ -131,19 +131,28 @@ as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd")){
 
   for(i in 1:length(date)){
 
-    if(is.na(date[i])) {date[i] <- NA_Date_
-    }else{if(stringr::str_detect(date[i], ",")) {
-      warning(paste0("Ambiguous date format (",date[i],"). Please provide format in parameters")) ; date[i] <- NA_Date_}
+    if(is.na(date[i])) {
+      date[i] <- NA_Date_
+      warning(
+"All formats failed to parse for some values.",
+"\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")
 
-      else{
-        date[i] <- do.call(date[i], list(x[i])) %>% as.character()
+
+    }else{if(stringr::str_detect(date[i], ",")) {
+      date[i] <- NA_Date_
+      warning(
+"Ambiguous date format (",date[i],"). Please provide format in parameters",
+"\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")
+
+      }else{
+        date[i] <- do.call(date[i], list(x[i])) %>% as.character
       }}
 
     # cant remember why this line
     # date[i] <- ifelse(is.na(date[i]), as_date(x[i]) %>% as.character(), date[i])
   }
 
-  date = ymd(date)
+  date <- ymd(date)
 
   return(date)
 }
