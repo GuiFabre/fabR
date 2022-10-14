@@ -129,10 +129,11 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @export
 as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
-  date <- which_any_date(x, format)
+  date <-
+    which_any_date(x, format) %>%
+    stringr::str_remove(pattern = ", as_date")
 
   for(i in 1:length(date)){
-
 
     test <- case_when(
       is.na(date[i]) & is.na(x[i])      ~ 1,
