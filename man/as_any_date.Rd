@@ -4,7 +4,7 @@
 \alias{as_any_date}
 \title{xxx xxx xxx}
 \usage{
-as_any_date(x, format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd"))
+as_any_date(x, format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "as_date"))
 }
 \arguments{
 \item{x}{object to be coerced.}

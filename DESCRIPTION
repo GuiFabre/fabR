@@ -34,6 +34,6 @@ Imports: dplyr,
     DT
 URL: https://github.com/GuiFabre/fabR/
 BugReports: https://github.com/GuiFabre/fabR/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 Encoding: UTF-8

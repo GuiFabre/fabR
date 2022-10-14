@@ -4,7 +4,10 @@
 \alias{which_any_date}
 \title{xxx xxx xxx}
 \usage{
-which_any_date(x, format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd"))
+which_any_date(
+  x,
+  format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "as_date")
+)
 }
 \arguments{
 \item{x}{object to be coerced.}
