@@ -156,10 +156,6 @@ as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as_da
 
   }
 
-    # cant remember why this line
-    # date[i] <- ifelse(is.na(date[i]), as_date(x[i]) %>% as.character(), date[i])
-  # }
-# }
   date <- ymd(date)
 
   return(date)

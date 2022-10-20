@@ -447,3 +447,35 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 
 }
 
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param ... xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @export
+as_any_boolean <- function(x){
+
+
+# to do xxx
+
+  return(x)
+}
+
+
+
+
