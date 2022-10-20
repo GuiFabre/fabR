@@ -102,9 +102,12 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
           if("myd" %in% format & !is.na(myd(x[i], quiet = TRUE))) "myd",
           if("as_date" %in% format & !is.na(suppressWarnings(as_date(x[i])))) "as_date") %>% toString }}
 
-  test <- test %>% na_if("")
+  test <-
+    test %>%
+    na_if("") %>%
+    stringr::str_remove(pattern = ", as_date")
 
-  return(test %>% na_if(""))
+  return(test)
 }
 
 #' xxx xxx xxx
@@ -130,8 +133,7 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
   date <-
-    which_any_date(x, format) %>%
-    stringr::str_remove(pattern = ", as_date")
+    which_any_date(x, format)
 
   for(i in 1:length(date)){
 

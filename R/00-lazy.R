@@ -452,7 +452,7 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 #'
 #' xxx xxx xxx.
 #'
-#' @param ... xxx xxx xxx
+#' @param x xxx xxx xxx
 #'
 #' @return xxx xxx xxx.
 #'
