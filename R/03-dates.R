@@ -132,8 +132,7 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @export
 as_any_date <- function(x = as.character(), format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
-  date <-
-    which_any_date(x, format)
+  date <- which_any_date(x, format)
 
   for(i in 1:length(date)){
     # stop()}

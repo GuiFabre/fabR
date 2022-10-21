@@ -464,15 +464,68 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr stringr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 as_any_boolean <- function(x){
 
+  # x1 = list(as.character(),
+  #          as.logical(),
+  #          NA,
+  #          NA_complex_,
+  #          "TRUE ",
+  #          "TrUe",
+  #          F,
+  #          FALSE,
+  #          "False",
+  #          "bonjour",
+  #          1,
+  #          sqrt(2)^2/2 - 1)
+  #
+  # x2 = c(as.character(),
+  #          as.logical(),
+  #          NA,
+  #          NA_complex_,
+  #          "TRUE ",
+  #          "TrUe",
+  #          F,
+  #          FALSE,
+  #          "False",
+  #          1)
 
-# to do xxx
 
+  if(length(x) == 0) return(as.logical(x))
+  if(typeof(x) == "logical") return(x)
+
+  # check if the col is empty
+  if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_boolean(x = x[[1]])) }
+
+  # check if the col is a vector
+  if(is.list(x)) stop("'list' object cannot be coerced to type 'logical'")
+
+  x <- str_squish(x)
+
+  xtemp <- x
+  for(i in 1:length(x)){
+    # stop()}
+
+    xtemp[i] <-
+      silently_run(case_when(
+        is.na(x[i])                                          ~ NA_character_,
+        toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
+        toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
+        toString(tolower(x[i]))   %in% c("0", "f","false")   ~ "FALSE",
+        toString(as.numeric(x[i])) ==    "0"                 ~ "FALSE",
+        TRUE                                                 ~ "NaN"
+      ))
+  }
+    if(sum(as.character(xtemp) %in% "NaN") > 0){
+      warning("x is not in a standard unambiguous format")
+      return(x)
+    }
+
+  x <- as.logical(xtemp)
   return(x)
 }
 
