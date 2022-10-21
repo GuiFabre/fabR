@@ -130,32 +130,32 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-as_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+as_any_date <- function(x = as.character(), format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
   date <-
     which_any_date(x, format)
 
   for(i in 1:length(date)){
+    # stop()}
 
     test <- case_when(
-      is.na(date[i]) & is.na(x[i])      ~ 1,
-      is.na(date[i]) & !is.na(x[i])     ~ 2,
-      stringr::str_detect(date[i], ",") ~ 3,
-      TRUE                              ~ 4
-    )
+      !is.na(date[i]) & length(x) == 0   ~ 1,
+      is.na(date[i])  & is.na(x[i])      ~ 2,
+      is.na(date[i])  & !is.na(x[i])     ~ 3,
+      stringr::str_detect(date[i], ",")  ~ 4,
+      TRUE                               ~ 5)
 
-
-    if     (test == 1) {date[i] <- NA_Date_}
-    else if(test == 2) {date[i] <- NA_Date_
+         if(test == 1) {date = as.character(x)}
+    else if(test == 2) {date[i] <- NA_Date_}
+    else if(test == 3) {date[i] <- NA_Date_
       warning(
 "All formats failed to parse for some values.",
 "\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")}
-    else if(test == 3) {date[i] <- NA_Date_
+    else if(test == 4) {date[i] <- NA_Date_
       warning(
 "Ambiguous date format (",date[i],"). Please provide format in parameters",
 "\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")}
     else {date[i] <- do.call(date[i], list(x[i])) %>% as.character}
-
   }
 
   date <- ymd(date)
