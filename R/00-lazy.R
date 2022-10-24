@@ -521,8 +521,7 @@ as_any_boolean <- function(x){
       ))
   }
     if(sum(as.character(xtemp) %in% "NaN") > 0){
-      warning("x is not in a standard unambiguous format")
-      return(x)
+      stop("x is not in a standard unambiguous format")
     }
 
   x <- as.logical(xtemp)
