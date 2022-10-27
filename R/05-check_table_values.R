@@ -213,9 +213,10 @@ get_all_na_rows <- function(tbl){
     test %>%
     mutate(is_na = ncol(test) - .data$is_na) %>%
     bind_cols(tbl[1]) %>%
-    filter(.data$is_na == 0) %>%
+    filter(.data$is_na == 1) %>%
     select(participant = last_col()) %>%
     mutate(
+      participant = toString(.data$`participant`),
       condition = "[ERR] - Empty participant")
   return(test)
 }
