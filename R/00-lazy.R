@@ -553,13 +553,13 @@ as_any_symbol <- function(x){
 
   if(class(try(eval(x),silent = TRUE))[1] == "try-error"){
     x <- substitute(x)
-    message(1)
   }else if(class(try(as.symbol(x),silent = TRUE))[1] == "try-error"){
     x <- as.symbol(as.list(match.call(expand.dots = TRUE))[['x']])
-    message(3)
   }else{
-    message(2)
     x <- as.symbol(x)}
+
+  if(as.symbol(x) == 'x' & typeof(substitute(x)) == "symbol"){
+    x = substitute(x)}
 
   return(x)
 }
