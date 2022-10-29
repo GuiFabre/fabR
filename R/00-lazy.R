@@ -529,5 +529,38 @@ as_any_boolean <- function(x){
 }
 
 
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param x xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr stringr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @export
+as_any_symbol <- function(x){
 
+  if(class(try(eval(x),silent = TRUE))[1] == "try-error"){
+    x <- substitute(x)
+    message(1)
+  }else if(class(try(as.symbol(x),silent = TRUE))[1] == "try-error"){
+    x <- as.symbol(as.list(match.call(expand.dots = TRUE))[['x']])
+    message(3)
+  }else{
+    message(2)
+    x <- as.symbol(x)}
+
+  return(x)
+}
 
