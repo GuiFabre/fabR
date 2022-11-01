@@ -37,7 +37,7 @@ list(tibble(iris), tibble(mtcars)) \%>\%
 
 make_name_list can be used when a function uses arguments provided by the user
 to generate a list. The name is simplified and given to the list itself
-my_function <- function(df){
+my_function = function(df){
 
   .fargs <- as.list(match.call(expand.dots = TRUE))
 

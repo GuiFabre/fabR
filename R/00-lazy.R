@@ -183,7 +183,7 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-write_excel_allsheets <- function (list, filename){
+write_excel_allsheets <- function(list, filename){
 
   objnames <- list %>% names
   fargs <- as.list(match.call(expand.dots = TRUE))
@@ -201,7 +201,7 @@ write_excel_allsheets <- function (list, filename){
 
   }
 
-#' Read a csv file using readr::read_csv and avoid errors
+#' Read a csv file using read_csv and avoid errors
 #'
 #' The csv file is read twice to detect the number of lines to use in attributing
 #' the column type ('guess_max' parameter of read_csv). This avoids common errors
@@ -398,7 +398,7 @@ get_path_list     <- function(list_obj, .map_list = NULL){
 #'
 #' make_name_list can be used when a function uses arguments provided by the user
 #' to generate a list. The name is simplified and given to the list itself
-#' my_function <- function(df){
+#' my_function = function(df){
 #'
 #'   .fargs <- as.list(match.call(expand.dots = TRUE))
 #'
@@ -564,3 +564,88 @@ as_any_symbol <- function(x){
   return(x)
 }
 
+
+
+
+#' xxx xxx xxx
+#'
+#' xxx xxx xxx.
+#'
+#' @param folder_r xxx xxx xxx
+#'
+#' @return xxx xxx xxx.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Example 1: xxx xxx xxx.
+#'
+#'
+#' }
+#'
+#' @import dplyr tidyr stringr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @export
+collect_roxygen <- function(folder_r = "R"){
+
+  # collect
+  idx <- file_index_create(folder_r)
+  doc <- tibble()
+  for(i in idx$file_path){doc <- bind_rows(doc,tibble(value = readLines(i), page = basename(i)))}
+
+  doc <-
+  # trim
+    doc %>%
+    mutate(value = str_squish(.data$`value`)) %>%
+    filter(str_detect(.data$`value`,"^#'") | str_detect(.data$`value`, '<- function\\(')) %>%
+
+  # classify
+    mutate(
+      class = ifelse(str_detect(.data$`value`,"^#' \\@export"),"EXPORT",NA_character_),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@examples"),"EXAMPLE",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@import"),"IMPORT",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@param"),"PARAM",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@return"),"RETURN",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"<- function\\("),"FUNCTION",.data$`class`))
+
+  doc <-
+    doc %>%
+    mutate(class_2 = c("FUNCTION",doc$`class`[2:(length(doc$`class`))-1])) %>%
+    mutate(class = ifelse(.data$`class_2` == "FUNCTION" & is.na(.data$`class`), "TITLE", .data$`class`)) %>%
+    fill(.data$`class`,.direction = "down") %>%
+    mutate(class = ifelse(.data$`class`   == "TITLE"    & is.na(.data$`class_2`), "DESCRIPTION", .data$`class`)) %>%
+    fill(.data$`class`,.direction = "down") %>%
+    mutate(class = ifelse(str_detect(.data$`value`,"^#'$"),"SPACE",.data$`class`))
+
+  doc <-
+    doc %>%
+    mutate(class_2 = c("DESCRIPTION", doc$`class`[2:(length( doc$`class`))-1])) %>%
+    mutate(class_3 = c("DESCRIPTION","DESCRIPTION", doc$`class`[3:(length( doc$`class_2`))-2])) %>%
+    mutate(
+      class_4 = ifelse(.data$`class`   == "DESCRIPTION" & .data$`class_2` == "SPACE" & .data$`class_3` == "TITLE", "DESCRIPTION", NA_character_),
+      class_4 = ifelse(.data$`class`   == "DESCRIPTION" & .data$`class_2` == "SPACE" & .data$`class_3` == "DESCRIPTION", "ATTENTION", .data$`class_4`)) %>%
+    fill(.data$`class_4`,.direction = "down") %>%
+    mutate(
+      class_4 = ifelse(.data$`class` == "DESCRIPTION",.data$`class_4`, NA_character_),
+      class   = ifelse(.data$`class` == "DESCRIPTION",.data$`class_4`, .data$`class`)) %>% select(-.data$`class_2`,-.data$`class_3`,-.data$`class_4`) %>%
+    filter(!.data$`class` %in% c("SPACE"))
+
+    # pivot
+  doc <-
+    doc %>%
+    group_by(.data$`class`) %>%
+    add_index() %>%
+    mutate(function_rank = ifelse(.data$`class` == 'FUNCTION',.data$`index` ,NA_integer_)) %>%
+    ungroup () %>%
+    select(-.data$`index`) %>%
+    fill(.data$`function_rank`,.direction = "up") %>%
+    group_by(.data$`function_rank`, .data$`class`, .data$`page`) %>%
+    summarise(value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
+    pivot_wider(names_from = .data$`class`, values_from = .data$`value`) %>%
+    ungroup %>%
+    select(.data$`function_rank`, .data$`page`, .data$`FUNCTION`,.data$`TITLE`,matches('DESCRIPTION'), matches("ATTENTION"),
+           matches("PARAM"), matches('EXAMPLE'), matches('IMPORT'), matches('EXPORT'))
+
+  return(doc)
+}

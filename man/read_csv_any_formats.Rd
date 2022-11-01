@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-lazy.R
 \name{read_csv_any_formats}
 \alias{read_csv_any_formats}
-\title{Read a csv file using readr::read_csv and avoid errors}
+\title{Read a csv file using read_csv and avoid errors}
 \usage{
 read_csv_any_formats(csv_name)
 }
