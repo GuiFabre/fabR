@@ -616,7 +616,9 @@ collect_roxygen <- function(folder_r = "R"){
     mutate(class_2 = c("FUNCTION",doc$`class`[2:(length(doc$`class`))-1])) %>%
     mutate(class = ifelse(.data$`class_2` == "FUNCTION" & is.na(.data$`class`), "TITLE", .data$`class`)) %>%
     fill(.data$`class`,.direction = "down") %>%
-    mutate(class = ifelse(.data$`class`   == "TITLE"    & is.na(.data$`class_2`), "DESCRIPTION", .data$`class`)) %>%
+    mutate(class_2 = ifelse(.data$`class`   == "TITLE" & str_detect(.data$`value`,"^#'$"), "SPACE", .data$`class_2`)) %>%
+    fill(.data$`class_2`,.direction = "down") %>%
+    mutate(class = ifelse(.data$`class`   == "TITLE" & .data$`class_2` == "SPACE", "DESCRIPTION", .data$`class`)) %>%
     fill(.data$`class`,.direction = "down") %>%
     mutate(class = ifelse(str_detect(.data$`value`,"^#'$"),"SPACE",.data$`class`))
 
