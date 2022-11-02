@@ -608,8 +608,7 @@ collect_roxygen <- function(folder_r = "R"){
       class = ifelse(str_detect(.data$`value`,"^#' \\@param"),"PARAM",.data$`class`),
       class = ifelse(str_detect(.data$`value`,"^#' \\@return"),"RETURN",.data$`class`),
       class = ifelse(str_detect(.data$`value`,"<- function\\("),"FUNCTION",.data$`class`)) %>%
-    filter(class == "FUNCTION") %>%
-    mutate(value = ifelse(.data$`class` == "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
+    mutate(value = ifelse(.data$`class` %in% "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
     mutate(across(everything(), ~stringr::str_squish(.)))
 
   doc <-
@@ -634,7 +633,7 @@ collect_roxygen <- function(folder_r = "R"){
       class   = ifelse(.data$`class` == "DESCRIPTION",.data$`class_4`, .data$`class`)) %>% select(-.data$`class_2`,-.data$`class_3`,-.data$`class_4`) %>%
     filter(!.data$`class` %in% c("SPACE"))
 
-    # pivot
+  # pivot
   doc <-
     doc %>%
     group_by(.data$`class`) %>%
