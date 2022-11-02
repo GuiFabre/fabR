@@ -607,7 +607,10 @@ collect_roxygen <- function(folder_r = "R"){
       class = ifelse(str_detect(.data$`value`,"^#' \\@import"),"IMPORT",.data$`class`),
       class = ifelse(str_detect(.data$`value`,"^#' \\@param"),"PARAM",.data$`class`),
       class = ifelse(str_detect(.data$`value`,"^#' \\@return"),"RETURN",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"<- function\\("),"FUNCTION",.data$`class`))
+      class = ifelse(str_detect(.data$`value`,"<- function\\("),"FUNCTION",.data$`class`)) %>%
+    filter(class == "FUNCTION") %>%
+    mutate(value = ifelse(.data$`class` == "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
+    mutate(across(everything(), ~stringr::str_squish(.)))
 
   doc <-
     doc %>%
@@ -644,8 +647,17 @@ collect_roxygen <- function(folder_r = "R"){
     summarise(value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
     pivot_wider(names_from = .data$`class`, values_from = .data$`value`) %>%
     ungroup %>%
-    select(.data$`function_rank`, .data$`page`, .data$`FUNCTION`,.data$`TITLE`,matches('DESCRIPTION'), matches("ATTENTION"),
-           matches("PARAM"), matches('EXAMPLE'), matches('IMPORT'), matches('EXPORT'))
+    select(`index` = .data$`function_rank`,
+           `page` = .data$`page`,
+           `name----------------------------------------------------------------------------` = .data$`FUNCTION`,
+           `title---------------------------------------------------------------------------` = .data$`TITLE`,
+           `description---------------------------------------------------------------------` = matches('DESCRIPTION'),
+           `attention-----------------------------------------------------------------------` = matches("ATTENTION"),
+           `param---------------------------------------------------------------------------` = matches("PARAM"),
+           `return--------------------------------------------------------------------------` = matches('RETURN'),
+           `examples------------------------------------------------------------------------` = matches('EXAMPLE'),
+           `import--------------------------------------------------------------------------` = matches('IMPORT'),
+           `export--------------------------------------------------------------------------` = matches('EXPORT'))
 
   return(doc)
 }
