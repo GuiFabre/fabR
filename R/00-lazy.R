@@ -275,7 +275,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
       tbl %>%
       tibble::add_column(!! name_index,.before = TRUE) %>%
       rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
-      mutate(across(all_of(name_index), ~ row_number() + start - 1))
+      mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
     }
 
   if(.force == TRUE){
@@ -284,7 +284,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
       select(-any_of(name_index)) %>%
       tibble::add_column(!! name_index,.before = TRUE) %>%
       rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
-      mutate(across(all_of(name_index), ~ row_number() + start - 1))
+      mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
     }
 
   return(tbl)
