@@ -29,7 +29,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
+file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 
   message(
     "Your files contained in your R environnement are currently being indexed. Please wait...\n")
@@ -137,7 +137,7 @@ file_index_create <- function(folder = getwd(), pattern = "", negate = FALSE){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-file_index_search <- function(index, file_path = "", file_name = "", extension = "", file_type = "", .fs_tree = TRUE){
+file_index_search <- function(index, file_path = "^", file_name = "^", extension = "^", file_type = "^", .fs_tree = TRUE){
 
   index <-
     index %>%
