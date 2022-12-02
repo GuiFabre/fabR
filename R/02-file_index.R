@@ -198,10 +198,10 @@ file_index_search <- function(index, file_path = "^", file_name = "^", extension
 #' @export
 file_index_read <- function(
   index,
-  file_path = "",
-  file_name = "",
-  extension = "",
-  file_type = "",
+  file_path = "^",
+  file_name = "^",
+  extension = "^",
+  file_type = "^",
   assign = FALSE,
   .envir = parent.frame()){
 
