@@ -4,7 +4,7 @@
 \alias{file_index_create}
 \title{Create an index of files in a folder}
 \usage{
-file_index_create(folder = getwd(), pattern = "", negate = FALSE)
+file_index_create(folder = getwd(), pattern = "^", negate = FALSE)
 }
 \arguments{
 \item{folder}{A character string identifying the folder to index. If not specified,

@@ -6,10 +6,10 @@
 \usage{
 file_index_search(
   index,
-  file_path = "",
-  file_name = "",
-  extension = "",
-  file_type = "",
+  file_path = "^",
+  file_name = "^",
+  extension = "^",
+  file_type = "^",
   .fs_tree = TRUE
 )
 }
