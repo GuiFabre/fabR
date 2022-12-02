@@ -18,7 +18,6 @@ Imports: dplyr,
     magrittr, 
     rlang,
     lubridate,
-    knitr,
     ggplot2,
     digest,
     fs,
@@ -35,5 +34,4 @@ Imports: dplyr,
 URL: https://github.com/GuiFabre/fabR/
 BugReports: https://github.com/GuiFabre/fabR/issues
 RoxygenNote: 7.2.2
-VignetteBuilder: knitr
 Encoding: UTF-8
