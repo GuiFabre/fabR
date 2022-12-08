@@ -48,7 +48,7 @@ get_duplicated_cols <- function(tbl){
     add_count() %>%
     filter(n > 1) %>%
     group_by(.data$col_1) %>%
-    summarise(across(everything(), ~ paste("[INFO] - Possible duplicated variables:", paste0(., collapse = " ; "))),.groups = "drop") %>%
+    summarise(across(everything(), ~ paste("[INFO] - Possible duplicated columns:", paste0(., collapse = " ; "))),.groups = "drop") %>%
     ungroup() %>% select(.data$condition) %>%
     tidyr::separate(col = .data$condition, into = c("to_remove","name_var"), sep = "\\:", remove = FALSE) %>%
     tidyr::separate_rows(.data$name_var, sep = ";") %>%
@@ -138,7 +138,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     add_count() %>%
     filter(n > 1) %>%
     group_by(.data$row_duplicate) %>%
-    summarise_all(~ paste("[INFO] - Possible duplicated participants :", paste0(., collapse = " ; "))) %>%
+    summarise_all(~ paste("[INFO] - Possible duplicated observations:", paste0(., collapse = " ; "))) %>%
     ungroup() %>% select(condition = .data$id_duplicate)
 
   return(test)
@@ -252,7 +252,7 @@ get_unique_value_cols <- function(tbl){
     tidyr::pivot_longer(cols = everything(), names_to = "name_var", values_to = "condition") %>%
     filter(.data$condition == 1) %>%
     mutate(
-      condition = "[INFO] - Unique value in the colomn")
+      condition = "[INFO] - Unique value in the column")
 
   return(test)
 }
