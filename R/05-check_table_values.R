@@ -50,8 +50,8 @@ get_duplicated_cols <- function(tbl){
     group_by(.data$col_1) %>%
     summarise(across(everything(), ~ paste("[INFO] - Possible duplicated columns:", paste0(., collapse = " ; "))),.groups = "drop") %>%
     ungroup() %>% select(.data$condition) %>%
-    tidyr::separate(col = .data$condition, into = c("to_remove","name_var"), sep = "\\:", remove = FALSE) %>%
-    tidyr::separate_rows(.data$name_var, sep = ";") %>%
+    tidyr::separate(col = .data$condition, into = c("to_remove","name_col"), sep = "\\:", remove = FALSE) %>%
+    tidyr::separate_rows(.data$name_col, sep = ";") %>%
     select(-.data$to_remove) %>%
     mutate(across(everything(), ~stringr::str_squish(.))) %>%
     mutate(across(everything(), ~as.character(.)))
