@@ -173,7 +173,7 @@ get_all_na_cols <- function(tbl){
   # identify columns containing all NA's
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(cols = everything(), names_to = "name_var", values_to = "condition") %>%
+    tidyr::pivot_longer(cols = everything(), names_to = "name_col", values_to = "condition") %>%
     filter(.data$condition == 0) %>%
     mutate(
       condition = "[INFO] - Empty column")
@@ -217,7 +217,7 @@ get_all_na_rows <- function(tbl){
     select(participant = last_col()) %>%
     mutate(
       participant = toString(.data$`participant`),
-      condition = "[ERR] - Empty participant")
+      condition = "[ERR] - Empty observation")
   return(test)
 }
 
@@ -249,7 +249,7 @@ get_unique_value_cols <- function(tbl){
   # identify columns containing one value
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(cols = everything(), names_to = "name_var", values_to = "condition") %>%
+    tidyr::pivot_longer(cols = everything(), names_to = "name_col", values_to = "condition") %>%
     filter(.data$condition == 1) %>%
     mutate(
       condition = "[INFO] - Unique value in the column")
