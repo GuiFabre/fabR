@@ -602,63 +602,50 @@ collect_roxygen <- function(folder_r = "R"){
 
   # classify
     mutate(
-      class = ifelse(str_detect(.data$`value`,"^#' \\@export"),"EXPORT",NA_character_),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@examples"),"EXAMPLE",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@import"),"IMPORT",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@param"),"PARAM",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@return"),"RETURN",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"<- function\\("),"FUNCTION",.data$`class`)) %>%
+      class = ifelse(str_detect(.data$`value`,"<- function\\(")    ,"FUNCTION"   ,NA_character_),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@title")      ,"TITLE"      ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@description"),"DESCRIPTION",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@details")    ,"DETAILS"    ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@format")     ,"FORMAT"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@seealso")    ,"SEEALSO"    ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@param")      ,"PARAM"      ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@return")     ,"RETURN"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@examples")   ,"EXAMPLES"   ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@import")     ,"IMPORT"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@export")     ,"EXPORT"     ,.data$`class`)) %>%
     mutate(value = ifelse(.data$`class` %in% "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
-    mutate(across(everything(), ~stringr::str_squish(.)))
+    mutate(across(everything(), ~stringr::str_squish(.))) %>%
+    filter(value != "#'")
 
   doc <-
     doc %>%
-    mutate(class_2 = c("FUNCTION",doc$`class`[2:(length(doc$`class`))-1])) %>%
-    mutate(class = ifelse(.data$`class_2` == "FUNCTION" & is.na(.data$`class`), "TITLE", .data$`class`)) %>%
-    fill(.data$`class`,.direction = "down") %>%
-    mutate(class_2 = ifelse(.data$`class`   == "TITLE" & str_detect(.data$`value`,"^#'$"), "SPACE", .data$`class_2`)) %>%
+    add_index() %>%
+    mutate(class_2 = ifelse(.data$`class` == 'TITLE', paste0("function_",.data$`index`), NA)) %>%
     fill(.data$`class_2`,.direction = "down") %>%
-    mutate(class = ifelse(.data$`class`   == "TITLE" & .data$`class_2` == "SPACE", "DESCRIPTION", .data$`class`)) %>%
     fill(.data$`class`,.direction = "down") %>%
-    mutate(class = ifelse(str_detect(.data$`value`,"^#'$"),"SPACE",.data$`class`))
-
-  doc <-
-    doc %>%
-    mutate(class_2 = c("DESCRIPTION", doc$`class`[2:(length( doc$`class`))-1])) %>%
-    mutate(class_3 = c("DESCRIPTION","DESCRIPTION", doc$`class`[3:(length( doc$`class_2`))-2])) %>%
-    mutate(
-      class_4 = ifelse(.data$`class`   == "DESCRIPTION" & .data$`class_2` == "SPACE" & .data$`class_3` == "TITLE", "DESCRIPTION", NA_character_),
-      class_4 = ifelse(.data$`class`   == "DESCRIPTION" & .data$`class_2` == "SPACE" & .data$`class_3` == "DESCRIPTION", "ATTENTION", .data$`class_4`)) %>%
-    fill(.data$`class_4`,.direction = "down") %>%
-    mutate(
-      class_4 = ifelse(.data$`class` == "DESCRIPTION",.data$`class_4`, NA_character_),
-      class   = ifelse(.data$`class` == "DESCRIPTION",.data$`class_4`, .data$`class`)) %>% select(-.data$`class_2`,-.data$`class_3`,-.data$`class_4`) %>%
-    filter(!.data$`class` %in% c("SPACE"))
+    select(-.data$`index`)
 
   # pivot
   doc <-
     doc %>%
-    group_by(.data$`class`) %>%
-    add_index() %>%
-    mutate(function_rank = ifelse(.data$`class` == 'FUNCTION',.data$`index` ,NA_integer_)) %>%
-    ungroup () %>%
-    select(-.data$`index`) %>%
-    fill(.data$`function_rank`,.direction = "up") %>%
-    group_by(.data$`function_rank`, .data$`class`, .data$`page`) %>%
+    group_by(.data$`class_2`, .data$`class`, .data$`page`) %>%
     summarise(value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
     pivot_wider(names_from = .data$`class`, values_from = .data$`value`) %>%
     ungroup %>%
-    select(`index` = .data$`function_rank`,
-           `page` = .data$`page`,
-           `name----------------------------------------------------------------------------` = .data$`FUNCTION`,
-           `title---------------------------------------------------------------------------` = .data$`TITLE`,
-           `description---------------------------------------------------------------------` = matches('DESCRIPTION'),
-           `attention-----------------------------------------------------------------------` = matches("ATTENTION"),
-           `param---------------------------------------------------------------------------` = matches("PARAM"),
-           `return--------------------------------------------------------------------------` = matches('RETURN'),
-           `examples------------------------------------------------------------------------` = matches('EXAMPLE'),
-           `import--------------------------------------------------------------------------` = matches('IMPORT'),
-           `export--------------------------------------------------------------------------` = matches('EXPORT'))
+    select(
+      `page` = .data$`page`,
+      `name----------------------------------------------------------------------------` = matches('FUNCTION'   ),
+      `title---------------------------------------------------------------------------` = matches('TITLE'      ),
+      `description---------------------------------------------------------------------` = matches('DESCRIPTION'),
+      `details-------------------------------------------------------------------------` = matches('DETAILS'    ),
+      `format--------------------------------------------------------------------------` = matches('FORMAT'     ),
+      `seealso-------------------------------------------------------------------------` = matches('SEEALSO'    ),
+      `param---------------------------------------------------------------------------` = matches('PARAM'      ),
+      `return--------------------------------------------------------------------------` = matches('RETURN'     ),
+      `examples------------------------------------------------------------------------` = matches('EXAMPLE'    ),
+      `import--------------------------------------------------------------------------` = matches('IMPORT'     ),
+      `export--------------------------------------------------------------------------` = matches('EXPORT'     )) %>%
+    add_index()
 
   return(doc)
 }
