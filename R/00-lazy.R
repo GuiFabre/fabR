@@ -615,7 +615,7 @@ collect_roxygen <- function(folder_r = "R"){
       class = ifelse(str_detect(.data$`value`,"^#' \\@export")     ,"EXPORT"     ,.data$`class`)) %>%
     mutate(value = ifelse(.data$`class` %in% "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
     mutate(across(everything(), ~stringr::str_squish(.))) %>%
-    filter(value != "#'")
+    filter(.data$`value` != "#'")
 
   doc <-
     doc %>%
