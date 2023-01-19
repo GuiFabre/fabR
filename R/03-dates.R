@@ -29,11 +29,13 @@ guess_date_format <- function(tbl, col = NULL){
 
   for(i in tbl %>% names){
 
-    test <- bind_rows(
+    test <-
+      bind_rows(
       test,
       tbl %>%
         select(var = all_of(i)) %>%
         filter(!is.na(.data$var)) %>%
+        distinct() %>%
         rowwise() %>%
         mutate(
           dmy = dmy(.data$var, quiet = TRUE),
@@ -43,16 +45,16 @@ guess_date_format <- function(tbl, col = NULL){
           mdy = mdy(.data$var, quiet = TRUE),
           myd = myd(.data$var, quiet = TRUE)) %>%
         ungroup %>%
-        summarise(across(-.data$`var`, ~ is.na(.) %>% sum)) %>%
+        summarise(across(-.data$`var`, ~ sum(!is.na(.)))) %>%
         tidyr::pivot_longer(cols = everything(), names_to = "Date format", values_to = "nb_values") %>%
         mutate(
-          name_var = all_of(i),
-          `% values formated` = round(100*(.data$nb_values / (tbl %>% select(var = all_of(i)) %>% filter(!is.na(.data$var)) %>% nrow)),2),
+          name_var = i,
+          `% values formated` = round(100*(.data$nb_values / (tbl %>% select(var = all_of(i)) %>% distinct %>% filter(!is.na(.data$var)) %>% nrow)),2),
           `% values formated` = ifelse(is.na(.data$`% values formated`),0,.data$`% values formated`),
-          `Date format` = case_when(
+          `Date match` = case_when(
             .data$`% values formated` == 0   ~ "No match",
-            .data$`% values formated` == 100 ~ paste0("Exact match : ", .data$`Date format`),
-            TRUE                       ~ paste0("Closest match : ", .data$`Date format`)),
+            .data$`% values formated` == 100 ~ paste0("Exact match"),
+            TRUE                       ~ paste0("Closest match")),
         )  %>%
         arrange(-.data$nb_values) %>%
         slice(1) %>%
