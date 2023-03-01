@@ -262,6 +262,7 @@ read_csv_any_formats <- function(csv_name){
 #' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
+#'
 #' @export
 add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
@@ -467,6 +468,7 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 #' @import dplyr stringr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
+#'
 #' @export
 as_any_boolean <- function(x){
 
