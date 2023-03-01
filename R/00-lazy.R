@@ -265,6 +265,11 @@ read_csv_any_formats <- function(csv_name){
 #' @export
 add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
+
+  tbl_index <-
+    data.frame(index = NA_integer_) %>%
+    rename_with(.cols = 'index', ~ name_index)
+
   if(.force == FALSE){
 
     if(name_index %in% (tbl %>% names)){
@@ -272,20 +277,15 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
                   "Please specifie another name or use .force = TRUE\n"))}
 
     tbl <-
-      tbl %>%
-      tibble::add_column(!! name_index,.before = TRUE) %>%
-      rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
+      bind_cols(tbl_index,tbl) %>%
       mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
-    }
+  }
 
   if(.force == TRUE){
     tbl <-
-      tbl %>%
-      select(-any_of(name_index)) %>%
-      tibble::add_column(!! name_index,.before = TRUE) %>%
-      rename_with(.cols = all_of(paste0('"',!! name_index,'"')), ~ name_index) %>%
+      bind_cols(tbl_index,tbl %>% select(-any_of(name_index))) %>%
       mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
-    }
+  }
 
   return(tbl)
 }
@@ -470,31 +470,6 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 #' @export
 as_any_boolean <- function(x){
 
-  # x1 = list(as.character(),
-  #          as.logical(),
-  #          NA,
-  #          NA_complex_,
-  #          "TRUE ",
-  #          "TrUe",
-  #          F,
-  #          FALSE,
-  #          "False",
-  #          "bonjour",
-  #          1,
-  #          sqrt(2)^2/2 - 1)
-  #
-  # x2 = c(as.character(),
-  #          as.logical(),
-  #          NA,
-  #          NA_complex_,
-  #          "TRUE ",
-  #          "TrUe",
-  #          F,
-  #          FALSE,
-  #          "False",
-  #          1)
-
-
   if(length(x) == 0) return(as.logical(x))
   if(typeof(x) == "logical") return(x)
 
@@ -511,21 +486,21 @@ as_any_boolean <- function(x){
     # stop()}
 
     xtemp[i] <-
-      silently_run(case_when(
+      suppressWarnings(suppressMessages(try({case_when(
         is.na(x[i])                                          ~ NA_character_,
         toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
         toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
         toString(tolower(x[i]))   %in% c("0", "f","false")   ~ "FALSE",
         toString(as.numeric(x[i])) ==    "0"                 ~ "FALSE",
-        TRUE                                                 ~ "NaN"
-      ))
-  }
-    if(sum(as.character(xtemp) %in% "NaN") > 0){
-      stop("x is not in a standard unambiguous format")
-    }
+        TRUE                                                 ~ "NaN")
 
-  x <- as.logical(xtemp)
-  return(x)
+      }, silent = TRUE)))
+
+    if(sum(as.character(xtemp) %in% "NaN") > 0) stop("x is not in a standard unambiguous format")
+
+    x <- as.logical(xtemp)
+    return(x)
+  }
 }
 
 
