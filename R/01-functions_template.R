@@ -1,10 +1,13 @@
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param ... xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -27,13 +30,16 @@ get_args <- function(...){
   invisible(args)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param ... xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -56,14 +62,17 @@ cast_error_fargs <- function(...){
   invisible(args)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param attributes xxx xxx xxx
 #' @param version xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -94,13 +103,16 @@ set_template <- function(attributes, version = NULL){
   invisible(fargs)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param .fargs xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -136,13 +148,16 @@ add_template <- function(.fargs){
   invisible(fargs)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param .fargs xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -179,13 +194,16 @@ prep_template <- function(.fargs){
 
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param attributes xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -207,14 +225,17 @@ set_template_run <- function(attributes){
   return(obj)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param obj xxx xxx xxx
 #' @param append_obj xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -249,13 +270,16 @@ add_template_run <- function(obj, append_obj){
   return(obj)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param obj xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -277,13 +301,16 @@ prep_template_run <- function(obj){
 
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param .fargs xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -305,13 +332,16 @@ show_pipeline <- function(.fargs){
     pull(.data$process) %>% paste0("\n") %>% message
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param .fargs xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{

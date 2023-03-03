@@ -16,9 +16,8 @@ for function creators where user experience enhancement is sought.
 }
 \examples{
 \dontrun{
-# example xxx
 
-silently_run()
+# Example 1: yyy yyy yyy
 
 }
 

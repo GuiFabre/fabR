@@ -18,8 +18,7 @@ xxx xxx xxx.
 \examples{
 \dontrun{
 
-# Example 1: xxx xxx xxx.
-
+# Example 1: yyy yyy yyy
 
 }
 

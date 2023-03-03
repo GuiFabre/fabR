@@ -4,10 +4,10 @@
 \alias{read_csv_any_formats}
 \title{Read a csv file using read_csv and avoid errors}
 \usage{
-read_csv_any_formats(csv_name)
+read_csv_any_formats(filename)
 }
 \arguments{
-\item{csv_name}{A character string of the path of the csv file.}
+\item{filename}{A character string of the path of the csv file.}
 }
 \value{
 a tibble corresponding to the csv read.
@@ -20,7 +20,7 @@ when reading csv files.
 \examples{
 \dontrun{
 
-# Example 1: xxx
+# Example 1: yyy yyy yyy
 }
 
 }

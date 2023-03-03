@@ -22,8 +22,6 @@ Prefer eval(parse(text = ...) instead.
 }
 \examples{
 \dontrun{
-# example xxx
-
 
 # Simple assignation will assignate 'b' in parceval environment (which is associated
 # to a function and different from .GlobalEnv, by definition).

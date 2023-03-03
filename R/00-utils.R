@@ -21,8 +21,10 @@ fabR_help <- function(){
 
 }
 
+#' @title
 #' Shortcut to display a message and acceptation on prompt
 #'
+#' @description
 #' Shortcut allowing to provide user a prompt and a message that is to be read and
 #' validated before pursuing process. This function is targeted for function creators
 #' where user interaction is required.
@@ -31,7 +33,8 @@ fabR_help <- function(){
 #'
 #' @examples
 #' \dontrun{
-#' # example xxx
+#'
+#' # Example 1: yyy yyy yyy
 #'
 #' message_on_prompt("Do you want continue? Press \dontrun{[enter]} to continue or
 #' \dontrun{[esc]} to skip this part" )
@@ -46,8 +49,10 @@ message_on_prompt <- function(...){
   invisible(readline(cat(prompt = paste(...))))
 }
 
+#' @title
 #' Shortcut to silently run a code chunk avoiding error (with try), messages and warnings
 #'
+#' @description
 #' Shortcut avoiding user to get messages, warnings and being stopped by an error.
 #' The usage is very similar to [base::suppressWarnings()]. This function is targeted
 #' for function creators where user experience enhancement is sought.
@@ -57,9 +62,8 @@ message_on_prompt <- function(...){
 #'
 #' @examples
 #' \dontrun{
-#' # example xxx
 #'
-#' silently_run()
+#' # Example 1: yyy yyy yyy
 #'
 #' }
 #'
@@ -71,8 +75,10 @@ silently_run <- function(...){
   return(suppressWarnings(suppressMessages(try(...,silent = TRUE))))
 }
 
+#' @title
 #' Shortcut to turn String character into R code
 #'
+#' @description
 #' Shortcut to [base::parse()] and [base::eval()]uate R expression in a character string,
 #' and turn it into runable R code. This function is targeted for interaction with
 #' external files (where expression is stored in text format) ; for tidy elements where
@@ -88,8 +94,6 @@ silently_run <- function(...){
 #'
 #' @examples
 #' \dontrun{
-#' # example xxx
-#'
 #'
 #' # Simple assignation will assignate 'b' in parceval environment (which is associated
 #' # to a function and different from .GlobalEnv, by definition).
@@ -138,8 +142,10 @@ parceval <- function(...){
   eval(parse(text = stringr::str_squish(...) %>% stringr::str_remove_all("\\\r")))
 }
 
+#' @title
 #' Read all Excel sheets using readxl::read_excel recursively
 #'
+#' @description
 #' The Excel file is read and the values are placed in a list of tibbles, with each
 #' sheet in a separate element in the list. If the Excel file has only one sheet,
 #' the output is a single tibble. See [readxl::read_excel()]
@@ -153,7 +159,7 @@ parceval <- function(...){
 #' @examples
 #' \dontrun{
 #'
-#' # xxx
+#' # Example 1: yyy yyy yyy
 #'
 #'
 #' }
@@ -186,8 +192,10 @@ read_excel_allsheets <- function(filename, sheets = "") {
   }
 }
 
+#' @title
 #' Write all Excel sheets using xlsx::write.xlsx recursively
 #'
+#' @description
 #' The R objects are read and the values are placed in separated sheets.
 #' This function is inspired by the function proposed in
 #' https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
@@ -195,11 +203,11 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' @param list R objects, coma separated.
 #' @param filename A character string of the path of the Excel file.
 #'
-#'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx
+#' # Example 1: yyy yyy yyy
+#'
 #' }
 #'
 #' @import dplyr
@@ -224,36 +232,40 @@ write_excel_allsheets <- function(list, filename){
 
   }
 
+#' @title
 #' Read a csv file using read_csv and avoid errors
 #'
+#' @description
 #' The csv file is read twice to detect the number of lines to use in attributing
 #' the column type ('guess_max' parameter of read_csv). This avoids common errors
 #' when reading csv files.
 #'
-#' @param csv_name A character string of the path of the csv file.
+#' @param filename A character string of the path of the csv file.
 #'
 #' @return a tibble corresponding to the csv read.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx
+#' # Example 1: yyy yyy yyy
 #' }
 #'
 #' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-read_csv_any_formats <- function(csv_name){
+read_csv_any_formats <- function(filename){
   guess_max <-
-    suppressMessages(suppressWarnings(readr::read_csv(csv_name, progress = FALSE))) %>% nrow
+    suppressMessages(suppressWarnings(readr::read_csv(filename, progress = FALSE))) %>% nrow
 
-  csv <- readr::read_delim(file = csv_name, guess_max = guess_max)
+  csv <- readr::read_delim(file = filename, guess_max = guess_max)
   return(csv)
 }
 
+#' @title
 #' Add an index column at the first place of a tibble
 #'
+#' @description
 #' Add an index, possibly by group, at the first place of a data frame or a tibble
 #' The name by default is 'index' but can be named. If 'index' already exists, or
 #' the given name, the column can be forced to be created, and replace the other
@@ -315,8 +327,10 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 }
 
 
+#' @title
 #' Get the paths of branches in a list
 #'
+#' @description
 #' Function that recursively go through a list object and store in a tibble the path
 #' of each element in the list. The paths can be after that edited and accessed using
 #' [fabR::parceval()] for example.
@@ -393,8 +407,10 @@ get_path_list <- function(list_obj, .map_list = NULL){
 }
 
 
+#' @title
 #' Shortcut to create beautiful names in a list
 #'
+#' @description
 #' Generate a name for an element in a list. This function is targeted for functions
 #' creations which handle lists. Those lists may need names to go through each elements.
 #' This function works with [stats::setNames()] and allows the user to provide name
@@ -408,33 +424,7 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' @examples
 #' \dontrun{
 #'
-#' # make_name_list generates names that are informative through a line of code or
-#' function. tibble(iris), iris %>% tibble and list(iris = tibble(mytibble) %>% select(Species))
-#' will have 'iris' as name,
-#'
-#' list(tibble(iris), tibble(mtcars)) %>%
-#'   setNames(
-#'     make_name_list(.,
-#'        args_list = c(
-#'           "IRIS %>% complicated_code",
-#'           "complicated_function(MTCARS)")))
-#'
-#'
-#' make_name_list can be used when a function uses arguments provided by the user
-#' to generate a list. The name is simplified and given to the list itself
-#' my_function = function(df){
-#'
-#'   .fargs <- as.list(match.call(expand.dots = TRUE))
-#'
-#'   list_df <-
-#'     list(df) %>%
-#'     stats::setNames(make_name_list(.,as.character(.fargs['df'])))
-#'
-#'   return(list_df)
-#' }
-#'
-#' my_function(iris %>% as_tibble %>% select(Species))
-#' my_function(iris %>% as_tibble %>% select(Species))
+#' # Example 1: yyy yyy yyy
 #'
 #' }
 #'
@@ -472,19 +462,21 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 }
 
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param x xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
-#'
+#' # Example 1: yyy yyy yyy
 #'
 #' }
 #'
@@ -511,7 +503,8 @@ as_any_boolean <- function(x){
     # stop()}
 
     xtemp[i] <-
-      suppressWarnings(suppressMessages(try({case_when(
+      suppressWarnings(suppressMessages(try({
+        case_when(
         is.na(x[i])                                          ~ NA_character_,
         toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
         toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
@@ -521,27 +514,29 @@ as_any_boolean <- function(x){
 
       }, silent = TRUE)))
 
-    if(sum(as.character(xtemp) %in% "NaN") > 0) stop("x is not in a standard unambiguous format")
+    if(xtemp[i] == "NaN") stop("x is not in a standard unambiguous format")
+  }
 
     x <- as.logical(xtemp)
     return(x)
-  }
 }
 
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param x xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
-#'
+#' # Example 1: yyy yyy yyy
 #'
 #' }
 #'
@@ -567,18 +562,21 @@ as_any_symbol <- function(x){
 
 
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param folder_r xxx xxx xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # Example 1: xxx xxx xxx.
+#' # Example 1: yyy yyy yyy
 #'
 #'
 #' }

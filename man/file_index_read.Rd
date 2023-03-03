@@ -33,9 +33,7 @@ Can be the full string or substring (matching by regex is supported).}
 \item{assign}{If TRUE, the name is automatically assigned from the name
 of the object read.}
 
-\item{.envir}{The environment to use. parent.frame() by default
-
-Can be the full string or substring (matching by regex is supported).}
+\item{.envir}{The environment to use. parent.frame() by default}
 }
 \value{
 R objects generated in the environment or R scripts. R object names are
@@ -47,6 +45,9 @@ Reads all files from a file index tibble as R objects to generate in the
 environment or R scripts to be sourced. Any other file types will be opened in
 browser (html files) or in environnement. If no index tibble is provided, the
 function creates one from the working directory.
+}
+\details{
+Can be the full string or substring (matching by regex is supported).
 }
 \examples{
 \dontrun{

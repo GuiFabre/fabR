@@ -16,7 +16,8 @@ where user interaction is required.
 }
 \examples{
 \dontrun{
-# example xxx
+
+# Example 1: yyy yyy yyy
 
 message_on_prompt("Do you want continue? Press \dontrun{[enter]} to continue or
 \dontrun{[esc]} to skip this part" )

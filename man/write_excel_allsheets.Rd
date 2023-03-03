@@ -19,7 +19,8 @@ https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-t
 \examples{
 \dontrun{
 
-# Example 1: xxx
+# Example 1: yyy yyy yyy
+
 }
 
 }

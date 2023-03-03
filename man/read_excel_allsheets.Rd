@@ -23,7 +23,7 @@ the output is a single tibble. See [readxl::read_excel()]
 \examples{
 \dontrun{
 
-# xxx
+# Example 1: yyy yyy yyy
 
 
 }
