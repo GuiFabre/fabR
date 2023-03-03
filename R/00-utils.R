@@ -1,3 +1,26 @@
+#' @title
+#' Call the help center for full documentation
+#'
+#' @description
+#' This feature is a direct call of the documentation in the repository hosting
+#' the package. The user accesses the description of the latest version of the
+#' package, the vignettes, and the list of functions.
+#'
+#' @examples
+#' \dontrun{
+#' # Example 1: call the help center!
+#' fabR_help()
+#' }
+#'
+#' @importFrom utils browseURL
+#'
+#' @export
+fabR_help <- function(){
+
+  browseURL("https://guifabre.github.io/fabR-documentation/")
+
+}
+
 #' Shortcut to display a message and acceptation on prompt
 #'
 #' Shortcut allowing to provide user a prompt and a message that is to be read and
@@ -325,7 +348,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-get_path_list     <- function(list_obj, .map_list = NULL){
+get_path_list <- function(list_obj, .map_list = NULL){
 
   if(is.null(.map_list)){
 

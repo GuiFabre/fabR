@@ -41,7 +41,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_main_word        <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()', max = 10, out = "ggplot2", group_by = NULL){
+plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()', max = 10, out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -138,7 +138,7 @@ plot_main_word        <- function(tbl = "iris", col = "Species", filter = 'c()',
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_histogram        <- function(tbl = "airquality", col = "Ozone", filter = 'c()', negate = FALSE, missing_values = 'c()',out = "ggplot2", group_by = NULL){
+plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', negate = FALSE, missing_values = 'c()',out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -220,7 +220,7 @@ plot_histogram        <- function(tbl = "airquality", col = "Ozone", filter = 'c
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_box              <- function(tbl = "airquality", col = "Month", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -313,7 +313,7 @@ plot_box              <- function(tbl = "airquality", col = "Month", filter = 'c
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_date             <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = FALSE, missing_values = 'c()', time = "day", out = "ggplot2", group_by = NULL){
+plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = FALSE, missing_values = 'c()', time = "day", out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -410,7 +410,7 @@ plot_date             <- function(tbl = "airquality", col = "Day", filter = 'c()
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_bar              <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -493,7 +493,7 @@ plot_bar              <- function(tbl = "iris", col = "Species", filter = 'c()',
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_density          <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "ggplot2", group_by = NULL){
+plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -574,7 +574,7 @@ plot_density          <- function(tbl = "iris", col = "Sepal.Length", filter = '
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_pie              <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -677,7 +677,7 @@ plot_pie              <- function(tbl = "iris", col = "Species", filter = 'c()',
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_pie_valid_value  <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = "'versicolor'", out = "ggplot2", group_by = NULL){
+plot_pie_valid_value <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = "'versicolor'", out = "ggplot2", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -780,7 +780,7 @@ plot_pie_valid_value  <- function(tbl = "iris", col = "Species", filter = 'c()',
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -861,7 +861,7 @@ summary_text          <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_numerical     <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_numerical <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -962,7 +962,7 @@ summary_numerical     <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_category      <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -1033,7 +1033,7 @@ summary_category      <- function(tbl = "iris", col = "col", filter = 'c()', neg
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-template_visual_report    <- function(to = getwd()){
+template_visual_report <- function(to = getwd()){
 
   try({unlink(paste0(to,"/temp_bookdown_report/"), recursive = TRUE)},silent = TRUE)
   fs::dir_create(paste0(to,"/temp_bookdown_report"))

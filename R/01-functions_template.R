@@ -18,7 +18,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-get_args           <- function(...){
+get_args <- function(...){
 
   # get arguments of function and inputs
   args <- as.list(args(get_args))
@@ -47,7 +47,7 @@ get_args           <- function(...){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-cast_error_fargs           <- function(...){
+cast_error_fargs <- function(...){
 
   # get arguments of function and inputs
   args <- as.list(args(get_args))
@@ -77,7 +77,7 @@ cast_error_fargs           <- function(...){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-set_template           <- function(attributes, version = NULL){
+set_template <- function(attributes, version = NULL){
 
   # get arguments of function and inputs
   args <- as.list(args(set_template))
@@ -114,7 +114,7 @@ set_template           <- function(attributes, version = NULL){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-add_template           <- function(.fargs){
+add_template <- function(.fargs){
 
   # get arguments of function and inputs
   args <- as.list(args(add_template))
@@ -156,7 +156,7 @@ add_template           <- function(.fargs){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-prep_template          <- function(.fargs){
+prep_template <- function(.fargs){
 
   # get arguments of function and inputs
   args <- as.list(args(prep_template))
@@ -199,7 +199,7 @@ prep_template          <- function(.fargs){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-set_template_run       <- function(attributes){
+set_template_run <- function(attributes){
 
   obj <- list()
   obj$attributes <- attributes
@@ -228,7 +228,7 @@ set_template_run       <- function(attributes){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-add_template_run       <- function(obj, append_obj){
+add_template_run <- function(obj, append_obj){
 
   # get arguments of function and inputs
   args <- as.list(args(add_template_run))
@@ -269,7 +269,7 @@ add_template_run       <- function(obj, append_obj){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-prep_template_run      <- function(obj){
+prep_template_run <- function(obj){
 
   message("Manipulate the way you want the want, and return obj")
 
@@ -297,7 +297,7 @@ prep_template_run      <- function(obj){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-show_pipeline          <- function(.fargs){
+show_pipeline <- function(.fargs){
 
   .fargs %>%
     group_by(.data$order,.data$function_name) %>% slice(1) %>%
@@ -325,7 +325,7 @@ show_pipeline          <- function(.fargs){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-show_template           <- function(.fargs){
+show_template <- function(.fargs){
 
   show_pipeline(.fargs)
 
