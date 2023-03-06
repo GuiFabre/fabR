@@ -150,15 +150,15 @@ guess_date_format <- function(tbl, col = NULL){
 #' @examples
 #' \dontrun{
 #'
-# time = c(
-#   "1983-07-19",
-#   "31 jan 2017",
-#   "1988/12/17",
-#   "31-02-2005",
-#   "02-02-02",
-#   "2017 october the 2nd",
-#   "02-07-2012",
-#   "19-19-1923")
+#' time = c(
+#'   "1983-07-19",
+#'   "31 jan 2017",
+#'   "1988/12/17",
+#'   "31-02-2005",
+#'   "02-02-02",
+#'   "2017 october the 2nd",
+#'   "02-07-2012",
+#'   "19-19-1923")
 #'
 #' which_any_date(time)
 #'
@@ -231,6 +231,10 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #'
 #' @examples
 #' \dontrun{
+#'
+#' # Sometimes, there is ambiguity and the format cannot be guessed by the function
+#' # and correspond to a multiple possibility.
+#'
 #' time =
 #'   tibble(time = c(
 #'   "1983 07-19",
@@ -238,11 +242,25 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #'   "2010-09-29",
 #'   "2023/12/12",
 #'   "2009-09-03",
-#'   "1509 nov the 30th",
 #'   "1809-01-01"))
 #'
 #' time %>% mutate(new_time = as_any_date(time))
 #' time %>% mutate(new_time = as_any_date(time, format = "ymd"))
+#'
+#' # Sometimes, there is no ambiguity and the format can be guessed by the function
+#' # and correspond to a unique possibility.
+#'
+#' time =
+#'   tibble(time = c(
+#'   "1983 07-19",
+#'   "14-01-1925",
+#'   "2010-09-29",
+#'   "12/13/2015",
+#'   "2009-09-13",
+#'   "2025 jan the 30th",
+#'   "1809-01-19"))
+#'
+#' time %>% mutate(new_time = as_any_date(time))
 #'
 #' }
 #'

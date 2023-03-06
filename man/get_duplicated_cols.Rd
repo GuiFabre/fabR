@@ -20,6 +20,12 @@ identical values for all observations.
 \examples{
 \dontrun{
 
+mtcars_duplicated <-
+ mtcars \%>\%
+ mutate(
+  cyl_2 = cyl,
+  cyl_3 = cyl,
+  mpg_2 = mpg)
 
  get_duplicated_cols(mtcars_duplicated)
 

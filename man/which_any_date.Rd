@@ -34,6 +34,15 @@ formats. If no format is found, the function returns NA.
 \examples{
 \dontrun{
 
+time = c(
+  "1983-07-19",
+  "31 jan 2017",
+  "1988/12/17",
+  "31-02-2005",
+  "02-02-02",
+  "2017 october the 2nd",
+  "02-07-2012",
+  "19-19-1923")
 
 which_any_date(time)
 

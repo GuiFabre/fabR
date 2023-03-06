@@ -34,6 +34,10 @@ provides the format to apply.
 }
 \examples{
 \dontrun{
+
+# Sometimes, there is ambiguity and the format cannot be guessed by the function
+# and correspond to a multiple possibility.
+
 time =
   tibble(time = c(
   "1983 07-19",
@@ -41,11 +45,25 @@ time =
   "2010-09-29",
   "2023/12/12",
   "2009-09-03",
-  "1509 nov the 30th",
   "1809-01-01"))
 
 time \%>\% mutate(new_time = as_any_date(time))
 time \%>\% mutate(new_time = as_any_date(time, format = "ymd"))
+
+# Sometimes, there is no ambiguity and the format can be guessed by the function
+# and correspond to a unique possibility.
+
+time =
+  tibble(time = c(
+  "1983 07-19",
+  "14-01-1925",
+  "2010-09-29",
+  "12/13/2015",
+  "2009-09-13",
+  "2025 jan the 30th",
+  "1809-01-19"))
+
+time \%>\% mutate(new_time = as_any_date(time))
 
 }
 
