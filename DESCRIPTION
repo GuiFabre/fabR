@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions Collection Used In Data Pipelines 
-Version: 1.0.0
+Version: 1.1.0
 Author: Guillaume Fabre
 Authors@R: 
     c(person(given = "Guillaume",
