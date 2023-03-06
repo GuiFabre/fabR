@@ -7,24 +7,47 @@
 make_name_list(args_list, list_elem)
 }
 \arguments{
-\item{args_list}{xxx xxx xxx}
+\item{args_list}{A list of character string of same length of list_elem}
 
-\item{list_elem}{xxx xxx xxx}
+\item{list_elem}{A list of character string of same length of args_list}
 }
 \value{
-xxx xxx xxx.
+A character string simplified to be used as names in a list.
 }
 \description{
 Generate a name for an element in a list. This function is targeted for functions
 creations which handle lists. Those lists may need names to go through each elements.
-This function works with [stats::setNames()] and allows the user to provide name
+This function works with \code{\link[stats:setNames]{stats::setNames()}} and allows the user to provide name
 shorter, more user-friendly in their lists.
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+# make_name_list generates names that are informative through a line of code or
+# function. tibble(iris), iris \%>\% tibble and
+# list(iris = tibble(mytibble) \%>\% select(Species))
+# will have 'iris' as name.
+
+list(tibble(iris), tibble(mtcars)) \%>\%
+  setNames(make_name_list(list(tibble(iris), tibble(mtcars)), args_list =
+    c("IRIS \%>\% complicated_code","complicated_function(MTCARS)")))
+
+# make_name_list can be used when a function uses arguments provided by the user
+# to generate a list. The name is simplified and given to the list itself
+library(tidyverse)
+my_function = function(df){
+  .fargs <- as.list(match.call(expand.dots = TRUE))
+  list_df <-
+    list(df) \%>\%
+    stats::setNames(.,make_name_list(as.character(.fargs['df']),list(df)))
+  return(list_df)}
+
+my_function(as_tibble(iris))
+my_function(iris \%>\% as_tibble \%>\% select(Species))
 
 }
 
+}
+\seealso{
+\code{\link[stats:setNames]{stats::setNames()}}
 }

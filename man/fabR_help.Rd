@@ -6,6 +6,9 @@
 \usage{
 fabR_help()
 }
+\value{
+Nothing to be returned. The function opens a web package.
+}
 \description{
 This feature is a direct call of the documentation in the repository hosting
 the package. The user accesses the description of the latest version of the
@@ -13,7 +16,7 @@ package, the vignettes, and the list of functions.
 }
 \examples{
 \dontrun{
-# Example 1: call the help center!
+# call the help center!
 fabR_help()
 }
 

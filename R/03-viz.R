@@ -1,5 +1,7 @@
+#' @title
 #' Draw bar plot of one (possibly grouped) open-text column in a tbl
 #'
+#' @description
 #' This function draws a bar plot of the values of open text column. This
 #' plot shows the x-th first most cited words in a column having open text values using
 #' tidytext library.
@@ -25,7 +27,11 @@
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return bar plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A bar plot object
 #'
 #' @examples
 #' \dontrun{
@@ -37,7 +43,7 @@
 #'
 #' }
 #'
-#' @import dplyr ggplot2
+#' @import dplyr ggplot2 tidytext
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
@@ -55,7 +61,7 @@ plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate
     "  filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>% "              ,"\n",
     "  group_by(",group_by,") %>%"                                                    ,"\n",
     "  mutate(",col," = as.character(",col,")) %>%"                                   ,"\n",
-    "  unnest_tokens(output = word, input = ",col,") %>%"                             ,"\n",
+    "  tidytext::unnest_tokens(output = word, input = ",col,") %>%"                   ,"\n",
     "  anti_join(tidytext::stop_words) %>%"                                           ,"\n",
     "  count(word, sort = TRUE) %>%"                                                  ,"\n",
     "  mutate(word = reorder(word, n)) %>%"                                           ,"\n",
@@ -97,9 +103,10 @@ plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw histogram of one (possibly grouped) column in a tbl
 #'
+#' @description
 #' This function draws a histogram plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -122,7 +129,11 @@ plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return hist plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A hist plot object
 #'
 #' @examples
 #' \dontrun{
@@ -179,9 +190,10 @@ plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', ne
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw box plot of one (possibly grouped) column in a tbl
 #'
+#' @description
 #' This function draws a box plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -204,7 +216,11 @@ plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', ne
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return box plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A box plot object
 #'
 #' @examples
 #' \dontrun{
@@ -232,7 +248,7 @@ plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate =
     tbl_name," %>% "                                                       ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                         ,"\n",
     "  filter(!(",col," %in% ",missing_values,"  )) %>% "                         ,"\n",
-    "  tibble::add_column(participants = 'participants')"                                      )
+    "  mutate(participants = 'participants')"                                      )
 
   if(stringr::str_detect(out,"ggplot2")){
     plot <- paste0(
@@ -266,9 +282,10 @@ plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate =
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw lollipop plot of one (possibly grouped) time-related column in a tbl
 #'
+#' @description
 #' This function draws a lollipop plot of the values of time related column.
 #' the 'time' parameter uses lubridate synthax to specify the period of time to consider.
 #' Missing values can be given as input to non-valid and valid values separately, or
@@ -294,7 +311,11 @@ plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate =
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return lollipop plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A lollipop plot object
 #'
 #' @examples
 #' \dontrun{
@@ -369,9 +390,10 @@ plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = 
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw bar plot of one (possibly grouped) column in a tbl
 #'
+#' @description
 #' This function draws a bar plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -394,7 +416,11 @@ plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = 
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return bar plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A bar plot object
 #'
 #' @examples
 #' \dontrun{
@@ -453,8 +479,10 @@ plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 }
 
 
+#' @title
 #' Draw density plot of one (possibly grouped) column in a tbl
 #'
+#' @description
 #' This function draws a density line plot of the values of a column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -477,7 +505,11 @@ plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return density plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A density plot object
 #'
 #' @examples
 #' \dontrun{
@@ -533,9 +565,10 @@ plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', neg
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw pie chart of one (possibly grouped) column in a tbl
 #'
+#' @description
 #' This function draws a pie plot of the values of column.
 #' Missing values can be given as input to non-valid and valid values separately, or
 #' grouped by another column. The output can be editable (using plotly library) or static
@@ -558,7 +591,12 @@ plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', neg
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return pie plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#'
+#' @return
+#' A pie plot object
 #'
 #' @examples
 #' \dontrun{
@@ -631,9 +669,10 @@ plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Draw pie chart of one (possibly grouped) column in a tbl (valid, non-valid and missing values)
 #'
+#' @description
 #' This function draws a pie plot of the values of a column separating valid,
 #' non-valid and missing values.
 #' Missing values can be given as input to non-valid and valid values separately, or
@@ -657,7 +696,11 @@ plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return pie plot object
+#' @seealso
+#' [ggplot2::ggplot()]
+#'
+#' @return
+#' A pie plot object
 #'
 #' @examples
 #' \dontrun{
@@ -739,9 +782,10 @@ plot_pie_valid_value <- function(tbl = "iris", col = "Species", filter = 'c()', 
                                                                "'ggplot2-cat', 'plotly-cat'"))}
 }
 
-
+#' @title
 #' Create summary table of one (possibly grouped) text-type column in a tbl
 #'
+#' @description
 #' This function creates a datatable of the values of a column with separate valid,
 #' non-valid and missing values.
 #' Missing values can be given as input to non-valid and valid values separately, or
@@ -764,7 +808,11 @@ plot_pie_valid_value <- function(tbl = "iris", col = "Species", filter = 'c()', 
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return A datatable (editable) object or a R script in a character string to create it.
+#' @seealso
+#' [DT::datatable()]
+#'
+#' @return
+#' A datatable (editable) object or a R script in a character string to create it.
 #'
 #' @examples
 #' \dontrun{
@@ -811,9 +859,10 @@ summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FAL
 
 }
 
-
+#' @title
 #' Create summary table of one (possibly grouped) numerical-type column in a tbl
 #'
+#' @description
 #' This function creates datatable of the values of a column separating valid,
 #' non-valid and missing values.
 #' Missing values can be given as input to non-valid and valid values separately, or
@@ -845,7 +894,11 @@ summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FAL
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return A datatable (editable) object or a R script in a character string to create it.
+#' @seealso
+#' [DT::datatable()]
+#'
+#' @return
+#' A datatable (editable) object or a R script in a character string to create it.
 #'
 #' @examples
 #' \dontrun{
@@ -922,8 +975,10 @@ summary_numerical <- function(tbl = "iris", col = "col", filter = 'c()', negate 
 
 }
 
+#' @title
 #' Create summary table of one (possibly grouped) category-type column in a tbl
 #'
+#' @description
 #' This function creates datatable of the values of a column separating valid,
 #' non-valid and missing values.
 #' Missing values can be given as input to non-valid and valid values separately, or
@@ -946,7 +1001,11 @@ summary_numerical <- function(tbl = "iris", col = "col", filter = 'c()', negate 
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
 #'
-#' @return A datatable (editable) object or a R script in a character string to create it.
+#' @seealso
+#' [DT::datatable()]
+#'
+#' @return
+#' A datatable (editable) object or a R script in a character string to create it.
 #'
 #' @examples
 #' \dontrun{
@@ -974,7 +1033,7 @@ summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate =
     tbl_name," %>% "                                                        ,"\n",
     "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                       ,"\n",
     "  group_by(",col,", group_by = ",group_by,") %>% count %>% "               ,"\n",
-    "  tibble::add_column(prop_no_mis = NA_real_) %>% "                                 ,"\n",
+    "  mutate(prop_no_mis = NA_real_) %>% "                                 ,"\n",
     "  group_by(group_by) %>% "                                                 ,"\n",
     "  select(group_by, everything()) %>% "                                     ,"\n",
     "  mutate(prop_no_mis = paste0(round(n/sum(n), digits = 2)*100,'%')) %>%"   ,"\n",
@@ -983,7 +1042,7 @@ summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate =
     "    filter(",negate,"(",col," %in% ",filter, ")) %>% "                     ,"\n",
     "    filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>% "      ,"\n",
     "      group_by(",col,", group_by = ",group_by,") %>% count %>% "           ,"\n",
-    "      tibble::add_column(prop_tot = NA_real_) %>% "                                ,"\n",
+    "      mutate(prop_tot = NA_real_) %>% "                                ,"\n",
     "      group_by(group_by) %>% "                                             ,"\n",
     "      select(group_by, everything()) %>% "                                 ,"\n",
     "      mutate(prop_tot = paste0(round(n/sum(n), digits = 2)*100,'%')))%>% " ,"\n",
@@ -1009,9 +1068,10 @@ summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate =
 
 }
 
-
+#' @title
 #' Create a bookdown template for the visual report
 #'
+#' @description
 #' This helper function creates a template for the visual report bookdown. This
 #' template is taken from the following link:
 #' https://github.com/jtr13/bookdown-template/archive/refs/heads/master.zip
@@ -1019,7 +1079,8 @@ summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate =
 #'
 #' @param to A character string of a path where the bookdown report will be placed
 #'
-#' @return a folder containing all files (Rmd, yml, docs, ...) to generate bookdown report
+#' @return
+#' A folder containing all files (Rmd, yml, docs, ...) to generate bookdown report
 #'
 #' @examples
 #' \dontrun{

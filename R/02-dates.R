@@ -1,11 +1,14 @@
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' xxx xxx xxx.
 #'
 #' @param col xxx
 #' @param tbl xxx
 #'
-#' @return xxx xxx xxx.
+#' @return
+#' xxx xxx xxx.
 #'
 #' @examples
 #' \dontrun{
@@ -64,14 +67,17 @@ guess_date_format <- function(tbl, col = NULL){
   return(test)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' Creates objects of type "Date".
 #'
 #' @param x object to be coerced.
 #' @param format object to be coerced.
 #'
-#' @return xxx xxx xxx
+#' @return
+#' xxx xxx xxx
 #'
 #' @examples
 #' \dontrun{
@@ -115,14 +121,17 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
   return(test)
 }
 
+#' @title
 #' xxx xxx xxx
 #'
+#' @description
 #' Creates objects of type "Date".
 #'
 #' @param x object to be coerced.
 #' @param format object to be coerced.
 #'
-#' @return xxx xxx xxx
+#' @return
+#' xxx xxx xxx
 #'
 #' @examples
 #' \dontrun{
@@ -154,11 +163,11 @@ as_any_date <- function(x = as.character(), format = c("dmy","dym","ymd","ydm","
 
   if(wrn3) warning(call. = FALSE,
                    "All formats failed to parse for some values.",
-                   "\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")
+                   "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
   if(wrn4) warning(call. = FALSE,
                    "Ambiguous date format (",date_test[i],"). Please provide format in parameters",
-                   "\n",crayon::bold("\n\nUseful tip:")," Use which_any_date(x) to get formats.")
+                   "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
   date_final <- ymd(date_test)
 

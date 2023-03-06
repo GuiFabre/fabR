@@ -2,24 +2,39 @@
 % Please edit documentation in R/00-utils.R
 \name{as_any_boolean}
 \alias{as_any_boolean}
-\title{xxx xxx xxx}
+\title{Create objects of type "logical".}
 \usage{
 as_any_boolean(x)
 }
 \arguments{
-\item{x}{xxx xxx xxx}
+\item{x}{Object to be coerced or tested. Can be a vector.}
 }
 \value{
-xxx xxx xxx.
+An logical object of the same size.
 }
 \description{
-xxx xxx xxx.
+Create or test for objects of type "logical", and the basic logical constants.
+This function is a wrapper of the function \code{\link[base:logical]{base::as.logical()}} and evaluates
+if the object to be coerced can be interpreted as a boolean. Any object :
+NA, NA_integer, NA_Date_, (...),
+0, 0L, F, FALSE, false, FaLsE, (...),
+1, 1L,T,  TRUE,  true, TrUe, (...),
+will be converted as NA, FALSE and TRUE. Any other other will return an error.
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+as_any_boolean("TRUE")
+as_any_boolean(c("1"))
+as_any_boolean(0L)
+as_any_boolean(c('foo'))
+as_any_boolean(c(0,1L,0,TRUE,"t","F","FALSE"))
+tibble(bvalues = c(0,1L,0,TRUE,"t","F","FALSE")) \%>\%
+  mutate(values = as_any_boolean(bvalues))
 
 }
 
+}
+\seealso{
+\code{\link[base:logical]{base::as.logical()}}
 }

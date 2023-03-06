@@ -38,3 +38,5 @@ test.R
 # /*_files/
 # End of https://www.toptal.com/developers/gitignore/api/r
 inst/doc
+docs
+_pkgdown.yml

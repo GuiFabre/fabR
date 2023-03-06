@@ -26,7 +26,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: xxx
+#' file_index_create(getwd())
 #' }
 #'
 #' @import dplyr
@@ -137,7 +137,11 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: xxx
+#'
+#' index <- file_index_create(getwd())
+#' file_index_search(index, file_name = 'my_name')
+#' file_index_search(index, extension = '^R$')
+#'
 #' }
 #'
 #' @import dplyr fs
@@ -196,11 +200,15 @@ file_index_search <- function(index, file_path = "^", file_name = "^", extension
 #' @return
 #' R objects generated in the environment or R scripts. R object names are
 #' created automatically from their file names. Otherwise return messages indicating
-#' what objects were created, or files opened, and if any troubles occured
+#' what objects were created, or files opened, and if any troubles occurred.
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: xxx
+#'
+#' index <- file_index_create(getwd())
+#' file_index_search(index, file_name = my_file_name)
+#' file_index_read(index, file_name = my_file_name)
+#'
 #' }
 #'
 #' @import dplyr

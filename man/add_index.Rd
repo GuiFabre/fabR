@@ -29,14 +29,7 @@ one
 \examples{
 \dontrun{
 
-tbl = tibble(iris)
-name_index = "Species"
-.force = FALSE
-.force = TRUE
-
-tibble(iris) \%>\% add_index
-add_index(tibble(iris), name_index = 'Species')
-add_index(tibble(iris), name_index = name_index, .force = TRUE)
+add_index(iris, "my_index")
 
 }
 

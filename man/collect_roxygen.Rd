@@ -2,24 +2,30 @@
 % Please edit documentation in R/00-utils.R
 \name{collect_roxygen}
 \alias{collect_roxygen}
-\title{xxx xxx xxx}
+\title{Collects and Generates documentation of a package in a tibble format.}
 \usage{
 collect_roxygen(folder_r = "R")
 }
 \arguments{
-\item{folder_r}{xxx xxx xxx}
+\item{folder_r}{A character string identifying the folder to index. If not specified,
+'R/' is the default.}
 }
 \value{
-xxx xxx xxx.
+A tibble where each line represents a function described in a package, and each
+column is documentation field. Most commun fields (title, description, details,
+param, see also, return and examples are placed ahead).
 }
 \description{
-xxx xxx xxx.
+This function crawls and aggregates roxygen documentation into a tibble format.
+To work properly, elements must be separated with the named fields at title,
+at description, at ...), each at will be used as column name. The column name
+will also have 80 character to show the margin limit of each chunck of documentation.
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
-
+library(tidyr)
+as_tibble(collect_roxygen())
 
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-utils.R
 \name{read_excel_allsheets}
 \alias{read_excel_allsheets}
-\title{Read all Excel sheets using readxl::read_excel recursively}
+\title{Read all Excel sheets using \code{\link[readxl:read_excel]{readxl::read_excel()}} recursively}
 \usage{
 read_excel_allsheets(filename, sheets = "")
 }
@@ -18,14 +18,16 @@ if the number of sheets is one.
 \description{
 The Excel file is read and the values are placed in a list of tibbles, with each
 sheet in a separate element in the list. If the Excel file has only one sheet,
-the output is a single tibble. See [readxl::read_excel()]
+the output is a single tibble.
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
-
+read_excel_allsheets(filename = "myfile.xlsx")
 
 }
 
+}
+\seealso{
+\code{\link[readxl:read_excel]{readxl::read_excel()}}
 }

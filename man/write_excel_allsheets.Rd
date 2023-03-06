@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-utils.R
 \name{write_excel_allsheets}
 \alias{write_excel_allsheets}
-\title{Write all Excel sheets using xlsx::write.xlsx recursively}
+\title{Write all Excel sheets using \code{\link[xlsx:write.xlsx]{xlsx::write.xlsx()}} recursively}
 \usage{
 write_excel_allsheets(list, filename)
 }
@@ -10,6 +10,9 @@ write_excel_allsheets(list, filename)
 \item{list}{R objects, coma separated.}
 
 \item{filename}{A character string of the path of the Excel file.}
+}
+\value{
+Nothing to be returned. The file is created at the path declared in the environnement.
 }
 \description{
 The R objects are read and the values are placed in separated sheets.
@@ -19,8 +22,11 @@ https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-t
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+write_excel_allsheets(list = myobject, filename = "myobject.xlsx")
 
 }
 
+}
+\seealso{
+\code{\link[xlsx:write.xlsx]{xlsx::write.xlsx()}}
 }

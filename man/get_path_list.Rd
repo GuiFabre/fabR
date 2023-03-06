@@ -19,22 +19,17 @@ class of each leaf (can be a list, or R objects).
 \description{
 Function that recursively go through a list object and store in a tibble the path
 of each element in the list. The paths can be after that edited and accessed using
-[fabR::parceval()] for example.
+\code{\link[=parceval]{parceval()}} for example.
 }
 \examples{
 \dontrun{
 
-MyList <-
-list(
-  My_iris = tibble(iris),
-  My_car = list(
-    car_data = tibble(cars),
-    model_data = tibble(mtcars)
-    )
-)
-
-get_path_list(MyList)#'
+list <- list(i = iris, m = list(t1 = mtcars, t2 = storms))
+get_path_list(list)
 
 }
 
+}
+\seealso{
+\code{\link[=parceval]{parceval()}}
 }

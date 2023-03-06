@@ -10,7 +10,7 @@ read_csv_any_formats(filename)
 \item{filename}{A character string of the path of the csv file.}
 }
 \value{
-a tibble corresponding to the csv read.
+A tibble corresponding to the csv read.
 }
 \description{
 The csv file is read twice to detect the number of lines to use in attributing
@@ -20,7 +20,8 @@ when reading csv files.
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+read_csv_any_formats(filename = "myfile.csv")
+
 }
 
 }

@@ -2,23 +2,25 @@
 % Please edit documentation in R/00-utils.R
 \name{as_any_symbol}
 \alias{as_any_symbol}
-\title{xxx xxx xxx}
+\title{Create objects of type "symbol".}
 \usage{
 as_any_symbol(x)
 }
 \arguments{
-\item{x}{xxx xxx xxx}
+\item{x}{Object to be coerced or tested. Can be a vector, a character string,
+a symbol.}
 }
 \value{
-xxx xxx xxx.
+Object of type "symbol".
 }
 \description{
-xxx xxx xxx.
+Create or test for objects of type "symbol".
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+as_any_symbol(coucou)
+as_any_symbol("coucou")
 
 }
 

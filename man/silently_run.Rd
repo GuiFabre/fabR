@@ -9,16 +9,24 @@ silently_run(...)
 \arguments{
 \item{...}{R code}
 }
+\value{
+The output of the R code, unless the output is a message, a warning or an error,
+Nothing will be returned in that case.
+}
 \description{
 Shortcut avoiding user to get messages, warnings and being stopped by an error.
-The usage is very similar to [base::suppressWarnings()]. This function is targeted
+The usage is very similar to \code{\link[base:warning]{base::suppressWarnings()}}. This function is targeted
 for function creators where user experience enhancement is sought.
 }
 \examples{
 \dontrun{
 
-# Example 1: yyy yyy yyy
+as.integer("text")
+silently_run(as.integer("text"))
 
 }
 
+}
+\seealso{
+\code{\link[base:invisible]{base::invisible()}}, \code{\link[base:warning]{base::suppressWarnings()}}, \code{\link[base:message]{base::suppressMessages()}}
 }

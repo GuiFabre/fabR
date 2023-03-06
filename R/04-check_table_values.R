@@ -1,11 +1,14 @@
+#' @title
 #' Extract columns that have same values in a tibble
 #'
+#' @description
 #' This helper function extracts the names of the columns in a tibble having
 #' identical values for all observations.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tbl
 #'
-#' @return A tibble indicating which columns which values is the same in
+#' @return
+#' A tibble indicating which columns which values is the same in
 #' the tibble
 #'
 #' @examples
@@ -59,9 +62,10 @@ get_duplicated_cols <- function(tbl){
   return(test)
 }
 
-
+#' @title
 #' Extract observations(rows) that have same values in a tibble
 #'
+#' @description
 #' This helper function extracts the row number (or first column value) in a
 #' tibble having identical values for all columns. This function can be used
 #' either on the whole columns or excluding the first column (id) (which can be
@@ -73,7 +77,8 @@ get_duplicated_cols <- function(tbl){
 #' columns will be taken in account for repeated observation identification.
 #' The row number will be used to identify those observations.
 #'
-#' @return A tibble indicating which row which values is the same in
+#' @return
+#' A tibble indicating which row which values is the same in
 #' the tibble
 #'
 #' @examples
@@ -84,24 +89,9 @@ get_duplicated_cols <- function(tbl){
 #' mtcars_duplicated <-
 #'   mtcars %>%
 #'   bind_rows(.,mtcars %>% slice(1)) %>%
-#'   as_tibble
+#'   as_tibble %>%
+#'   get_duplicated_rows()
 #'
-#' get_duplicated_rows(mtcars_duplicated)
-#'
-#' # the first column is returned to identify which observations have repeated
-#' values (Excluding the first column itseft)
-#'
-#' mtcars_duplicated <-
-#'   mtcars %>%
-#'   mutate(id_obs = rownames(mtcars)) %>%
-#'   bind_rows(.,
-#'             mtcars %>%
-#'               slice(1) %>%
-#'               mutate(id_obs = "new_observation")) %>%
-#'   select(id_obs, everything()) %>%
-#'   as_tibble()
-#'
-#' get_duplicated_rows(tbl = mtcars_duplicated, id_col = "id_obs")
 #'
 #' }
 #'
@@ -132,7 +122,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     mutate_all(~ digest::digest(.,algo = "md5")) %>%
     mutate_all(~ stringr::str_sub(., 1, 2)) %>%
     tidyr::unite(col = "row_duplicate", sep = "") %>%
-    tibble::add_column(tbl %>% select(id_duplicate = 1)) %>%
+    mutate(id_duplicate = tbl[[1]]) %>%
     select(2, 1) %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
@@ -144,15 +134,17 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   return(test)
 }
 
-
+#' @title
 #' Extract columns that are all 'NA' from a tbl
 #'
+#' @description
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tbl
 #'
-#' @return A vector string indicating either that the tbl does not have empty
+#' @return
+#' A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
@@ -181,14 +173,17 @@ get_all_na_cols <- function(tbl){
   return(test)
 }
 
+#' @title
 #' Extract columns that are all 'NA' from a tbl
 #'
+#' @description
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tbl
 #'
-#' @return A vector string indicating either that the tbl does not have empty
+#' @return
+#' A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
@@ -221,14 +216,17 @@ get_all_na_rows <- function(tbl){
   return(test)
 }
 
+#' @title
 #' Extract columns that are all 'NA' from a tbl
 #'
+#' @description
 #' This helper function extracts the names of the columns in a tbl having NA
 #' values for all observations.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tbl
 #'
-#' @return A vector string indicating either that the tbl does not have empty
+#' @return
+#' A vector string indicating either that the tbl does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
