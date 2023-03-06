@@ -38,8 +38,8 @@
 #' # Example 1: cat output generated as a template when no argument provided
 #' plot_main_word()
 #'
-#' # Example 2: words contains in Species
-#' plot_main_word(tbl = tbl, col = "Species", out = "ggplot2")
+#' # Example 2: words contained in Species
+#' plot_main_word(tbl = iris, col = "Species", out = "ggplot2")
 #'
 #' }
 #'
@@ -47,7 +47,15 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()', max = 10, out = "ggplot2", group_by = NULL){
+plot_main_word <- function(
+    tbl = "iris",
+    col = "Species",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    max = 10,
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -141,7 +149,7 @@ plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate
 #' plot_histogram()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_histogram(tbl = tbl, col = "Petal.Length", out = "ggplot2")
+#' plot_histogram(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
@@ -149,7 +157,14 @@ plot_main_word <- function(tbl = "iris", col = "Species", filter = 'c()', negate
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', negate = FALSE, missing_values = 'c()',out = "ggplot2", group_by = NULL){
+plot_histogram <- function(
+    tbl = "airquality",
+    col = "Ozone",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -228,7 +243,7 @@ plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', ne
 #' plot_box()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_box(tbl = tbl, col = "Petal.Length", out = "ggplot2")
+#' plot_box(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
@@ -236,7 +251,14 @@ plot_histogram <- function(tbl = "airquality", col = "Ozone", filter = 'c()', ne
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_box <- function(
+    tbl = "airquality",
+    col = "Month",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -322,11 +344,15 @@ plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate =
 #' # Example 1: cat output generated as a template when no argument provided
 #' plot_date()
 #'
-#' # Example 2: graph of
-#'
-#' tbl = read_csv_any_formats("study_TOKYO.csv")
-#' plot_date(tbl, col = "dob", out = "ggplot2",time = "year")
-#' plot_date(tbl, col = "dob", out = "ggplot2",time = "month")
+#' # Example 2: graph of number of storms per month
+#' annual_storms <-
+#'   storms %>% sample_n(100) %>%
+#'   mutate(annual = as_any_date(paste(year,month,day),"ymd"))
+#' plot_date(
+#'  tbl = annual_storms,
+#'  col = "annual",
+#'  time = "month",
+#'  out = "ggplot2")
 #'
 #' }
 #'
@@ -334,7 +360,15 @@ plot_box <- function(tbl = "airquality", col = "Month", filter = 'c()', negate =
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = FALSE, missing_values = 'c()', time = "day", out = "ggplot2", group_by = NULL){
+plot_date <- function(
+    tbl = "mutate(sample_n(storms,100), annual = as_any_date(paste(year,month,day), 'ymd' ))",
+    col = "annual",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    time = "day",
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -428,7 +462,7 @@ plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = 
 #' plot_bar()
 #'
 #' # Example 2: graph of Species
-#' plot_bar(tbl = tbl, col = "Species", out = "ggplot2")
+#' plot_bar(tbl = storms, col = "status", out = "ggplot2")
 #'
 #' }
 #'
@@ -436,7 +470,14 @@ plot_date <- function(tbl = "airquality", col = "Day", filter = 'c()', negate = 
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_bar <- function(
+    tbl = "storms",
+    col = "status",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -517,7 +558,7 @@ plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' plot_density()
 #'
 #' # Example 2: graph of Petal.Length
-#' plot_density(tbl = tbl, col = "Petal.Length", out = "ggplot2")
+#' plot_density(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
 #'
@@ -525,7 +566,14 @@ plot_bar <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "ggplot2", group_by = NULL){
+plot_density <- function(
+    tbl = "iris",
+    col = "Sepal.Length",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -603,8 +651,8 @@ plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', neg
 #' # Example 1: cat output generated as a template when no argument provided
 #' plot_pie()
 #'
-#' # Example 2: graph of Species
-#' plot_pie(tbl = tbl, col = "Species", out = "ggplot2")
+#' # Example 2: graph of status in storms
+#' plot_pie(tbl = storms, col = "status", out = "ggplot2")
 #'
 #' }
 #'
@@ -612,7 +660,14 @@ plot_density <- function(tbl = "iris", col = "Sepal.Length", filter = 'c()', neg
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = 'c()',               out = "ggplot2", group_by = NULL){
+plot_pie <- function(
+    tbl = "storms",
+    col = "status",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -705,13 +760,14 @@ plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' @examples
 #' \dontrun{
 #' # Example 1: cat output generated as a template when no argument provided
+#' plot_pie_valid_value()
 #'
 #' # Example 2: graph of Species (virginica is associated to missing values for the
 #' # purpose of example)
 #' plot_pie_valid_value(
-#'   tbl = tbl,
-#'   col = "Species",
-#'   missing_values = "'virginica'" ,
+#'   tbl = storms,
+#'   col = "status",
+#'   missing_values = "'other low'" ,
 #'   out = "ggplot2")
 #'
 #' }
@@ -720,7 +776,14 @@ plot_pie <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FAL
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-plot_pie_valid_value <- function(tbl = "iris", col = "Species", filter = 'c()', negate = FALSE, missing_values = "'versicolor'", out = "ggplot2", group_by = NULL){
+plot_pie_valid_value <- function(
+    tbl = "storms",
+    col = "status",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = "'other low'",
+    out = "ggplot2-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -820,15 +883,22 @@ plot_pie_valid_value <- function(tbl = "iris", col = "Species", filter = 'c()', 
 #' summary_text()
 #'
 #' # Example 2: summary table of Species
-#' summary_text(tbl = iris, col = "Species", out = "DT")
+#' summary_text(tbl = storms, col = "status", out = "DT")
 #'
 #' }
 #'
-#' @import dplyr ggplot2 DT
+#' @import dplyr ggplot2 DT janitor
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_text <- function(
+    tbl = "storms",
+    col = "status",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "DT-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -846,7 +916,7 @@ summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FAL
     "  rename(`Values` = 1, `Number of answers` = 2) %>% "                ,"\n",
     "  arrange(`Values`,desc(`Number of answers`)) %>% "                  ,"\n",
     "  mutate(`Values` = na_if(`Values`,'')) %>%"                        ,"\n",
-    "    remove_empty(which = 'cols') %>%"                                 ,"\n",
+    "    janitor::remove_empty(which = 'cols') %>%"                                 ,"\n",
     "  DT::datatable( "                                                        ,"\n",
     "    class = 'cell-border stripe', rownames = FALSE,"                  ,"\n",
     "    filter = 'top', editable = FALSE, extensions = 'Buttons', "       ,"\n",
@@ -914,7 +984,14 @@ summary_text <- function(tbl = "iris", col = "col", filter = 'c()', negate = FAL
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_numerical <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_numerical <- function(
+    tbl = "iris",
+    col = "col",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "DT-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -1017,11 +1094,18 @@ summary_numerical <- function(tbl = "iris", col = "col", filter = 'c()', negate 
 #'
 #' }
 #'
-#' @import dplyr ggplot2 DT
+#' @import dplyr ggplot2 DT janitor
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate = FALSE, missing_values = 'c()', out = "DT-cat", group_by = NULL){
+summary_category <- function(
+    tbl = "iris",
+    col = "col",
+    filter = 'c()',
+    negate = FALSE,
+    missing_values = 'c()',
+    out = "DT-cat",
+    group_by = NULL){
 
   group_by <- ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
   negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
@@ -1055,7 +1139,7 @@ summary_category <- function(tbl = "iris", col = "col", filter = 'c()', negate =
     "  select(1, 2, 3, 4, 5) %>% "                                                  ,"\n",
     "  mutate(`Grouping variable` = na_if(`Grouping variable`,'')) %>% "        ,"\n",
     "  arrange(`Grouping variable`,`Category code`) %>% "                       ,"\n",
-    "    remove_empty('cols') %>% "                                             ,"\n",
+    "    janitor::remove_empty('cols') %>% "                                             ,"\n",
     "  DT::datatable( "                                                             ,"\n",
     "    class = 'cell-border stripe', rownames = FALSE,"                       ,"\n",
     "    filter = 'top', editable = FALSE, extensions = 'Buttons', "            ,"\n",

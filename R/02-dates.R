@@ -1,18 +1,69 @@
 #' @title
-#' xxx xxx xxx
+#' Evaluate and gives the best match to any date format using lubridate library
 #'
 #' @description
-#' xxx xxx xxx.
+#' This function takes a tibble and a specific column. This column is evaluated
+#' one observation after the other, and finally gives the best matching date format
+#' for the whole column. The best matching format is tested across 7 different formats
+#' provided by the lubridate library. Along with the format, the percentage of matching
+#' is given in the output tibble. The information of the best matching format can be used
+#' to mutate a column using [fabR::as_any_date()].
 #'
-#' @param col xxx
-#' @param tbl xxx
+#' @details
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
+#' column as a whole, and does not cast the column if there is ambiguity between
+#' values. For example, ('19-07-1983', '02-03-1982') implies that 02 refers to
+#' the day and 03 refers to the month, since that order works for the first element,
+#' and doesn't otherwise.
+#'
+#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param col A character string specifying a column of interest
+#'
+#' @seealso
+#' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
+#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::as_date()],
+#' [fabR::which_any_date()],[fabR::as_any_date()]
 #'
 #' @return
-#' xxx xxx xxx.
+#' A tibble with information concerning the best matching date format, given an
+#' object to be evaluated.
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: xxx xxx xxx.
+#'
+#' time =
+#'   tibble(time = c(
+#'   "1983-07-19",
+#'   "2003-01-14",
+#'   "2010-09-29",
+#'   "2023-12-12",
+#'   "2009-09-03",
+#'   "1509-11-30",
+#'   "1809-01-01"))
+#' guess_date_format(time)
+#'
+#' time =
+#'   tibble(time = c(
+#'   "1983-19-07",
+#'   "2003-01-14",
+#'   "2010-09-29",
+#'   "2023-12-12",
+#'   "2009-09-03",
+#'   "1509-11-30",
+#'   "1809-01-01"))
+#' guess_date_format(time)
+#'
+#' time =
+#'   tibble(time = c(
+#'   "198-07-19",
+#'   "200-01-14",
+#'   "201-09-29",
+#'   "202-12-12",
+#'   "200-09-03",
+#'   "150-11-30",
+#'   "180-01-01"))
+#' guess_date_format(time)
 #'
 #' }
 #'
@@ -68,21 +119,48 @@ guess_date_format <- function(tbl, col = NULL){
 }
 
 #' @title
-#' xxx xxx xxx
+#' Evaluates and gives the possible format(s) for an object to be evaluated.
 #'
 #' @description
-#' Creates objects of type "Date".
+#' This function takes a character string or a vector. This vector is evaluates
+#' one observation after the other, and gives the best matching date format
+#' for each of them (independently). The best matching format is tested across 7
+#' different formats provided by the lubridate library. The information of the best
+#' matching format can be used to mutate a column using [fabR::as_any_date()].
 #'
-#' @param x object to be coerced.
+#' @details
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
+#' different possibilities for a date. For example, c('02-03-1982') can be either
+#' March the 2nd or February the 3rd. The function will provide "mdy, dmy" as possible
+#' formats. If no format is found, the function returns NA.
+#'
+#' @param x object to be coerced. Can be a character string or a vector.
 #' @param format object to be coerced.
 #'
 #' @return
-#' xxx xxx xxx
+#' A character string of the possible date formats given a parameter to be tested.
+#' The length of the vector is the lenght of the input object.
+#'
+#' @seealso
+#' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
+#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::as_date()],
+#' [fabR::guess_date_format()],[fabR::as_any_date()]
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: This example
 #'
+# time = c(
+#   "1983-07-19",
+#   "31 jan 2017",
+#   "1988/12/17",
+#   "31-02-2005",
+#   "02-02-02",
+#   "2017 october the 2nd",
+#   "02-07-2012",
+#   "19-19-1923")
+#'
+#' which_any_date(time)
 #'
 #' }
 #'
@@ -122,21 +200,49 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 }
 
 #' @title
-#' xxx xxx xxx
+#' Create objects of class "Date".
 #'
 #' @description
-#' Creates objects of type "Date".
+#' This function takes a character string or a vector. This vector is evaluates
+#' one observation after the other, and casts the best matching date format
+#' for each of them (independently). The best matching format is tested across 7
+#' different formats provided by the lubridate library. The user can specify the
+#' wanted matching format (and can be helped using [fabR::which_any_date()] for
+#' each value or [fabR::guess_date_format()] for the values as a whole.
+#'
+#' @details
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
+#' different possibilities for a date. For example, c('02-03-1982') can be either
+#' March the 2nd or February the 3rd. The function will cast the value as NA, and
+#' a warning, since there is an ambiguity that cannot be solved, unless the user
+#' provides the format to apply.
 #'
 #' @param x object to be coerced.
 #' @param format object to be coerced.
 #'
+#' @seealso
+#' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
+#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::as_date()],
+#' [fabR::guess_date_format()],[fabR::which_any_date()]
+#'
 #' @return
-#' xxx xxx xxx
+#' A R Object of class 'Date'.
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: This example
+#' time =
+#'   tibble(time = c(
+#'   "1983 07-19",
+#'   "2003-01-14",
+#'   "2010-09-29",
+#'   "2023/12/12",
+#'   "2009-09-03",
+#'   "1509 nov the 30th",
+#'   "1809-01-01"))
 #'
+#' time %>% mutate(new_time = as_any_date(time))
+#' time %>% mutate(new_time = as_any_date(time, format = "ymd"))
 #'
 #' }
 #'
@@ -144,7 +250,8 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-as_any_date <- function(x = as.character(), format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+as_any_date <- function(
+    x = as.character(), format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
   date_test <- which_any_date(x, format)
 

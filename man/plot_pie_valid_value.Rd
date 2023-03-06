@@ -5,12 +5,12 @@
 \title{Draw pie chart of one (possibly grouped) column in a tbl (valid, non-valid and missing values)}
 \usage{
 plot_pie_valid_value(
-  tbl = "iris",
-  col = "Species",
+  tbl = "storms",
+  col = "status",
   filter = "c()",
   negate = FALSE,
-  missing_values = "'versicolor'",
-  out = "ggplot2",
+  missing_values = "'other low'",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -51,13 +51,14 @@ grouped by another column. The output can be editable (using plotly library) or 
 \examples{
 \dontrun{
 # Example 1: cat output generated as a template when no argument provided
+plot_pie_valid_value()
 
 # Example 2: graph of Species (virginica is associated to missing values for the
 # purpose of example)
 plot_pie_valid_value(
-  tbl = tbl,
-  col = "Species",
-  missing_values = "'virginica'" ,
+  tbl = storms,
+  col = "status",
+  missing_values = "'other low'" ,
   out = "ggplot2")
 
 }

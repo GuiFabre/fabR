@@ -5,8 +5,8 @@
 \title{Create summary table of one (possibly grouped) text-type column in a tbl}
 \usage{
 summary_text(
-  tbl = "iris",
-  col = "col",
+  tbl = "storms",
+  col = "status",
   filter = "c()",
   negate = FALSE,
   missing_values = "c()",
@@ -53,7 +53,7 @@ The user can download the datatable in csv format.
 summary_text()
 
 # Example 2: summary table of Species
-summary_text(tbl = iris, col = "Species", out = "DT")
+summary_text(tbl = storms, col = "status", out = "DT")
 
 }
 

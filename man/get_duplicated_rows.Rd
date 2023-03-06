@@ -27,14 +27,9 @@ useful to identify repeated observation across different ids)
 \examples{
 \dontrun{
 
-# the row number is returned to identify which observations have repeated
-# values
-mtcars_duplicated <-
-  mtcars \%>\%
-  bind_rows(.,mtcars \%>\% slice(1)) \%>\%
-  as_tibble \%>\%
-  get_duplicated_rows()
-
+# the row numbers are returned to identify which observations have repeated values
+library(tidyverse)
+get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 
 }
 

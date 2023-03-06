@@ -10,7 +10,7 @@ plot_box(
   filter = "c()",
   negate = FALSE,
   missing_values = "c()",
-  out = "ggplot2",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -53,7 +53,7 @@ grouped by another column. The output can be editable (using plotly library) or 
 plot_box()
 
 # Example 2: graph of Petal.Length
-plot_box(tbl = tbl, col = "Petal.Length", out = "ggplot2")
+plot_box(tbl = iris, col = "Petal.Length", out = "ggplot2")
 
 }
 

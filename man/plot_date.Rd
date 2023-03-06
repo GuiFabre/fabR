@@ -5,13 +5,14 @@
 \title{Draw lollipop plot of one (possibly grouped) time-related column in a tbl}
 \usage{
 plot_date(
-  tbl = "airquality",
-  col = "Day",
+  tbl =
+    "mutate(sample_n(storms,100), annual = as_any_date(paste(year,month,day), 'ymd' ))",
+  col = "annual",
   filter = "c()",
   negate = FALSE,
   missing_values = "c()",
   time = "day",
-  out = "ggplot2",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -57,11 +58,15 @@ grouped by another column. The output can be editable (using plotly library) or 
 # Example 1: cat output generated as a template when no argument provided
 plot_date()
 
-# Example 2: graph of
-
-tbl = read_csv_any_formats("study_TOKYO.csv")
-plot_date(tbl, col = "dob", out = "ggplot2",time = "year")
-plot_date(tbl, col = "dob", out = "ggplot2",time = "month")
+# Example 2: graph of number of storms per month
+annual_storms <-
+  storms \%>\% sample_n(100) \%>\%
+  mutate(annual = as_any_date(paste(year,month,day),"ymd"))
+plot_date(
+ tbl = annual_storms,
+ col = "annual",
+ time = "month",
+ out = "ggplot2")
 
 }
 

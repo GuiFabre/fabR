@@ -19,11 +19,13 @@ values for all observations.
 }
 \examples{
 \dontrun{
-# Example 1: All columns have observation
+# Example 1: All rows have observation
 get_all_na_cols(iris)
 
-# Example 2: One column doesn't have any observations
-get_all_na_cols(iris \%>\% mutate(new_col = NA))
+# Example 2: One row doesn't have any observations
+library(tidyverse)
+get_all_na_rows(bind_rows(iris, tibble(Species = NA)))
+
 }
 
 }

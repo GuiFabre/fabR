@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-dates.R
 \name{as_any_date}
 \alias{as_any_date}
-\title{xxx xxx xxx}
+\title{Create objects of class "Date".}
 \usage{
 as_any_date(
   x = as.character(),
@@ -15,16 +15,44 @@ as_any_date(
 \item{format}{object to be coerced.}
 }
 \value{
-xxx xxx xxx
+A R Object of class 'Date'.
 }
 \description{
-Creates objects of type "Date".
+This function takes a character string or a vector. This vector is evaluates
+one observation after the other, and casts the best matching date format
+for each of them (independently). The best matching format is tested across 7
+different formats provided by the lubridate library. The user can specify the
+wanted matching format (and can be helped using \code{\link[=which_any_date]{which_any_date()}} for
+each value or \code{\link[=guess_date_format]{guess_date_format()}} for the values as a whole.
+}
+\details{
+Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates the
+different possibilities for a date. For example, c('02-03-1982') can be either
+March the 2nd or February the 3rd. The function will cast the value as NA, and
+a warning, since there is an ambiguity that cannot be solved, unless the user
+provides the format to apply.
 }
 \examples{
 \dontrun{
-# Example 1: This example
+time =
+  tibble(time = c(
+  "1983 07-19",
+  "2003-01-14",
+  "2010-09-29",
+  "2023/12/12",
+  "2009-09-03",
+  "1509 nov the 30th",
+  "1809-01-01"))
 
+time \%>\% mutate(new_time = as_any_date(time))
+time \%>\% mutate(new_time = as_any_date(time, format = "ymd"))
 
 }
 
+}
+\seealso{
+\code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
+\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=which_any_date]{which_any_date()}}
 }

@@ -11,7 +11,7 @@ plot_main_word(
   negate = FALSE,
   missing_values = "c()",
   max = 10,
-  out = "ggplot2",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -57,8 +57,8 @@ grouped by another column. The output can be editable (using plotly library) or 
 # Example 1: cat output generated as a template when no argument provided
 plot_main_word()
 
-# Example 2: words contains in Species
-plot_main_word(tbl = tbl, col = "Species", out = "ggplot2")
+# Example 2: words contained in Species
+plot_main_word(tbl = iris, col = "Species", out = "ggplot2")
 
 }
 

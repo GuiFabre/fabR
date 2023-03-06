@@ -23,7 +23,8 @@ values for all observations.
 get_all_na_cols(iris)
 
 # Example 2: One column doesn't have any observations
-get_all_na_cols(iris \%>\% mutate(new_col = NA))
+library(tidyverse)
+get_all_na_cols(mutate(iris, new_col = NA))
 }
 
 }

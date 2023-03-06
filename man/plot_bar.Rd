@@ -5,12 +5,12 @@
 \title{Draw bar plot of one (possibly grouped) column in a tbl}
 \usage{
 plot_bar(
-  tbl = "iris",
-  col = "Species",
+  tbl = "storms",
+  col = "status",
   filter = "c()",
   negate = FALSE,
   missing_values = "c()",
-  out = "ggplot2",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -53,7 +53,7 @@ grouped by another column. The output can be editable (using plotly library) or 
 plot_bar()
 
 # Example 2: graph of Species
-plot_bar(tbl = tbl, col = "Species", out = "ggplot2")
+plot_bar(tbl = storms, col = "status", out = "ggplot2")
 
 }
 

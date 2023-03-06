@@ -19,11 +19,12 @@ values for all observations.
 }
 \examples{
 \dontrun{
-# Example 1: All columns have observation
-get_all_na_cols(iris)
+# Example 1: All columns have distinct observation
+get_unique_value_cols(iris)
 
-# Example 2: One column doesn't have any observations
-get_all_na_cols(iris \%>\% mutate(new_col = NA))
+# Example 2: One column doesn't have distinct observations
+get_unique_value_cols(slice(iris,1:50))
+
 }
 
 }

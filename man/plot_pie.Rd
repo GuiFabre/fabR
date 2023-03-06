@@ -5,12 +5,12 @@
 \title{Draw pie chart of one (possibly grouped) column in a tbl}
 \usage{
 plot_pie(
-  tbl = "iris",
-  col = "Species",
+  tbl = "storms",
+  col = "status",
   filter = "c()",
   negate = FALSE,
   missing_values = "c()",
-  out = "ggplot2",
+  out = "ggplot2-cat",
   group_by = NULL
 )
 }
@@ -52,8 +52,8 @@ grouped by another column. The output can be editable (using plotly library) or 
 # Example 1: cat output generated as a template when no argument provided
 plot_pie()
 
-# Example 2: graph of Species
-plot_pie(tbl = tbl, col = "Species", out = "ggplot2")
+# Example 2: graph of status in storms
+plot_pie(tbl = storms, col = "status", out = "ggplot2")
 
 }
 

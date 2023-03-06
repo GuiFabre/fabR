@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-dates.R
 \name{which_any_date}
 \alias{which_any_date}
-\title{xxx xxx xxx}
+\title{Evaluates and gives the possible format(s) for an object to be evaluated.}
 \usage{
 which_any_date(
   x,
@@ -10,21 +10,39 @@ which_any_date(
 )
 }
 \arguments{
-\item{x}{object to be coerced.}
+\item{x}{object to be coerced. Can be a character string or a vector.}
 
 \item{format}{object to be coerced.}
 }
 \value{
-xxx xxx xxx
+A character string of the possible date formats given a parameter to be tested.
+The length of the vector is the lenght of the input object.
 }
 \description{
-Creates objects of type "Date".
+This function takes a character string or a vector. This vector is evaluates
+one observation after the other, and gives the best matching date format
+for each of them (independently). The best matching format is tested across 7
+different formats provided by the lubridate library. The information of the best
+matching format can be used to mutate a column using \code{\link[=as_any_date]{as_any_date()}}.
+}
+\details{
+Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates the
+different possibilities for a date. For example, c('02-03-1982') can be either
+March the 2nd or February the 3rd. The function will provide "mdy, dmy" as possible
+formats. If no format is found, the function returns NA.
 }
 \examples{
 \dontrun{
-# Example 1: This example
 
+
+which_any_date(time)
 
 }
 
+}
+\seealso{
+\code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
+\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=as_any_date]{as_any_date()}}
 }

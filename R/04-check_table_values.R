@@ -14,12 +14,12 @@
 #' @examples
 #' \dontrun{
 #'
-#' mtcars_duplicated <-
-#'  mtcars %>%
-#'  mutate(
-#'   cyl_2 = cyl,
-#'   cyl_3 = cyl,
-#'   mpg_2 = mpg)
+# mtcars_duplicated <-
+#  mtcars %>%
+#  mutate(
+#   cyl_2 = cyl,
+#   cyl_3 = cyl,
+#   mpg_2 = mpg)
 #'
 #'  get_duplicated_cols(mtcars_duplicated)
 #'
@@ -84,14 +84,9 @@ get_duplicated_cols <- function(tbl){
 #' @examples
 #' \dontrun{
 #'
-#' # the row number is returned to identify which observations have repeated
-#' # values
-#' mtcars_duplicated <-
-#'   mtcars %>%
-#'   bind_rows(.,mtcars %>% slice(1)) %>%
-#'   as_tibble %>%
-#'   get_duplicated_rows()
-#'
+#' # the row numbers are returned to identify which observations have repeated values
+#' library(tidyverse)
+#' get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 #'
 #' }
 #'
@@ -153,7 +148,8 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #' get_all_na_cols(iris)
 #'
 #' # Example 2: One column doesn't have any observations
-#' get_all_na_cols(iris %>% mutate(new_col = NA))
+#' library(tidyverse)
+#' get_all_na_cols(mutate(iris, new_col = NA))
 #' }
 #'
 #' @import dplyr
@@ -188,11 +184,13 @@ get_all_na_cols <- function(tbl){
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: All columns have observation
+#' # Example 1: All rows have observation
 #' get_all_na_cols(iris)
 #'
-#' # Example 2: One column doesn't have any observations
-#' get_all_na_cols(iris %>% mutate(new_col = NA))
+#' # Example 2: One row doesn't have any observations
+#' library(tidyverse)
+#' get_all_na_rows(bind_rows(iris, tibble(Species = NA)))
+#'
 #' }
 #'
 #' @import dplyr
@@ -212,7 +210,7 @@ get_all_na_rows <- function(tbl){
     select(participant = last_col()) %>%
     mutate(
       participant = toString(.data$`participant`),
-      condition = "[ERR] - Empty observation")
+      condition = "[INFO] - Empty observation")
   return(test)
 }
 
@@ -231,11 +229,12 @@ get_all_na_rows <- function(tbl){
 #'
 #' @examples
 #' \dontrun{
-#' # Example 1: All columns have observation
-#' get_all_na_cols(iris)
+#' # Example 1: All columns have distinct observation
+#' get_unique_value_cols(iris)
 #'
-#' # Example 2: One column doesn't have any observations
-#' get_all_na_cols(iris %>% mutate(new_col = NA))
+#' # Example 2: One column doesn't have distinct observations
+#' get_unique_value_cols(slice(iris,1:50))
+#'
 #' }
 #'
 #' @import dplyr
