@@ -12,7 +12,8 @@ as_any_date(
 \arguments{
 \item{x}{object to be coerced.}
 
-\item{format}{object to be coerced.}
+\item{format}{A character identifying the format to apply to the object.
+That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
 }
 \value{
 A R Object of class 'Date'.

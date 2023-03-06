@@ -12,7 +12,8 @@ which_any_date(
 \arguments{
 \item{x}{object to be coerced. Can be a character string or a vector.}
 
-\item{format}{object to be coerced.}
+\item{format}{A character identifying the format to apply to the object to test.
+That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
 }
 \value{
 A character string of the possible date formats given a parameter to be tested.

@@ -135,7 +135,8 @@ guess_date_format <- function(tbl, col = NULL){
 #' formats. If no format is found, the function returns NA.
 #'
 #' @param x object to be coerced. Can be a character string or a vector.
-#' @param format object to be coerced.
+#' @param format A character identifying the format to apply to the object to test.
+#' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
 #'
 #' @return
 #' A character string of the possible date formats given a parameter to be tested.
@@ -218,7 +219,8 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' provides the format to apply.
 #'
 #' @param x object to be coerced.
-#' @param format object to be coerced.
+#' @param format A character identifying the format to apply to the object.
+#' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
