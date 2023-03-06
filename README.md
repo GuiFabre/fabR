@@ -26,9 +26,10 @@ devtools::install_github("GuiFabre/fabR")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+To see all functions and their documentation, please go and visit the
+github web site:
 
 ``` r
 library(fabR)
-## basic example code
+fabR_help()
 ```
