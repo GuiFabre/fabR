@@ -25,33 +25,38 @@ when parceval is used in a different environment, such as in a function.
 Prefer eval(parse(text = ...) instead.
 }
 \examples{
-\dontrun{
+\donttest{
 
+##### Example 1 -------------------------------------------------------------
 # Simple assignation will assign 'b' in parceval environment (which is
 # associated to a function and different from .GlobalEnv, by definition).
 # Double assignation will put 'b' in .GlobalEnv.
 # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
-a <- 1
-parceval("b <<- 1")
-print(a)
-print(b)
 
-parceval("b <<- b + a")
-print(b)
+# a <- 1
+# parceval("b <<- 1")
+# print(a)
+# print(b)
+# parceval("b <<- b + a")
+# print(b)
+# my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
+# parceval(my_code)
 
-my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
-parceval(my_code)
-
+##### Example 2 -------------------------------------------------------------
 # use rowwise to directly use parceval in a tibble, or use a for loop.
-library(tidyverse)
-as_tibble(cars) \%>\%
+library(dplyr)
+library(tidyr)
+
+tibble(cars) \%>\%
   mutate(
     to_eval = paste0(speed,"/",dist)) \%>\%
   rowwise() \%>\%
   mutate(
     eval = parceval(to_eval))
 
+##### Example 3 -------------------------------------------------------------
 # parceval can be parcevaled itself!
+
 code_R <-
   'as_tibble(cars) \%>\%
   mutate(
@@ -60,8 +65,8 @@ code_R <-
   mutate(
     eval = parceval(to_eval))'
 
-code_R \%>\% cat
-code_R \%>\% parceval
+cat(code_R)
+parceval(code_R)
 
 }
 

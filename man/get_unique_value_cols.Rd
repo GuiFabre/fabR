@@ -18,12 +18,15 @@ This helper function extracts the names of the columns in a tibble having NA
 values for all observations.
 }
 \examples{
-\dontrun{
-# Example 1: All columns have distinct observation
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# All columns have distinct observation
 get_unique_value_cols(iris)
 
-# Example 2: One column doesn't have distinct observations
-get_unique_value_cols(slice(iris,seq_len(50)))
+##### Example 2 -------------------------------------------------------------
+# One column doesn't have distinct observations
+get_unique_value_cols(iris[1:50,])
 
 }
 

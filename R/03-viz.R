@@ -22,9 +22,9 @@
 #' @param max integer specifying the x-th first most cited words
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -36,12 +36,15 @@
 #' A bar plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_main_word()
 #'
-#' # Example 2: words contained in Species
-#' plot_main_word(tbl = iris, col = "Species", out = "ggplot2")
+#' ##### Example 2 -------------------------------------------------------------
+#' # words contained in Species
+#' plot_main_word(tbl = "iris", col = "Species", out = "ggplot2")
 #'
 #' }
 #'
@@ -90,9 +93,9 @@ plot_main_word <- function(
       "       title = 'Frequent words in ",col,"') +"                     ,"\n",
       "  geom_text(aes(label = n), hjust = 1.2, colour = 'white') +"      ,"\n",
       "  theme(plot.title = element_text(hjust = 0.5),"                   ,"\n",
-      "        axis.title.x = ,"                                          ,"\n",
+      "        axis.title.x = "                                           ,"\n",
       "          element_text(face='bold', colour='darkblue', size = 12),","\n",
-      "        axis.title.y = ,"                                          ,"\n",
+      "        axis.title.y = "                                           ,"\n",
       "          element_text(face='bold', colour='darkblue', size = 12))",
       ifelse(
         !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
@@ -108,9 +111,9 @@ plot_main_word <- function(
       "       title = 'Frequent words in ",col,"') +"                     ,"\n",
       "  geom_text(aes(label = n), hjust = 1.2, colour = 'white') +"      ,"\n",
       "  theme(plot.title = element_text(hjust = 0.5),"                   ,"\n",
-      "       axis.title.x = ,"                                           ,"\n",
+      "       axis.title.x = "                                            ,"\n",
       "          element_text(face='bold', colour='darkblue', size = 12),","\n",
-      "       axis.title.y = ,"                                           ,"\n",
+      "       axis.title.y = "                                            ,"\n",
       "          element_text(face='bold', colour='darkblue', size = 12))",
       ifelse(
         !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
@@ -150,9 +153,9 @@ plot_main_word <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -164,11 +167,14 @@ plot_main_word <- function(
 #' A hist plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_histogram()
 #'
-#' # Example 2: graph of Petal.Length
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of Petal.Length
 #' plot_histogram(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
@@ -259,9 +265,9 @@ plot_histogram <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -273,11 +279,14 @@ plot_histogram <- function(
 #' A box plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_box()
 #'
-#' # Example 2: graph of Petal.Length
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of Petal.Length
 #' plot_box(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
@@ -373,9 +382,9 @@ plot_box <- function(
 #' documentation.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -387,13 +396,17 @@ plot_box <- function(
 #' A lollipop plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
-#' plot_date()
+#' \donttest{
 #'
-#' # Example 2: graph of number of storms per month
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
+#' # plot_date()
+#'
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of number of storms per month
+#' library(dplyr)
 #' annual_storms <-
-#'   storms %>% sample_n(100) %>%
+#'   dplyr::storms %>% sample_n(100) %>%
 #'   mutate(annual = as_any_date(paste(year,month,day),"ymd"))
 #' plot_date(
 #'  tbl = annual_storms,
@@ -505,9 +518,9 @@ plot_date <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -519,12 +532,15 @@ plot_date <- function(
 #' A bar plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_bar()
 #'
-#' # Example 2: graph of Species
-#' plot_bar(tbl = storms, col = "status", out = "ggplot2")
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of Species
+#' plot_bar(tbl = "dplyr::storms", col = "status", out = "ggplot2")
 #'
 #' }
 #'
@@ -533,7 +549,7 @@ plot_date <- function(
 #' @importFrom rlang .data
 #' @export
 plot_bar <- function(
-    tbl = "storms",
+    tbl = "dplyr::storms",
     col = "status",
     filter = 'c()',
     negate = FALSE,
@@ -614,9 +630,9 @@ plot_bar <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -628,11 +644,14 @@ plot_bar <- function(
 #' A density plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_density()
 #'
-#' # Example 2: graph of Petal.Length
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of Petal.Length
 #' plot_density(tbl = iris, col = "Petal.Length", out = "ggplot2")
 #'
 #' }
@@ -723,9 +742,9 @@ plot_density <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -738,12 +757,15 @@ plot_density <- function(
 #' A pie plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_pie()
 #'
-#' # Example 2: graph of status in storms
-#' plot_pie(tbl = storms, col = "status", out = "ggplot2")
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of status in storms
+#' plot_pie(tbl = "dplyr::storms", col = "status", out = "ggplot2")
 #'
 #' }
 #'
@@ -752,7 +774,7 @@ plot_density <- function(
 #' @importFrom rlang .data
 #' @export
 plot_pie <- function(
-    tbl = "storms",
+    tbl = "dplyr::storms",
     col = "status",
     filter = 'c()',
     negate = FALSE,
@@ -852,9 +874,9 @@ plot_pie <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+#' gives the code in a string (usable directly with eval/parse functions) and
+#' cat provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
 #' taken as a grouping column. The visual element will be grouped and displayed
 #' by this column.
@@ -866,14 +888,16 @@ plot_pie <- function(
 #' A pie plot object
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' plot_pie_valid_value()
 #'
-#' # Example 2: graph of Species (virginica is associated to missing values for
-#' # the purpose of example)
+#' ##### Example 2 -------------------------------------------------------------
+#' # graph of Species (virginica is as missing values)
 #' plot_pie_valid_value(
-#'   tbl = storms,
+#'   tbl = "dplyr::storms",
 #'   col = "status",
 #'   missing_values = "'other low'" ,
 #'   out = "ggplot2")
@@ -885,7 +909,7 @@ plot_pie <- function(
 #' @importFrom rlang .data
 #' @export
 plot_pie_valid_value <- function(
-    tbl = "storms",
+    tbl = "dplyr::storms",
     col = "status",
     filter = 'c()',
     negate = FALSE,
@@ -1003,12 +1027,15 @@ plot_pie_valid_value <- function(
 #' it.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' summary_text()
 #'
-#' # Example 2: summary table of Species
-#' summary_text(tbl = storms, col = "status", out = "DT")
+#' ##### Example 2 -------------------------------------------------------------
+#' # summary table of Species
+#' summary_text(tbl = "dplyr::storms", col = "status", out = "DT")
 #'
 #' }
 #'
@@ -1017,7 +1044,7 @@ plot_pie_valid_value <- function(
 #' @importFrom rlang .data
 #' @export
 summary_text <- function(
-    tbl = "storms",
+    tbl = "dplyr::storms",
     col = "status",
     filter = 'c()',
     negate = FALSE,
@@ -1109,11 +1136,14 @@ summary_text <- function(
 #' it.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' summary_numerical()
 #'
-#' # Example 2: summary table of Petal.Length
+#' ##### Example 2 -------------------------------------------------------------
+#' # summary table of Petal.Length
 #' summary_numerical(tbl = iris, col = "Petal.Length", out = "DT")
 #'
 #' }
@@ -1235,11 +1265,14 @@ summary_numerical <- function(
 #' it.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: cat output generated as a template when no argument provided
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # cat output generated as a template when no argument provided
 #' summary_category()
 #'
-#' # Example 2: summary table of Petal.Length
+#' ##### Example 2 -------------------------------------------------------------
+#' # summary table of Petal.Length
 #' summary_category(tbl = iris, col = "Species", out = "DT")
 #'
 #' }
@@ -1327,10 +1360,9 @@ summary_category <- function(
 #' report
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: create a folder containing template
+#' \donttest{
 #'
-#' template_visual_report("template")
+#' unlink(template_visual_report(tempdir()))
 #'
 #' }
 #'
@@ -1338,7 +1370,7 @@ summary_category <- function(
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-template_visual_report <- function(to = getwd()){
+template_visual_report <- function(to){
 
   try({unlink(paste0(to,"/temp_bookdown_report/"), recursive = TRUE)},
     silent = TRUE)

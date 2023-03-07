@@ -10,9 +10,11 @@
 #' Nothing to be returned. The function opens a web package.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#'
 #' # call the help center!
 #' fabR_help()
+#'
 #' }
 #'
 #' @importFrom utils browseURL
@@ -40,7 +42,7 @@ fabR_help <- function(){
 #' console.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' message_on_prompt("Do you want to continue? Press `enter` or `esc`")
 #'
@@ -73,7 +75,7 @@ message_on_prompt <- function(...){
 #' [base::invisible()], [base::suppressWarnings()], [base::suppressMessages()]
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' as.integer("text")
 #' silently_run(as.integer("text"))
@@ -113,33 +115,38 @@ silently_run <- function(...){
 #'
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
+#' ##### Example 1 -------------------------------------------------------------
 #' # Simple assignation will assign 'b' in parceval environment (which is
 #' # associated to a function and different from .GlobalEnv, by definition).
 #' # Double assignation will put 'b' in .GlobalEnv.
 #' # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
-#' a <- 1
-#' parceval("b <<- 1")
-#' print(a)
-#' print(b)
 #'
-#' parceval("b <<- b + a")
-#' print(b)
+#' # a <- 1
+#' # parceval("b <<- 1")
+#' # print(a)
+#' # print(b)
+#' # parceval("b <<- b + a")
+#' # print(b)
+#' # my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
+#' # parceval(my_code)
 #'
-#' my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
-#' parceval(my_code)
-#'
+#' ##### Example 2 -------------------------------------------------------------
 #' # use rowwise to directly use parceval in a tibble, or use a for loop.
-#' library(tidyverse)
-#' as_tibble(cars) %>%
+#' library(dplyr)
+#' library(tidyr)
+#'
+#' tibble(cars) %>%
 #'   mutate(
 #'     to_eval = paste0(speed,"/",dist)) %>%
 #'   rowwise() %>%
 #'   mutate(
 #'     eval = parceval(to_eval))
 #'
+#' ##### Example 3 -------------------------------------------------------------
 #' # parceval can be parcevaled itself!
+#'
 #' code_R <-
 #'   'as_tibble(cars) %>%
 #'   mutate(
@@ -148,8 +155,8 @@ silently_run <- function(...){
 #'   mutate(
 #'     eval = parceval(to_eval))'
 #'
-#' code_R %>% cat
-#' code_R %>% parceval
+#' cat(code_R)
+#' parceval(code_R)
 #'
 #' }
 #'
@@ -182,9 +189,9 @@ parceval <- function(...){
 #' [readxl::read_excel()]
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' read_excel_allsheets(filename = "myfile.xlsx")
+#' try(read_excel_allsheets(filename = tempfile()), silent = TRUE)
 #'
 #' }
 #'
@@ -208,17 +215,18 @@ read_excel_allsheets <- function(filename, sheets = "") {
 
   if(purrr::is_empty(sheets_name)){
     message("The sheet name(s) you provided do not exist")}else{
-    x <- lapply(sheets_name,
-                function(X) readxl::read_excel(
-                  path      = filename,
-                  sheet     = X,
-                  guess_max =
-                    suppressWarnings(
-                      readxl::read_excel(filename, sheet = X) %>% nrow)))
-    names(x) <- sheets_name
-    if(length(x) == 1){return(x[[1]])}else{return(x)}
-  }
+      x <- lapply(sheets_name,
+                  function(X) readxl::read_excel(
+                    path      = filename,
+                    sheet     = X,
+                    guess_max =
+                      suppressWarnings(
+                        readxl::read_excel(filename, sheet = X) %>% nrow)))
+      names(x) <- sheets_name
+      if(length(x) == 1){return(x[[1]])}else{return(x)}
+    }
 }
+
 
 #' @title
 #' Write all Excel sheets using [xlsx::write.xlsx()] recursively
@@ -239,9 +247,12 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' environment.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' write_excel_allsheets(list = myobject, filename = "myobject.xlsx")
+#' unlink(
+#'   write_excel_allsheets(
+#'     list = list(iris = iris, mtcars = mtcars),
+#'     filename = tempfile()))
 #'
 #' }
 #'
@@ -265,7 +276,9 @@ write_excel_allsheets <- function(list, filename){
   fs::dir_create(dirname(filename))
   writexl::write_xlsx(x = list, path = filename)
 
-  }
+}
+
+
 
 #' @title
 #' Read a csv file using read_csv and avoid errors
@@ -281,9 +294,9 @@ write_excel_allsheets <- function(list, filename){
 #' A tibble corresponding to the csv read.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' read_csv_any_formats(filename = "myfile.csv")
+#' try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 #'
 #' }
 #'
@@ -318,7 +331,7 @@ read_csv_any_formats <- function(filename){
 #' any given name.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' add_index(iris, "my_index")
 #'
@@ -376,10 +389,14 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 #' class of each leaf (can be a list, or R objects).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' list <- list(i = iris, m = list(t1 = mtcars, t2 = storms))
-#' get_path_list(list)
+#' library(dplyr)
+#' get_path_list(
+#'   list(
+#'     tibble = iris,
+#'     list = list(t1 = mtcars, t2 = tibble(iris)),
+#'     char = "foo"))
 #'
 #' }
 #'
@@ -453,7 +470,7 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' @description
 #' Generate a name for an element in a list. This function is targeted for
 #' functions creations which handle lists. Those lists may need names to go
-#' through each elements. This function works with [stats::setNames()] and
+#' through each elements. This function can works with [stats::setNames()] and
 #' allows the user to provide name shorter, more user-friendly in their lists.
 #'
 #' @param args_list A list of character string of same length of list_elem
@@ -466,30 +483,36 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' A character string simplified to be used as names in a list.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
+#' library(tidyr)
+#' library(magrittr)
+#'
+#' #### Example 1 --------------------------------------------------------------
 #' # make_name_list generates names that are informative through a line of code
 #' # or function. tibble(iris), iris %>% tibble and
-#' # list(iris = tibble(mytibble) %>% select(Species))
-#' # will have 'iris' as name.
+#' # list(iris = tibble(mytibble) %>% select(Species)) will have 'iris' as name.
 #'
 #' list(tibble(iris), tibble(mtcars)) %>%
 #'   setNames(make_name_list(list(tibble(iris), tibble(mtcars)), args_list =
 #'     c("IRIS %>% complicated_code","complicated_function(MTCARS)")))
 #'
+#' #### Example 2 --------------------------------------------------------------
 #' # make_name_list can be used when a function uses arguments provided by the
 #' # user to generate a list. The name is simplified and given to the list
 #' # itself
-#' library(tidyverse)
-#' my_function = function(df){
+#'
+#' library(dplyr)
+#' my_function <- function(df){
+#'
 #'   .fargs <- as.list(match.call(expand.dots = TRUE))
 #'   list_df <-
 #'     list(df) %>%
 #'     stats::setNames(.,make_name_list(as.character(.fargs['df']),list(df)))
 #'   return(list_df)}
 #'
-#' my_function(as_tibble(iris))
-#' my_function(iris %>% as_tibble %>% select(Species))
+#' my_function(tibble(iris))
+#' my_function(iris %>% tibble %>% select(Species))
 #'
 #' }
 #'
@@ -518,7 +541,7 @@ make_name_list <- function(args_list, list_elem){
 
   if(length(list_elem) != length(name_list)) {
     warning(
-"\nThe names of your elements in your list might have been wrongly parsed.
+      "\nThe names of your elements in your list might have been wrongly parsed.
 Please verify the names of your elements and reparse.\n", call. = FALSE)
   }
 
@@ -549,15 +572,17 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 #' [base::as.logical()]
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#'
+#' library(dplyr)
 #'
 #' as_any_boolean("TRUE")
 #' as_any_boolean(c("1"))
 #' as_any_boolean(0L)
-#' as_any_boolean(c('foo'))
+#' try(as_any_boolean(c('foo')))
 #' as_any_boolean(c(0,1L,0,TRUE,"t","F","FALSE"))
-#' tibble(bvalues = c(0,1L,0,TRUE,"t","F","FALSE")) %>%
-#'   mutate(values = as_any_boolean(bvalues))
+#' tibble(values = c(0,1L,0,TRUE,"t","F","FALSE")) %>%
+#'   mutate(bool_values = as_any_boolean(values))
 #'
 #' }
 #'
@@ -586,12 +611,12 @@ as_any_boolean <- function(x){
     xtemp[i] <-
       suppressWarnings(suppressMessages(try({
         case_when(
-        is.na(x[i])                                          ~ NA_character_,
-        toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
-        toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
-        toString(tolower(x[i]))   %in% c("0", "f","false")   ~ "FALSE",
-        toString(as.numeric(x[i])) ==    "0"                 ~ "FALSE",
-        TRUE                                                 ~ "NaN")
+          is.na(x[i])                                          ~ NA_character_,
+          toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
+          toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
+          toString(tolower(x[i]))   %in% c("0", "f","false")   ~ "FALSE",
+          toString(as.numeric(x[i])) ==    "0"                 ~ "FALSE",
+          TRUE                                                 ~ "NaN")
 
       }, silent = TRUE)))
 
@@ -599,8 +624,8 @@ as_any_boolean <- function(x){
       stop("x is not in a standard unambiguous format")
   }
 
-    x <- as.logical(xtemp)
-    return(x)
+  x <- as.logical(xtemp)
+  return(x)
 }
 
 
@@ -617,7 +642,7 @@ as_any_boolean <- function(x){
 #' Object of type "symbol".
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' as_any_symbol(coucou)
 #' as_any_symbol("coucou")
@@ -662,10 +687,10 @@ as_any_symbol <- function(x){
 #' details, param, see also, return and examples are placed ahead).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' library(tidyr)
-#' as_tibble(collect_roxygen())
+#' try({tibble(collect_roxygen(tempfile()))}, silent = FALSE)
 #'
 #' }
 #'
@@ -682,13 +707,13 @@ collect_roxygen <- function(folder_r = "R"){
     doc <- bind_rows(doc,tibble(value = readLines(i), page = basename(i)))}
 
   doc <-
-  # trim
+    # trim
     doc %>%
     mutate(value = str_squish(.data$`value`)) %>%
     filter(str_detect(.data$`value`,"^#'") |
              str_detect(.data$`value`, '<- function\\(')) %>%
 
-  # classify
+    # classify
     mutate(
       class = ifelse(str_detect(.data$`value`,"<- function\\(")    ,
                      "FUNCTION"   ,NA_character_),
@@ -756,3 +781,4 @@ collect_roxygen <- function(folder_r = "R"){
 
   return(doc)
 }
+

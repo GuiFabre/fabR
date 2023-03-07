@@ -5,7 +5,7 @@
 \title{Draw bar plot of one (possibly grouped) column in a tibble}
 \usage{
 plot_bar(
-  tbl = "storms",
+  tbl = "dplyr::storms",
   col = "status",
   filter = "c()",
   negate = FALSE,
@@ -50,12 +50,15 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
 plot_bar()
 
-# Example 2: graph of Species
-plot_bar(tbl = storms, col = "status", out = "ggplot2")
+##### Example 2 -------------------------------------------------------------
+# graph of Species
+plot_bar(tbl = "dplyr::storms", col = "status", out = "ggplot2")
 
 }
 

@@ -35,12 +35,14 @@ NA, and a warning, since there is an ambiguity that cannot be solved, unless
 the user provides the format to apply.
 }
 \examples{
-\dontrun{
+\donttest{
 
-# Sometimes, there is ambiguity and the format cannot be guessed by the
-# function and corresponds to a multiple possibility.
+library(dplyr)
+library(tidyr)
 
-time =
+##### Example 1 -------------------------------------------------------------
+# Ambiguous dates -----------------------------------------------------------
+time <-
   tibble(time = c(
   "1983 07-19",
   "2003-01-14",
@@ -52,10 +54,9 @@ time =
 time \%>\% mutate(new_time = as_any_date(time))
 time \%>\% mutate(new_time = as_any_date(time, format = "ymd"))
 
-# Sometimes, there is no ambiguity and the format can be guessed by the
-# function and corresponds to a unique possibility.
-
-time =
+##### Example 2 -------------------------------------------------------------
+# Non-ambiguous dates -------------------------------------------------------
+time <-
   tibble(time = c(
   "1983 07-19",
   "14-01-1925",

@@ -24,15 +24,17 @@ will be converted as NA, FALSE and TRUE. Any other other will return an
 error.
 }
 \examples{
-\dontrun{
+\donttest{
+
+library(dplyr)
 
 as_any_boolean("TRUE")
 as_any_boolean(c("1"))
 as_any_boolean(0L)
-as_any_boolean(c('foo'))
+try(as_any_boolean(c('foo')))
 as_any_boolean(c(0,1L,0,TRUE,"t","F","FALSE"))
-tibble(bvalues = c(0,1L,0,TRUE,"t","F","FALSE")) \%>\%
-  mutate(values = as_any_boolean(bvalues))
+tibble(values = c(0,1L,0,TRUE,"t","F","FALSE")) \%>\%
+  mutate(bool_values = as_any_boolean(values))
 
 }
 

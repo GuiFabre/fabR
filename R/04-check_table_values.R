@@ -11,8 +11,9 @@
 #' A tibble indicating which columns which values is the same in the tibble
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
+#' library(dplyr)
 #' mtcars_duplicated <-
 #'  mtcars %>%
 #'  mutate(
@@ -88,11 +89,11 @@ get_duplicated_cols <- function(tbl){
 #' A tibble indicating which row which values is the same in the tibble
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' # the row numbers are returned to identify which observations have repeated
 #' # values
-#' library(tidyverse)
+#' library(dplyr)
 #' get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 #'
 #' }
@@ -152,13 +153,17 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: All columns have observation
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # All columns have observation
 #' get_all_na_cols(iris)
 #'
-#' # Example 2: One column doesn't have any observations
-#' library(tidyverse)
+#' ##### Example 2 -------------------------------------------------------------
+#' # One column doesn't have any observations
+#' library(dplyr)
 #' get_all_na_cols(mutate(iris, new_col = NA))
+#'
 #' }
 #'
 #' @import dplyr
@@ -194,12 +199,15 @@ get_all_na_cols <- function(tbl){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: All rows have observation
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # All rows have observation
 #' get_all_na_cols(iris)
 #'
-#' # Example 2: One row doesn't have any observations
-#' library(tidyverse)
+#' ##### Example 2 -------------------------------------------------------------
+#' # One row doesn't have any observations
+#' library(dplyr)
 #' get_all_na_rows(bind_rows(iris, tibble(Species = NA)))
 #'
 #' }
@@ -239,12 +247,15 @@ get_all_na_rows <- function(tbl){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \dontrun{
-#' # Example 1: All columns have distinct observation
+#' \donttest{
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # All columns have distinct observation
 #' get_unique_value_cols(iris)
 #'
-#' # Example 2: One column doesn't have distinct observations
-#' get_unique_value_cols(slice(iris,seq_len(50)))
+#' ##### Example 2 -------------------------------------------------------------
+#' # One column doesn't have distinct observations
+#' get_unique_value_cols(iris[1:50,])
 #'
 #' }
 #'

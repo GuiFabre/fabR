@@ -16,4 +16,13 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Guillaume Fabre \email{guijoseph.fabre@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Maelstrom-Research [funder]
+}
+
+}
 \keyword{internal}

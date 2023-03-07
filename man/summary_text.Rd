@@ -5,7 +5,7 @@
 \title{Create summary table of one (possibly grouped) text-type column in a tibble}
 \usage{
 summary_text(
-  tbl = "storms",
+  tbl = "dplyr::storms",
   col = "status",
   filter = "c()",
   negate = FALSE,
@@ -52,12 +52,15 @@ editable for coding recycling purpose. The user can download the datatable in
 csv format.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
 summary_text()
 
-# Example 2: summary table of Species
-summary_text(tbl = storms, col = "status", out = "DT")
+##### Example 2 -------------------------------------------------------------
+# summary table of Species
+summary_text(tbl = "dplyr::storms", col = "status", out = "DT")
 
 }
 

@@ -10,7 +10,7 @@ file_index_search(
   file_name = "^",
   extension = "^",
   file_type = "^",
-  .fs_tree = TRUE
+  show_tree = FALSE
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ Can be the full string or substring (matching by regex is supported).}
 \item{file_type}{A character string a file type to search by.
 Can be the full string or substring (matching by regex is supported).}
 
-\item{.fs_tree}{If TRUE, return the file tree of the query.}
+\item{show_tree}{If TRUE, return the file tree of the query.}
 }
 \value{
 A tibble with indexed information for files matching the query.
@@ -40,12 +40,15 @@ options and provides a table where all the files in a specified folder and
 corresponding to the query are listed (recursively). If no index tibble is
 provided, the function creates one from the working directory.
 }
+\details{
+The function displays the tree of your files. You can enable this
+functionality with 'show_tree = TRUE'
+}
 \examples{
 \dontrun{
 
-index <- file_index_create(getwd())
-file_index_search(index, file_name = 'my_name')
-file_index_search(index, extension = '^R$')
+index <- file_index_create(tempdir())
+file_index_search(index, file_name = my_file_name)
 
 }
 

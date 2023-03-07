@@ -4,7 +4,7 @@
 \alias{template_visual_report}
 \title{Create a bookdown template for the visual report}
 \usage{
-template_visual_report(to = getwd())
+template_visual_report(to)
 }
 \arguments{
 \item{to}{A character string of a path where the bookdown report will be
@@ -21,10 +21,9 @@ https://github.com/jtr13/bookdown-template/archive/refs/heads/master.zip
 folder
 }
 \examples{
-\dontrun{
-# Example 1: create a folder containing template
+\donttest{
 
-template_visual_report("template")
+unlink(template_visual_report(tempdir()))
 
 }
 

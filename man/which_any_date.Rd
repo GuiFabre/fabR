@@ -36,9 +36,9 @@ either March the 2nd or February the 3rd. The function will provide
 NA.
 }
 \examples{
-\dontrun{
+\donttest{
 
-time = c(
+time <- c(
   "1983-07-19",
   "31 jan 2017",
   "1988/12/17",

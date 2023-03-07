@@ -22,10 +22,14 @@ path of each element in the list. The paths can be after that edited and
 accessed using \code{\link[=parceval]{parceval()}} for example.
 }
 \examples{
-\dontrun{
+\donttest{
 
-list <- list(i = iris, m = list(t1 = mtcars, t2 = storms))
-get_path_list(list)
+library(dplyr)
+get_path_list(
+  list(
+    tibble = iris,
+    list = list(t1 = mtcars, t2 = tibble(iris)),
+    char = "foo"))
 
 }
 

@@ -35,7 +35,9 @@ The user must make sure their files are in the folder to be indexed.
 }
 \examples{
 \dontrun{
-file_index_create(getwd())
+
+file_index_create(tempdir())
+
 }
 
 }

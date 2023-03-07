@@ -31,9 +31,13 @@
 #' object to be evaluated.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' time =
+#' library(tidyr)
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # Non-ambiguous dates ----------------------------------------------------
+#' time <-
 #'   tibble(time = c(
 #'   "1983-07-19",
 #'   "2003-01-14",
@@ -44,7 +48,9 @@
 #'   "1809-01-01"))
 #' guess_date_format(time)
 #'
-#' time =
+#' ##### Example 2 -------------------------------------------------------------
+#' # Ambiguous dates --------------------------------------------------------
+#' time <-
 #'   tibble(time = c(
 #'   "1983-19-07",
 #'   "2003-01-14",
@@ -55,7 +61,9 @@
 #'   "1809-01-01"))
 #' guess_date_format(time)
 #'
-#' time =
+#' ##### Example 3 -------------------------------------------------------------
+#' # Non date format dates --------------------------------------------------
+#' time <-
 #'   tibble(time = c(
 #'   "198-07-19",
 #'   "200-01-14",
@@ -161,9 +169,9 @@ guess_date_format <- function(tbl, col = NULL){
 #' [fabR::guess_date_format()],[fabR::as_any_date()]
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' time = c(
+#' time <- c(
 #'   "1983-07-19",
 #'   "31 jan 2017",
 #'   "1988/12/17",
@@ -248,12 +256,14 @@ which_any_date <- function(
 #' A R Object of class 'Date'.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
-#' # Sometimes, there is ambiguity and the format cannot be guessed by the
-#' # function and corresponds to a multiple possibility.
+#' library(dplyr)
+#' library(tidyr)
 #'
-#' time =
+#' ##### Example 1 -------------------------------------------------------------
+#' # Ambiguous dates -----------------------------------------------------------
+#' time <-
 #'   tibble(time = c(
 #'   "1983 07-19",
 #'   "2003-01-14",
@@ -265,10 +275,9 @@ which_any_date <- function(
 #' time %>% mutate(new_time = as_any_date(time))
 #' time %>% mutate(new_time = as_any_date(time, format = "ymd"))
 #'
-#' # Sometimes, there is no ambiguity and the format can be guessed by the
-#' # function and corresponds to a unique possibility.
-#'
-#' time =
+#' ##### Example 2 -------------------------------------------------------------
+#' # Non-ambiguous dates -------------------------------------------------------
+#' time <-
 #'   tibble(time = c(
 #'   "1983 07-19",
 #'   "14-01-1925",

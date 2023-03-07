@@ -19,7 +19,7 @@ and validated before pursuing process. This function is targeted for function
 creators where user interaction is required.
 }
 \examples{
-\dontrun{
+\donttest{
 
 message_on_prompt("Do you want to continue? Press `enter` or `esc`")
 

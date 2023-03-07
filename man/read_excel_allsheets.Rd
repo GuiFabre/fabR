@@ -21,9 +21,9 @@ each sheet in a separate element in the list. If the Excel file has only one
 sheet, the output is a single tibble.
 }
 \examples{
-\dontrun{
+\donttest{
 
-read_excel_allsheets(filename = "myfile.xlsx")
+try(read_excel_allsheets(filename = tempfile()), silent = TRUE)
 
 }
 

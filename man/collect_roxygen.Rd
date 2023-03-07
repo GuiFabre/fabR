@@ -23,10 +23,10 @@ column name will also have 80 character to show the margin limit of each
 chunk of documentation.
 }
 \examples{
-\dontrun{
+\donttest{
 
 library(tidyr)
-as_tibble(collect_roxygen())
+try({tibble(collect_roxygen(tempfile()))}, silent = FALSE)
 
 }
 

@@ -56,13 +56,17 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
-plot_date()
+\donttest{
 
-# Example 2: graph of number of storms per month
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
+# plot_date()
+
+##### Example 2 -------------------------------------------------------------
+# graph of number of storms per month
+library(dplyr)
 annual_storms <-
-  storms \%>\% sample_n(100) \%>\%
+  dplyr::storms \%>\% sample_n(100) \%>\%
   mutate(annual = as_any_date(paste(year,month,day),"ymd"))
 plot_date(
  tbl = annual_storms,

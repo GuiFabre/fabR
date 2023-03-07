@@ -55,12 +55,15 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
 plot_main_word()
 
-# Example 2: words contained in Species
-plot_main_word(tbl = iris, col = "Species", out = "ggplot2")
+##### Example 2 -------------------------------------------------------------
+# words contained in Species
+plot_main_word(tbl = "iris", col = "Species", out = "ggplot2")
 
 }
 

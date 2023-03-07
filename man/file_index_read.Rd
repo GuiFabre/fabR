@@ -45,18 +45,30 @@ occurred.
 Reads all files from a file index tibble as R objects to generate in the
 environment or R scripts to be sourced. Any other file types will be opened
 in browser (html files) or in environment. If no index tibble is provided,
-the function creates one from the working directory.
+the function creates one from the working directory. (matching by regex is
+supported).
 }
 \details{
-Can be the full string or substring (matching by regex is supported).
+for each file selected,
+xlsx files will be read using the function \code{\link[=read_excel_allsheets]{read_excel_allsheets()}},
+csv files will be read using the function \code{\link[=read_csv_any_formats]{read_csv_any_formats()}},
+spss and sav files will be read using the function \code{\link[haven:read_spss]{haven::read_spss()}},
+dta files will be read using the function \code{\link[haven:read_dta]{haven::read_dta()}},
+sas7bdat and sas files will be read using the function \code{\link[haven:read_sas]{haven::read_sas()}},
+R scripts, Rmd and md files be read using the function \code{\link[base:readLines]{base::readLines()}},
+The whole files will be created in a list, which name is the name of the
+file.
 }
 \examples{
 \dontrun{
 
-index <- file_index_create(getwd())
-file_index_search(index, file_name = my_file_name)
+index <- file_index_create(tempdir())
 file_index_read(index, file_name = my_file_name)
 
 }
 
+}
+\seealso{
+\code{\link[=read_excel_allsheets]{read_excel_allsheets()}}, \code{\link[=read_csv_any_formats]{read_csv_any_formats()}}, \code{\link[haven:read_spss]{haven::read_spss()}},
+\code{\link[haven:read_dta]{haven::read_dta()}}, \code{\link[haven:read_sas]{haven::read_sas()}}, \code{\link[base:readLines]{base::readLines()}}
 }

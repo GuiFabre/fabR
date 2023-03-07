@@ -21,9 +21,9 @@ This function is inspired by the function proposed in
 https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 }
 \examples{
-\dontrun{
+\donttest{
 
-write_excel_allsheets(list = myobject, filename = "myobject.xlsx")
+unlink(write_excel_allsheets(list = list(iris = iris, mtcars = mtcars), filename = tempfile()))
 
 }
 

@@ -52,11 +52,14 @@ editable for coding recycling purpose. The user can download the datatable in
 csv format.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
 summary_category()
 
-# Example 2: summary table of Petal.Length
+##### Example 2 -------------------------------------------------------------
+# summary table of Petal.Length
 summary_category(tbl = iris, col = "Species", out = "DT")
 
 }

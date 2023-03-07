@@ -24,11 +24,11 @@ either on the whole columns or excluding the first column (id) (which can be
 useful to identify repeated observation across different ids)
 }
 \examples{
-\dontrun{
+\donttest{
 
 # the row numbers are returned to identify which observations have repeated
 # values
-library(tidyverse)
+library(dplyr)
 get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 
 }

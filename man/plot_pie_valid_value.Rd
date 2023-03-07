@@ -5,7 +5,7 @@
 \title{Draw pie chart of one column in a tibble (valid and non-valid values)}
 \usage{
 plot_pie_valid_value(
-  tbl = "storms",
+  tbl = "dplyr::storms",
   col = "status",
   filter = "c()",
   negate = FALSE,
@@ -51,14 +51,16 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\dontrun{
-# Example 1: cat output generated as a template when no argument provided
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# cat output generated as a template when no argument provided
 plot_pie_valid_value()
 
-# Example 2: graph of Species (virginica is associated to missing values for
-# the purpose of example)
+##### Example 2 -------------------------------------------------------------
+# graph of Species (virginica is as missing values)
 plot_pie_valid_value(
-  tbl = storms,
+  tbl = "dplyr::storms",
   col = "status",
   missing_values = "'other low'" ,
   out = "ggplot2")

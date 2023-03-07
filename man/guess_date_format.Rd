@@ -32,9 +32,13 @@ refers to the day and 03 refers to the month, since that order works for the
 first element, and doesn't otherwise.
 }
 \examples{
-\dontrun{
+\donttest{
 
-time =
+library(tidyr)
+
+##### Example 1 -------------------------------------------------------------
+# Non-ambiguous dates ----------------------------------------------------
+time <-
   tibble(time = c(
   "1983-07-19",
   "2003-01-14",
@@ -45,7 +49,9 @@ time =
   "1809-01-01"))
 guess_date_format(time)
 
-time =
+##### Example 2 -------------------------------------------------------------
+# Ambiguous dates --------------------------------------------------------
+time <-
   tibble(time = c(
   "1983-19-07",
   "2003-01-14",
@@ -56,7 +62,9 @@ time =
   "1809-01-01"))
 guess_date_format(time)
 
-time =
+##### Example 3 -------------------------------------------------------------
+# Non date format dates --------------------------------------------------
+time <-
   tibble(time = c(
   "198-07-19",
   "200-01-14",

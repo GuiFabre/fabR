@@ -18,12 +18,15 @@ This helper function extracts the names of the columns in a tibble having NA
 values for all observations.
 }
 \examples{
-\dontrun{
-# Example 1: All rows have observation
+\donttest{
+
+##### Example 1 -------------------------------------------------------------
+# All rows have observation
 get_all_na_cols(iris)
 
-# Example 2: One row doesn't have any observations
-library(tidyverse)
+##### Example 2 -------------------------------------------------------------
+# One row doesn't have any observations
+library(dplyr)
 get_all_na_rows(bind_rows(iris, tibble(Species = NA)))
 
 }
