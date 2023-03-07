@@ -13,4 +13,5 @@
 3. ensure that functions do not write by default in the user env.
 4. suppress print in the file index functions
 5. ensure there is no default path in writing functions, and replace by tempfile()/tempdir()
+6. addition of haven and xlsx in the package dependancies
 

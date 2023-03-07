@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions Collection Used in Data Pipelines 
-Version: 1.1.0.1001
+Version: 1.1.0.1002
 Authors@R: c(
     person("Guillaume", "Fabre", 
         role = c("aut", "cre"),
@@ -38,6 +38,9 @@ Encoding: UTF-8
 Suggests: 
     knitr,
     rmarkdown,
-    stats
+    stats,
+    haven,
+    xlsx,
+    viridis,
 VignetteBuilder: knitr
 Language: en-US
