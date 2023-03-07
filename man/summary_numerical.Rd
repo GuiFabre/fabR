@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-viz.R
 \name{summary_numerical}
 \alias{summary_numerical}
-\title{Create summary table of one (possibly grouped) numerical-type column in a tbl}
+\title{Create summary tibble of a (possibly grouped) numerical-type column}
 \usage{
 summary_numerical(
   tbl = "iris",
@@ -19,33 +19,37 @@ summary_numerical(
 
 \item{col}{A character string of a column of interest}
 
-\item{filter}{A character string to subset the rows, applying the expressions in ...
-to the column values to determine which rows should be retained. It can be applied
-to both grouped and ungrouped data.}
+\item{filter}{A character string to subset the rows, applying the expressions
+to the column values to determine which rows should be retained. It can be
+applied to both grouped and ungrouped data.}
 
 \item{negate}{If TRUE, return non-matching elements.}
 
-\item{missing_values}{Vector listing values to exclude from valid values. Those
-values will not be exclud from counting, but will be separated from valid values.}
+\item{missing_values}{Vector listing values to exclude from valid values.
+Those values will not be exclud from counting, but will be separated from
+valid values.}
 
-\item{out}{parameter that specifies the output expected: can be either 'DT', 'DT-code' and 'DT-cat'.
-DT renders a datatable using DT library, code gives the code in a string (usable
-directly with eval/parse functions) and cat provides indented code in the console.}
+\item{out}{parameter that specifies the output expected: can be either 'DT',
+'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives
+the code in a string (usable directly with eval/parse functions) and cat
+provides indented code in the console.}
 
 \item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
 by this column.}
 }
 \value{
-A datatable (editable) object or a R script in a character string to create it.
+A datatable (editable) object or a R script in a character string to create
+it.
 }
 \description{
 This function creates datatable of the values of a column separating valid,
 non-valid and missing values.
-Missing values can be given as input to non-valid and valid values separately, or
-grouped by another column. The output can be editable (using plotly library) or static
-(using ggplot2 library). The R-code is also editable for coding recycling purpose.
-The user can download the datatable in csv format.
+Missing values can be given as input to non-valid and valid values
+separately, or grouped by another column. The output can be editable (using
+plotly library) or static (using ggplot2 library). The R-code is also
+editable for coding recycling purpose. The user can download the datatable in
+csv format.
 }
 \examples{
 \dontrun{

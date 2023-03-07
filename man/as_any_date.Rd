@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-dates.R
 \name{as_any_date}
 \alias{as_any_date}
-\title{Create objects of class "Date".}
+\title{Create objects of class "Date"}
 \usage{
 as_any_date(
   x = as.character(),
@@ -21,23 +21,24 @@ A R Object of class 'Date'.
 \description{
 This function takes a character string or a vector. This vector is evaluates
 one observation after the other, and casts the best matching date format
-for each of them (independently). The best matching format is tested across 7
-different formats provided by the lubridate library. The user can specify the
-wanted matching format (and can be helped using \code{\link[=which_any_date]{which_any_date()}} for
-each value or \code{\link[=guess_date_format]{guess_date_format()}} for the values as a whole.
+for each of them (independently). The best matching format is tested across
+seven different formats provided by the lubridate library. The user can
+specify the wanted matching format (and can be helped using
+\code{\link[=which_any_date]{which_any_date()}} for each value or \code{\link[=guess_date_format]{guess_date_format()}}
+for the values as a whole.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates the
-different possibilities for a date. For example, c('02-03-1982') can be either
-March the 2nd or February the 3rd. The function will cast the value as NA, and
-a warning, since there is an ambiguity that cannot be solved, unless the user
-provides the format to apply.
+Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+the different possibilities for a date. For example, c('02-03-1982') can be
+either March the 2nd or February the 3rd. The function will cast the value as
+NA, and a warning, since there is an ambiguity that cannot be solved, unless
+the user provides the format to apply.
 }
 \examples{
 \dontrun{
 
-# Sometimes, there is ambiguity and the format cannot be guessed by the function
-# and correspond to a multiple possibility.
+# Sometimes, there is ambiguity and the format cannot be guessed by the
+# function and corresponds to a multiple possibility.
 
 time =
   tibble(time = c(
@@ -51,8 +52,8 @@ time =
 time \%>\% mutate(new_time = as_any_date(time))
 time \%>\% mutate(new_time = as_any_date(time, format = "ymd"))
 
-# Sometimes, there is no ambiguity and the format can be guessed by the function
-# and correspond to a unique possibility.
+# Sometimes, there is no ambiguity and the format can be guessed by the
+# function and corresponds to a unique possibility.
 
 time =
   tibble(time = c(

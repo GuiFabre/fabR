@@ -5,24 +5,25 @@
 #' Creates a tibble listing files in a specified folder (recursively) with file
 #' path name and other useful metadata. This index can be used to quickly find
 #' files in the environment. The index also generates script to read files as
-#' R objects into the environment. Names for R objects are generated automatically
-#' from file names (R objects are not created at this step but the command line is
-#' generated and stored in the column to_eval, ready to be evaluated and generate
-#' R objects).
+#' R objects into the environment. Names for R objects are generated
+#' automatically from file names (R objects are not created at this step but the
+#' command line is generated and stored in the column to_eval, ready to be
+#' evaluated and generate R objects).
 #'
 #' @details
 #' The user must make sure their files are in the folder to be indexed.
 #'
-#' @param folder A character string identifying the folder to index. If not specified,
-#' the current folder is the default
-#' @param pattern A character string defining a pattern to sub-select within folder.
-#' Can be useful for excluding certain folders from indexing (matching by regex is supported).
+#' @param folder A character string identifying the folder to index. If not
+#' specified, the current folder is the default
+#' @param pattern A character string defining a pattern to sub-select within
+#' folder. Can be useful for excluding certain folders from indexing (matching
+#' by regex is supported).
 #' @param negate logical. If TRUE, return non-matching elements.
 #'
 #' @return
 #' A tibble with folder_path, file_path, file_name, extension, file_type
-#' columns and a last column to_eval which is R code in a character vector to read
-#' the file into the environment.
+#' columns and a last column to_eval which is R code in a character vector to
+#' read the file into the environment.
 #'
 #' @examples
 #' \dontrun{
@@ -36,7 +37,8 @@
 file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 
   message(
-    "Your files contained in your R environnement are currently being indexed. Please wait...\n")
+    "Your files contained in your R environnement are currently being indexed.
+    Please wait...\n")
 
   index <- tibble(
     folder_path = tools::file_path_as_absolute(folder),
@@ -67,29 +69,41 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
       mutate(
         file_name = paste0(basename(.data$file_path)),
         extension = tools::file_ext(.data$file_path),
-        extension = ifelse(nchar(.data$extension) == 0,.data$file_name,.data$extension),
+        extension =
+          ifelse(nchar(.data$extension) == 0,.data$file_name,.data$extension),
         to_eval = case_when(
-          extension == "spss"         ~ paste0("haven::read_spss('",.data$file_path,"')"),
-          extension %in%c("Rmd","md") ~ paste0("readLines('",.data$file_path,"') %>% as_tibble()"),
-          extension == "sav"          ~ paste0("haven::read_spss('",.data$file_path,"')"),
-          extension == "dta"          ~ paste0("haven::read_dta('",.data$file_path,"')"),
-          extension == "sas7bdat"     ~ paste0("haven::read_sas('",.data$file_path,"')"),
-          extension == "sas"          ~ paste0("haven::read_sas('",.data$file_path,"')"),
-          extension == "xlsx"         ~ paste0("read_excel_allsheets('",.data$file_path,"')"),
-          extension == "csv"          ~ paste0("suppressMessages(read_csv_any_formats('",.data$file_path,"'))"),
-          extension == "R"            ~ paste0("source('",.data$file_path,"')"),
-          TRUE                        ~ NA_character_),
+          extension == "spss"         ~
+            paste0("haven::read_spss('",.data$file_path,"')"),
+          extension %in%c("Rmd","md") ~
+            paste0("readLines('",.data$file_path,"') %>% as_tibble()"),
+          extension == "sav"          ~
+            paste0("haven::read_spss('",.data$file_path,"')"),
+          extension == "dta"          ~
+            paste0("haven::read_dta('",.data$file_path,"')"),
+          extension == "sas7bdat"     ~
+            paste0("haven::read_sas('",.data$file_path,"')"),
+          extension == "sas"          ~
+            paste0("haven::read_sas('",.data$file_path,"')"),
+          extension == "xlsx"         ~
+            paste0("read_excel_allsheets('",.data$file_path,"')"),
+          extension == "csv"          ~
+            paste0("suppressMessages(
+                   read_csv_any_formats('",.data$file_path,"'))"),
+          extension == "R"            ~
+            paste0("source('",.data$file_path,"')"),
+          TRUE                        ~
+            NA_character_),
         file_type = case_when(
-          extension %in%c("R","r")                            ~ "R script",
-          extension %in%c("Rmd","md")                         ~ "Markdown file",
-          extension == "html"                                 ~ "html page",
-          extension == "RData"                                ~ "RData file",
-          extension == "sav"                                  ~ "excel-like file",
-          extension == "dta"                                  ~ "excel-like file",
-          extension == "sas7bdat"                             ~ "excel-like file",
-          extension == "sas"                                  ~ "excel-like file",
-          extension == "xlsx"                                 ~ "excel-like file",
-          extension == "csv"                                  ~ "excel-like file",
+          extension %in%c("R","r")        ~ "R script",
+          extension %in%c("Rmd","md")     ~ "Markdown file",
+          extension == "html"             ~ "html page",
+          extension == "RData"            ~ "RData file",
+          extension == "sav"              ~ "excel-like file",
+          extension == "dta"              ~ "excel-like file",
+          extension == "sas7bdat"         ~ "excel-like file",
+          extension == "sas"              ~ "excel-like file",
+          extension == "xlsx"             ~ "excel-like file",
+          extension == "csv"              ~ "excel-like file",
           extension %in%c("png","jpg", "JPG", "jpeg", "JPEG") ~ "image",
 
           TRUE                     ~ "other file")) %>%
@@ -98,7 +112,9 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
     # visualization of the dir tree
     temporary_folder <- fs::path_temp() %>% basename
     fs::dir_create(temporary_folder)
-    folder_tp <- stringr::str_remove(string = index$file_path, pattern = dirname(index$folder_path))
+    folder_tp <- stringr::str_remove(
+      string = index$file_path,
+      pattern = dirname(index$folder_path))
     for(i in folder_tp){
       fs::dir_create(paste0(temporary_folder,"/",dirname(i)))
       fs::file_create(paste0(temporary_folder,"/",i))}
@@ -148,20 +164,35 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-file_index_search <- function(index, file_path = "^", file_name = "^", extension = "^", file_type = "^", .fs_tree = TRUE){
+file_index_search <- function(
+    index, file_path = "^",
+    file_name = "^",
+    extension = "^",
+    file_type = "^",
+    .fs_tree = TRUE){
 
   index <-
     index %>%
-    filter(stringr::str_detect(string = .data$file_path,  pattern = !! file_path)) %>%
-    filter(stringr::str_detect(string = .data$file_name,  pattern = !! file_name)) %>%
-    filter(stringr::str_detect(string = .data$file_type,  pattern = !! file_type)) %>%
-    filter(stringr::str_detect(string = .data$extension,  pattern = !! extension))
+    filter(stringr::str_detect(
+      string = .data$file_path,
+      pattern = !! file_path)) %>%
+    filter(stringr::str_detect(
+      string = .data$file_name,
+      pattern = !! file_name)) %>%
+    filter(stringr::str_detect(
+      string = .data$file_type,
+      pattern = !! file_type)) %>%
+    filter(stringr::str_detect(
+      string = .data$extension,
+      pattern = !! extension))
 
   if(.fs_tree == TRUE){
     # visualization of the dir tree
     temporary_folder <- path_temp() %>% basename
     dir_create(temporary_folder)
-    folder_tp <- stringr::str_remove(string = index$file_path, pattern = dirname(index$folder_path))
+    folder_tp <- stringr::str_remove(
+      string = index$file_path,
+      pattern = dirname(index$folder_path))
     for(i in folder_tp){
       dir_create(paste0(temporary_folder,"/",dirname(i)))
       file_create(paste0(temporary_folder,"/",i))}
@@ -176,9 +207,9 @@ file_index_search <- function(index, file_path = "^", file_name = "^", extension
 #'
 #' @description
 #' Reads all files from a file index tibble as R objects to generate in the
-#' environment or R scripts to be sourced. Any other file types will be opened in
-#' browser (html files) or in environnement. If no index tibble is provided, the
-#' function creates one from the working directory.
+#' environment or R scripts to be sourced. Any other file types will be opened
+#' in browser (html files) or in environnement. If no index tibble is provided,
+#' the function creates one from the working directory.
 #'
 #' @details
 #' Can be the full string or substring (matching by regex is supported).
@@ -199,8 +230,9 @@ file_index_search <- function(index, file_path = "^", file_name = "^", extension
 #'
 #' @return
 #' R objects generated in the environment or R scripts. R object names are
-#' created automatically from their file names. Otherwise return messages indicating
-#' what objects were created, or files opened, and if any troubles occurred.
+#' created automatically from their file names. Otherwise return messages
+#' indicating what objects were created, or files opened, and if any troubles
+#' occurred.
 #'
 #' @examples
 #' \dontrun{
@@ -236,15 +268,20 @@ file_index_read <- function(
 
   print(index)
 
-  files_append = list()
+  files_append <- list()
 
   if(nrow(index) > 0){
 
-    for(i in 1:nrow(index)){
+    for(i in seq_len(nrow(index))){
 
-      if(stringr::str_detect(index$to_eval[i], "^source\\('|^utils::browseURL\\('|^usethis::edit_file\\('|^load\\('")){
+      if(stringr::str_detect(
+        index$to_eval[i],
+        "^source\\('|^utils::browseURL\\('|^usethis::edit_file\\('|^load\\('")){
         index$to_eval[i] %>% parceval()
-        message("the file: ",basename(index$file_path[i])," has been sourced, loaded or opened in your environnement")
+        message(
+          "the file: ",
+          basename(index$file_path[i]),
+          " has been sourced, loaded or opened in your environment")
 
       }else{
 
@@ -261,9 +298,7 @@ file_index_read <- function(
           file_name <- tools::file_path_sans_ext(index$file_name[i])
           files_append[[file_name]] <- index$to_eval[i] %>% parceval()
 
-        }
-      }
-    }
+        }}}
 
     if(length(files_append) > 0) return(files_append)
 

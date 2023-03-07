@@ -13,18 +13,18 @@ add_index(tbl, name_index = "index", start = 1, .force = FALSE)
 
 \item{start}{integer indicating firt index number. 1 by default.}
 
-\item{.force}{TRUE or FALSE, that parameter indicates wheter or not the column
-is created if already exists. FALSE by default.}
+\item{.force}{TRUE or FALSE, that parameter indicates whether or not the
+column is created if already exists. FALSE by default.}
 }
 \value{
 A tibble or a data frame containing one extra first column 'index' or
 any given name.
 }
 \description{
-Add an index, possibly by group, at the first place of a data frame or a tibble
-The name by default is 'index' but can be named. If 'index' already exists, or
-the given name, the column can be forced to be created, and replace the other
-one
+Add an index, possibly by group, at the first place of a data frame or a
+tibble The name by default is 'index' but can be named. If 'index' already
+exists, or the given name, the column can be forced to be created, and
+replace the other one.
 }
 \examples{
 \dontrun{

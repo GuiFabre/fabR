@@ -7,19 +7,20 @@
 collect_roxygen(folder_r = "R")
 }
 \arguments{
-\item{folder_r}{A character string identifying the folder to index. If not specified,
-'R/' is the default.}
+\item{folder_r}{A character string identifying the folder to index. If not
+specified, 'R/' is the default.}
 }
 \value{
-A tibble where each line represents a function described in a package, and each
-column is documentation field. Most commun fields (title, description, details,
-param, see also, return and examples are placed ahead).
+A tibble where each line represents a function described in a package, and
+each column is documentation field. Most commun fields (title, description,
+details, param, see also, return and examples are placed ahead).
 }
 \description{
-This function crawls and aggregates roxygen documentation into a tibble format.
-To work properly, elements must be separated with the named fields at title,
-at description, at ...), each at will be used as column name. The column name
-will also have 80 character to show the margin limit of each chunck of documentation.
+This function crawls and aggregates roxygen documentation into a tibble
+format. To work properly, elements must be separated with the named fields at
+title, at description, at ...), each at will be used as column name. The
+column name will also have 80 character to show the margin limit of each
+chunk of documentation.
 }
 \examples{
 \dontrun{

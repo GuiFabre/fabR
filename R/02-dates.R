@@ -3,18 +3,19 @@
 #'
 #' @description
 #' This function takes a tibble and a specific column. This column is evaluated
-#' one observation after the other, and finally gives the best matching date format
-#' for the whole column. The best matching format is tested across 7 different formats
-#' provided by the lubridate library. Along with the format, the percentage of matching
-#' is given in the output tibble. The information of the best matching format can be used
-#' to mutate a column using [fabR::as_any_date()].
+#' one observation after the other, and finally gives the best matching date
+#' format for the whole column. The best matching format is tested across seven
+#' different formats provided by the lubridate library. Along with the format,
+#' the percentage of matching is given in the output tibble. The information of
+#' the best matching format can be used to mutate a column using
+#' [fabR::as_any_date()].
 #'
 #' @details
-#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
-#' column as a whole, and does not cast the column if there is ambiguity between
-#' values. For example, ('19-07-1983', '02-03-1982') implies that 02 refers to
-#' the day and 03 refers to the month, since that order works for the first element,
-#' and doesn't otherwise.
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates
+#' the column as a whole, and does not cast the column if there is ambiguity
+#' between values. For example, ('19-07-1983', '02-03-1982') implies that 02
+#' refers to the day and 03 refers to the month, since that order works for the
+#' first element, and doesn't otherwise.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tbl
 #' @param col A character string specifying a column of interest
@@ -100,11 +101,19 @@ guess_date_format <- function(tbl, col = NULL){
             myd = myd(.data$var, quiet = TRUE)) %>%
           ungroup %>%
           summarise(across(-.data$`var`, ~ sum(!is.na(.)))) %>%
-          pivot_longer(cols = everything(), names_to = "Date format", values_to = "nb_values") %>%
+          pivot_longer(
+            cols = everything(),
+            names_to = "Date format",
+            values_to = "nb_values") %>%
           mutate(
             name_var = i,
-            `% values formated` = round(100*(.data$nb_values / (tbl %>% select(var = all_of(i)) %>% distinct %>% filter(!is.na(.data$var)) %>% nrow)),2),
-            `% values formated` = ifelse(is.na(.data$`% values formated`),0,.data$`% values formated`),
+            `% values formated` =
+              round(100*(.data$nb_values / (
+                tbl %>% select(var = all_of(i)) %>%
+                  distinct %>% filter(!is.na(.data$var)) %>% nrow)),2),
+            `% values formated` =
+              ifelse(is.na(.data$`% values formated`),
+                     0,.data$`% values formated`),
             `Date match` = case_when(
               .data$`% values formated` == 0   ~ "No match",
               .data$`% values formated` == 100 ~ paste0("Exact match"),
@@ -119,28 +128,31 @@ guess_date_format <- function(tbl, col = NULL){
 }
 
 #' @title
-#' Evaluates and gives the possible format(s) for an object to be evaluated.
+#' Evaluates and gives the possible format(s) for an object to be evaluated
 #'
 #' @description
 #' This function takes a character string or a vector. This vector is evaluates
 #' one observation after the other, and gives the best matching date format
-#' for each of them (independently). The best matching format is tested across 7
-#' different formats provided by the lubridate library. The information of the best
-#' matching format can be used to mutate a column using [fabR::as_any_date()].
+#' for each of them (independently). The best matching format is tested across
+#' seven different formats provided by the lubridate library. The information of
+#' the best matching format can be used to mutate a column using
+#' [fabR::as_any_date()].
 #'
 #' @details
-#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
-#' different possibilities for a date. For example, c('02-03-1982') can be either
-#' March the 2nd or February the 3rd. The function will provide "mdy, dmy" as possible
-#' formats. If no format is found, the function returns NA.
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates
+#' the different possibilities for a date. For example, c('02-03-1982') can be
+#' either March the 2nd or February the 3rd. The function will provide
+#' "mdy, dmy" as possible formats. If no format is found, the function returns
+#' NA.
 #'
 #' @param x object to be coerced. Can be a character string or a vector.
-#' @param format A character identifying the format to apply to the object to test.
+#' @param format A character identifying the format to apply to the object to
+#' test.
 #' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
 #'
 #' @return
-#' A character string of the possible date formats given a parameter to be tested.
-#' The length of the vector is the lenght of the input object.
+#' A character string of the possible date formats given a parameter to be
+#' tested. The length of the vector is the lenght of the input object.
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
@@ -169,15 +181,16 @@ guess_date_format <- function(tbl, col = NULL){
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
-which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+which_any_date <- function(
+    x,format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
-  test = c()
+  test <- c()
   x_origin <- x
   x <- unique(x)
 
   if(length(x) == 0) return("ymd")
 
-  for(i in 1:length(x)){
+  for(i in seq_len(length(x))){
 
     if(is.na(x[i])){ test[i] <- NA_character_ }
     else{
@@ -189,7 +202,9 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
           if("ydm" %in% format & !is.na(ydm(x[i], quiet = TRUE))) "ydm",
           if("mdy" %in% format & !is.na(mdy(x[i], quiet = TRUE))) "mdy",
           if("myd" %in% format & !is.na(myd(x[i], quiet = TRUE))) "myd",
-          if("as_date" %in% format & !is.na(suppressWarnings(as_date(x[i])))) "as_date") %>% toString }}
+          if("as_date" %in% format & !is.na(suppressWarnings(as_date(x[i]))))
+            "as_date") %>%
+        toString }}
 
   test <-
     test %>%
@@ -201,22 +216,23 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 }
 
 #' @title
-#' Create objects of class "Date".
+#' Create objects of class "Date"
 #'
 #' @description
 #' This function takes a character string or a vector. This vector is evaluates
 #' one observation after the other, and casts the best matching date format
-#' for each of them (independently). The best matching format is tested across 7
-#' different formats provided by the lubridate library. The user can specify the
-#' wanted matching format (and can be helped using [fabR::which_any_date()] for
-#' each value or [fabR::guess_date_format()] for the values as a whole.
+#' for each of them (independently). The best matching format is tested across
+#' seven different formats provided by the lubridate library. The user can
+#' specify the wanted matching format (and can be helped using
+#' [fabR::which_any_date()] for each value or [fabR::guess_date_format()]
+#' for the values as a whole.
 #'
 #' @details
-#' Contrary to lubridate library or [base::as.Date()], the function evaluates the
-#' different possibilities for a date. For example, c('02-03-1982') can be either
-#' March the 2nd or February the 3rd. The function will cast the value as NA, and
-#' a warning, since there is an ambiguity that cannot be solved, unless the user
-#' provides the format to apply.
+#' Contrary to lubridate library or [base::as.Date()], the function evaluates
+#' the different possibilities for a date. For example, c('02-03-1982') can be
+#' either March the 2nd or February the 3rd. The function will cast the value as
+#' NA, and a warning, since there is an ambiguity that cannot be solved, unless
+#' the user provides the format to apply.
 #'
 #' @param x object to be coerced.
 #' @param format A character identifying the format to apply to the object.
@@ -234,8 +250,8 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @examples
 #' \dontrun{
 #'
-#' # Sometimes, there is ambiguity and the format cannot be guessed by the function
-#' # and correspond to a multiple possibility.
+#' # Sometimes, there is ambiguity and the format cannot be guessed by the
+#' # function and corresponds to a multiple possibility.
 #'
 #' time =
 #'   tibble(time = c(
@@ -249,8 +265,8 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' time %>% mutate(new_time = as_any_date(time))
 #' time %>% mutate(new_time = as_any_date(time, format = "ymd"))
 #'
-#' # Sometimes, there is no ambiguity and the format can be guessed by the function
-#' # and correspond to a unique possibility.
+#' # Sometimes, there is no ambiguity and the format can be guessed by the
+#' # function and corresponds to a unique possibility.
 #'
 #' time =
 #'   tibble(time = c(
@@ -271,30 +287,38 @@ which_any_date <- function(x, format = c("dmy","dym","ymd","ydm","mdy","myd","as
 #' @importFrom rlang .data
 #' @export
 as_any_date <- function(
-    x = as.character(), format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+    x = as.character(),
+    format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
   date_test <- which_any_date(x, format)
 
   wrn3 <- wrn4 <- FALSE
 
-  for(i in 1:length(date_test)){
+  for(i in seq_len(length(date_test))){
     # stop()}
 
-    if(!is.na(date_test[i]) & length(x) == 0){date_test = as.character(x)}
-    else if(is.na(date_test[i])  & is.na(x[i])){date_test[i] <- NA_Date_}
-    else if(is.na(date_test[i])  & !is.na(x[i])){date_test[i] <- NA_Date_;wrn3 <- TRUE}
-    else if(str_detect(date_test[i], ",")){date_test[i] <- NA_Date_;wrn4 <- TRUE}
+    if(!is.na(date_test[i]) & length(x) == 0){date_test <- as.character(x)}
+    else if(
+      is.na(date_test[i]) & is.na(x[i])){date_test[i] <- NA_Date_}
+    else if(
+      is.na(date_test[i]) & !is.na(x[i])){date_test[i] <- NA_Date_;wrn3 <- TRUE}
+    else if(
+      str_detect(date_test[i], ",")){date_test[i] <- NA_Date_;wrn4 <- TRUE}
     else {date_test[i] <- do.call(date_test[i], list(x[i])) %>% as.character}
 
   }
 
-  if(wrn3) warning(call. = FALSE,
-                   "All formats failed to parse for some values.",
-                   "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
+  if(wrn3)
+    warning(
+      call. = FALSE,
+      "All formats failed to parse for some values.",
+      "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
-  if(wrn4) warning(call. = FALSE,
-                   "Ambiguous date format (",date_test[i],"). Please provide format in parameters",
-                   "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
+  if(wrn4)
+    warning(
+      call. = FALSE,
+      "Ambiguous date format (",date_test[i],"). Please provide format.",
+      "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
   date_final <- ymd(date_test)
 

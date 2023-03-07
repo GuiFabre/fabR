@@ -17,18 +17,19 @@ object to be evaluated.
 }
 \description{
 This function takes a tibble and a specific column. This column is evaluated
-one observation after the other, and finally gives the best matching date format
-for the whole column. The best matching format is tested across 7 different formats
-provided by the lubridate library. Along with the format, the percentage of matching
-is given in the output tibble. The information of the best matching format can be used
-to mutate a column using \code{\link[=as_any_date]{as_any_date()}}.
+one observation after the other, and finally gives the best matching date
+format for the whole column. The best matching format is tested across seven
+different formats provided by the lubridate library. Along with the format,
+the percentage of matching is given in the output tibble. The information of
+the best matching format can be used to mutate a column using
+\code{\link[=as_any_date]{as_any_date()}}.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates the
-column as a whole, and does not cast the column if there is ambiguity between
-values. For example, ('19-07-1983', '02-03-1982') implies that 02 refers to
-the day and 03 refers to the month, since that order works for the first element,
-and doesn't otherwise.
+Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+the column as a whole, and does not cast the column if there is ambiguity
+between values. For example, ('19-07-1983', '02-03-1982') implies that 02
+refers to the day and 03 refers to the month, since that order works for the
+first element, and doesn't otherwise.
 }
 \examples{
 \dontrun{

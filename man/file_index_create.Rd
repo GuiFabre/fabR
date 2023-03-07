@@ -7,27 +7,28 @@
 file_index_create(folder = getwd(), pattern = "^", negate = FALSE)
 }
 \arguments{
-\item{folder}{A character string identifying the folder to index. If not specified,
-the current folder is the default}
+\item{folder}{A character string identifying the folder to index. If not
+specified, the current folder is the default}
 
-\item{pattern}{A character string defining a pattern to sub-select within folder.
-Can be useful for excluding certain folders from indexing (matching by regex is supported).}
+\item{pattern}{A character string defining a pattern to sub-select within
+folder. Can be useful for excluding certain folders from indexing (matching
+by regex is supported).}
 
 \item{negate}{logical. If TRUE, return non-matching elements.}
 }
 \value{
 A tibble with folder_path, file_path, file_name, extension, file_type
-columns and a last column to_eval which is R code in a character vector to read
-the file into the environment.
+columns and a last column to_eval which is R code in a character vector to
+read the file into the environment.
 }
 \description{
 Creates a tibble listing files in a specified folder (recursively) with file
 path name and other useful metadata. This index can be used to quickly find
 files in the environment. The index also generates script to read files as
-R objects into the environment. Names for R objects are generated automatically
-from file names (R objects are not created at this step but the command line is
-generated and stored in the column to_eval, ready to be evaluated and generate
-R objects).
+R objects into the environment. Names for R objects are generated
+automatically from file names (R objects are not created at this step but the
+command line is generated and stored in the column to_eval, ready to be
+evaluated and generate R objects).
 }
 \details{
 The user must make sure their files are in the folder to be indexed.

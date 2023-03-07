@@ -5,11 +5,10 @@
 #' This helper function extracts the names of the columns in a tibble having
 #' identical values for all observations.
 #'
-#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tibble
 #'
 #' @return
-#' A tibble indicating which columns which values is the same in
-#' the tibble
+#' A tibble indicating which columns which values is the same in the tibble
 #'
 #' @examples
 #' \dontrun{
@@ -51,9 +50,17 @@ get_duplicated_cols <- function(tbl){
     add_count() %>%
     filter(n > 1) %>%
     group_by(.data$col_1) %>%
-    summarise(across(everything(), ~ paste("[INFO] - Possible duplicated columns:", paste0(., collapse = " ; "))),.groups = "drop") %>%
+    summarise(
+      across(
+        everything(),
+        ~ paste("[INFO] - Possible duplicated columns:",
+                paste0(., collapse = " ; "))),.groups = "drop") %>%
     ungroup() %>% select(.data$condition) %>%
-    tidyr::separate(col = .data$condition, into = c("to_remove","name_col"), sep = "\\:", remove = FALSE) %>%
+    tidyr::separate(
+      col = .data$condition,
+      into = c("to_remove","name_col"),
+      sep = "\\:",
+      remove = FALSE) %>%
     tidyr::separate_rows(.data$name_col, sep = ";") %>%
     select(-.data$to_remove) %>%
     mutate(across(everything(), ~stringr::str_squish(.))) %>%
@@ -71,20 +78,20 @@ get_duplicated_cols <- function(tbl){
 #' either on the whole columns or excluding the first column (id) (which can be
 #' useful to identify repeated observation across different ids)
 #'
-#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tibble
 #' @param id_col A character string specifying the column to ignore in
 #' identification of repeated observations. If NULL (by default), all of the
 #' columns will be taken in account for repeated observation identification.
 #' The row number will be used to identify those observations.
 #'
 #' @return
-#' A tibble indicating which row which values is the same in
-#' the tibble
+#' A tibble indicating which row which values is the same in the tibble
 #'
 #' @examples
 #' \dontrun{
 #'
-#' # the row numbers are returned to identify which observations have repeated values
+#' # the row numbers are returned to identify which observations have repeated
+#' # values
 #' library(tidyverse)
 #' get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 #'
@@ -112,7 +119,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 
   test <-
     test %>%
-    select(sample(2:length(test), 50, replace = TRUE)) %>%
+    select(sample(seq_along(2:length(test)), 50, replace = TRUE)) %>%
     rowwise() %>%
     mutate_all(~ digest::digest(.,algo = "md5")) %>%
     mutate_all(~ stringr::str_sub(., 1, 2)) %>%
@@ -123,23 +130,25 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     add_count() %>%
     filter(n > 1) %>%
     group_by(.data$row_duplicate) %>%
-    summarise_all(~ paste("[INFO] - Possible duplicated observations:", paste0(., collapse = " ; "))) %>%
+    summarise_all(
+      ~ paste("[INFO] - Possible duplicated observations:",
+              paste0(., collapse = " ; "))) %>%
     ungroup() %>% select(condition = .data$id_duplicate)
 
   return(test)
 }
 
 #' @title
-#' Extract columns that are all 'NA' from a tbl
+#' Extract columns that are all 'NA' from a tibble
 #'
 #' @description
-#' This helper function extracts the names of the columns in a tbl having NA
+#' This helper function extracts the names of the columns in a tibble having NA
 #' values for all observations.
 #'
-#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tibble
 #'
 #' @return
-#' A vector string indicating either that the tbl does not have empty
+#' A vector string indicating either that the tibble does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
@@ -161,7 +170,9 @@ get_all_na_cols <- function(tbl){
   # identify columns containing all NA's
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(cols = everything(), names_to = "name_col", values_to = "condition") %>%
+    tidyr::pivot_longer(
+      cols = everything(),
+      names_to = "name_col", values_to = "condition") %>%
     filter(.data$condition == 0) %>%
     mutate(
       condition = "[INFO] - Empty column")
@@ -170,16 +181,16 @@ get_all_na_cols <- function(tbl){
 }
 
 #' @title
-#' Extract columns that are all 'NA' from a tbl
+#' Extract columns that are all 'NA' from a tibble
 #'
 #' @description
-#' This helper function extracts the names of the columns in a tbl having NA
+#' This helper function extracts the names of the columns in a tibble having NA
 #' values for all observations.
 #'
-#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tibble
 #'
 #' @return
-#' A vector string indicating either that the tbl does not have empty
+#' A vector string indicating either that the tibble does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
@@ -215,16 +226,16 @@ get_all_na_rows <- function(tbl){
 }
 
 #' @title
-#' Extract columns that are all 'NA' from a tbl
+#' Extract columns that are all 'NA' from a tibble
 #'
 #' @description
-#' This helper function extracts the names of the columns in a tbl having NA
+#' This helper function extracts the names of the columns in a tibble having NA
 #' values for all observations.
 #'
-#' @param tbl R object(dataframe or tibble) of the input tbl
+#' @param tbl R object(dataframe or tibble) of the input tibble
 #'
 #' @return
-#' A vector string indicating either that the tbl does not have empty
+#' A vector string indicating either that the tibble does not have empty
 #' columns or the names of the empty columns.
 #'
 #' @examples
@@ -233,7 +244,7 @@ get_all_na_rows <- function(tbl){
 #' get_unique_value_cols(iris)
 #'
 #' # Example 2: One column doesn't have distinct observations
-#' get_unique_value_cols(slice(iris,1:50))
+#' get_unique_value_cols(slice(iris,seq_len(50)))
 #'
 #' }
 #'
@@ -246,7 +257,10 @@ get_unique_value_cols <- function(tbl){
   # identify columns containing one value
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(cols = everything(), names_to = "name_col", values_to = "condition") %>%
+    tidyr::pivot_longer(
+      cols = everything(),
+      names_to = "name_col",
+      values_to = "condition") %>%
     filter(.data$condition == 1) %>%
     mutate(
       condition = "[INFO] - Unique value in the column")

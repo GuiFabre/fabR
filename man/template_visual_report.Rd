@@ -7,10 +7,12 @@
 template_visual_report(to = getwd())
 }
 \arguments{
-\item{to}{A character string of a path where the bookdown report will be placed}
+\item{to}{A character string of a path where the bookdown report will be
+placed}
 }
 \value{
-A folder containing all files (Rmd, yml, docs, ...) to generate bookdown report
+A folder containing all files (Rmd, yml, docs, ...) to generate bookdown
+report
 }
 \description{
 This helper function creates a template for the visual report bookdown. This

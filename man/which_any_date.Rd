@@ -2,7 +2,7 @@
 % Please edit documentation in R/02-dates.R
 \name{which_any_date}
 \alias{which_any_date}
-\title{Evaluates and gives the possible format(s) for an object to be evaluated.}
+\title{Evaluates and gives the possible format(s) for an object to be evaluated}
 \usage{
 which_any_date(
   x,
@@ -12,25 +12,28 @@ which_any_date(
 \arguments{
 \item{x}{object to be coerced. Can be a character string or a vector.}
 
-\item{format}{A character identifying the format to apply to the object to test.
+\item{format}{A character identifying the format to apply to the object to
+test.
 That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
 }
 \value{
-A character string of the possible date formats given a parameter to be tested.
-The length of the vector is the lenght of the input object.
+A character string of the possible date formats given a parameter to be
+tested. The length of the vector is the lenght of the input object.
 }
 \description{
 This function takes a character string or a vector. This vector is evaluates
 one observation after the other, and gives the best matching date format
-for each of them (independently). The best matching format is tested across 7
-different formats provided by the lubridate library. The information of the best
-matching format can be used to mutate a column using \code{\link[=as_any_date]{as_any_date()}}.
+for each of them (independently). The best matching format is tested across
+seven different formats provided by the lubridate library. The information of
+the best matching format can be used to mutate a column using
+\code{\link[=as_any_date]{as_any_date()}}.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates the
-different possibilities for a date. For example, c('02-03-1982') can be either
-March the 2nd or February the 3rd. The function will provide "mdy, dmy" as possible
-formats. If no format is found, the function returns NA.
+Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+the different possibilities for a date. For example, c('02-03-1982') can be
+either March the 2nd or February the 3rd. The function will provide
+"mdy, dmy" as possible formats. If no format is found, the function returns
+NA.
 }
 \examples{
 \dontrun{

@@ -10,12 +10,13 @@ message_on_prompt(...)
 \item{...}{String character to put in a message}
 }
 \value{
-Nothing to be returned. The function sends a message as a prompt in the console.
+Nothing to be returned. The function sends a message as a prompt in the
+console.
 }
 \description{
-Shortcut allowing to provide user a prompt and a message that is to be read and
-validated before pursuing process. This function is targeted for function creators
-where user interaction is required.
+Shortcut allowing to provide user a prompt and a message that is to be read
+and validated before pursuing process. This function is targeted for function
+creators where user interaction is required.
 }
 \examples{
 \dontrun{

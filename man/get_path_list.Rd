@@ -17,9 +17,9 @@ A tibble containing all the paths of each element of the list and the
 class of each leaf (can be a list, or R objects).
 }
 \description{
-Function that recursively go through a list object and store in a tibble the path
-of each element in the list. The paths can be after that edited and accessed using
-\code{\link[=parceval]{parceval()}} for example.
+Function that recursively go through a list object and store in a tibble the
+path of each element in the list. The paths can be after that edited and
+accessed using \code{\link[=parceval]{parceval()}} for example.
 }
 \examples{
 \dontrun{

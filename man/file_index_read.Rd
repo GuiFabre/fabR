@@ -37,14 +37,15 @@ of the object read.}
 }
 \value{
 R objects generated in the environment or R scripts. R object names are
-created automatically from their file names. Otherwise return messages indicating
-what objects were created, or files opened, and if any troubles occurred.
+created automatically from their file names. Otherwise return messages
+indicating what objects were created, or files opened, and if any troubles
+occurred.
 }
 \description{
 Reads all files from a file index tibble as R objects to generate in the
-environment or R scripts to be sourced. Any other file types will be opened in
-browser (html files) or in environnement. If no index tibble is provided, the
-function creates one from the working directory.
+environment or R scripts to be sourced. Any other file types will be opened
+in browser (html files) or in environnement. If no index tibble is provided,
+the function creates one from the working directory.
 }
 \details{
 Can be the full string or substring (matching by regex is supported).

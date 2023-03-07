@@ -2,7 +2,7 @@
 % Please edit documentation in R/03-viz.R
 \name{plot_bar}
 \alias{plot_bar}
-\title{Draw bar plot of one (possibly grouped) column in a tbl}
+\title{Draw bar plot of one (possibly grouped) column in a tibble}
 \usage{
 plot_bar(
   tbl = "storms",
@@ -15,24 +15,25 @@ plot_bar(
 )
 }
 \arguments{
-\item{tbl}{A character string or tibble specifying the input tbl}
+\item{tbl}{A character string or tibble specifying the input tibble}
 
 \item{col}{A character string specifying a column of interest}
 
-\item{filter}{A character string specifying the values to filter. (equivalent of 'values in')
-This determines which values should be retained. It can be applied to both grouped
-and ungrouped data.}
+\item{filter}{A character string specifying the values to filter. (equivalent
+to 'values in') This determines which values should be retained. It can be
+applied to both grouped and ungrouped data.}
 
 \item{negate}{If TRUE, return non-matching elements.}
 
-\item{missing_values}{Vector listing values to exclude from valid values. These
-values will not be excluded from counting - but will be displayed separately from valid values.}
+\item{missing_values}{Vector listing values to exclude from valid values.
+These values will not be excluded from counting - but will be displayed
+separately from valid values.}
 
 \item{out}{parameter that specifies the output expected: can be either
-'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or 'plotly-cat'.
-gglot2 renders a static plot, plotly a dynamic plot, code gives the code in a string
-(usable directly with eval/parse functions) and cat provides indented code in the
-console.}
+'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
+'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+the code in a string (usable directly with eval/parse functions) and cat
+provides indented code in the console.}
 
 \item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
@@ -43,9 +44,10 @@ A bar plot object
 }
 \description{
 This function draws a bar plot of the values of a column.
-Missing values can be given as input to non-valid and valid values separately, or
-grouped by another column. The output can be editable (using plotly library) or static
-(using ggplot2 library). The R-code is also editable for coding recycling purpose.
+Missing values can be given as input to non-valid and valid values
+separately, or grouped by another column. The output can be editable (using
+plotly library) or static (using ggplot2 library). The R-code is also
+editable for coding recycling purpose.
 }
 \examples{
 \dontrun{

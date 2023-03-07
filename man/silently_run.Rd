@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-utils.R
 \name{silently_run}
 \alias{silently_run}
-\title{Shortcut to silently run a code chunk avoiding error (with try), messages and warnings}
+\title{Shortcut to silently run a code chunk avoiding error, messages and warnings}
 \usage{
 silently_run(...)
 }
@@ -10,13 +10,14 @@ silently_run(...)
 \item{...}{R code}
 }
 \value{
-The output of the R code, unless the output is a message, a warning or an error,
-Nothing will be returned in that case.
+The output of the R code, unless the output is a message, a warning or an
+error, nothing will be returned in that case.
 }
 \description{
-Shortcut avoiding user to get messages, warnings and being stopped by an error.
-The usage is very similar to \code{\link[base:warning]{base::suppressWarnings()}}. This function is targeted
-for function creators where user experience enhancement is sought.
+Shortcut avoiding user to get messages, warnings and being stopped by an
+error. The usage is very similar to \code{\link[base:warning]{base::suppressWarnings()}}. This function
+is targeted for function creators where user experience enhancement is
+sought.
 }
 \examples{
 \dontrun{

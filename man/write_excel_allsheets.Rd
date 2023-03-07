@@ -12,7 +12,8 @@ write_excel_allsheets(list, filename)
 \item{filename}{A character string of the path of the Excel file.}
 }
 \value{
-Nothing to be returned. The file is created at the path declared in the environnement.
+Nothing to be returned. The file is created at the path declared in the
+environment.
 }
 \description{
 The R objects are read and the values are placed in separated sheets.

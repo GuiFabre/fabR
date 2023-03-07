@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-utils.R
 \name{as_any_symbol}
 \alias{as_any_symbol}
-\title{Create objects of type "symbol".}
+\title{Create objects of type "symbol"}
 \usage{
 as_any_symbol(x)
 }

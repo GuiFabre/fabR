@@ -29,14 +29,15 @@ fabR_help <- function(){
 #' Shortcut to display a message and acceptation on prompt
 #'
 #' @description
-#' Shortcut allowing to provide user a prompt and a message that is to be read and
-#' validated before pursuing process. This function is targeted for function creators
-#' where user interaction is required.
+#' Shortcut allowing to provide user a prompt and a message that is to be read
+#' and validated before pursuing process. This function is targeted for function
+#' creators where user interaction is required.
 #'
 #' @param ... String character to put in a message
 #'
 #' @return
-#' Nothing to be returned. The function sends a message as a prompt in the console.
+#' Nothing to be returned. The function sends a message as a prompt in the
+#' console.
 #'
 #' @examples
 #' \dontrun{
@@ -54,18 +55,19 @@ message_on_prompt <- function(...){
 }
 
 #' @title
-#' Shortcut to silently run a code chunk avoiding error (with try), messages and warnings
+#' Shortcut to silently run a code chunk avoiding error, messages and warnings
 #'
 #' @description
-#' Shortcut avoiding user to get messages, warnings and being stopped by an error.
-#' The usage is very similar to [base::suppressWarnings()]. This function is targeted
-#' for function creators where user experience enhancement is sought.
+#' Shortcut avoiding user to get messages, warnings and being stopped by an
+#' error. The usage is very similar to [base::suppressWarnings()]. This function
+#' is targeted for function creators where user experience enhancement is
+#' sought.
 #'
 #' @param ... R code
 #'
 #' @return
-#' The output of the R code, unless the output is a message, a warning or an error,
-#' Nothing will be returned in that case.
+#' The output of the R code, unless the output is a message, a warning or an
+#' error, nothing will be returned in that case.
 #'
 #' @seealso
 #' [base::invisible()], [base::suppressWarnings()], [base::suppressMessages()]
@@ -90,15 +92,16 @@ silently_run <- function(...){
 #' Shortcut to turn String character into R code
 #'
 #' @description
-#' Shortcut to [base::parse()] and [base::eval()] evaluate R expression in a character
-#' string, and turns it into runable R code. This function is targeted for interaction
-#' with external files (where expression is stored in text format) ; for tidy elements
-#' where code expression is generated using [dplyr::mutate()], combined with
-#' [base::paste0()] ; in for while, map, etc. loops where character string expression
-#' can be indexed or iteratively generated and evaluated ; objects to be created
-#' (using assign, <- or <<- obj) where the name of the R object is stored in a string.
-#' Some issues may occur when parceval is used in a different environment, such
-#' as in a function. Prefer eval(parse(text = ...) instead.
+#' Shortcut to [base::parse()] and [base::eval()] evaluate R expression in a
+#' character string, and turns it into runable R code. This function is targeted
+#' for interaction with external files (where expression is stored in text
+#' format) ; for tidy elements where code expression is generated using
+#' [dplyr::mutate()], combined with [base::paste0()] ; in for while, map, etc.
+#' loops where character string expression can be indexed or iteratively
+#' generated and evaluated ; objects to be created (using assign, <- or <<- obj)
+#' where the name of the R object is stored in a string. Some issues may occur
+#' when parceval is used in a different environment, such as in a function.
+#' Prefer eval(parse(text = ...) instead.
 #'
 #' @param ... String character to be parsed and evaluated
 #'
@@ -112,10 +115,10 @@ silently_run <- function(...){
 #' @examples
 #' \dontrun{
 #'
-# Simple assignation will assign 'b' in parceval environment (which is associated
-# to a function and different from .GlobalEnv, by definition).
-# Double assignation will put 'b' in .GlobalEnv.
-# (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
+#' # Simple assignation will assign 'b' in parceval environment (which is
+#' # associated to a function and different from .GlobalEnv, by definition).
+#' # Double assignation will put 'b' in .GlobalEnv.
+#' # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
 #' a <- 1
 #' parceval("b <<- 1")
 #' print(a)
@@ -155,16 +158,18 @@ silently_run <- function(...){
 #' @importFrom rlang .data
 #' @export
 parceval <- function(...){
-  eval(parse(text = stringr::str_squish(...) %>% stringr::str_remove_all("\\\r")))
+  eval(
+    parse(
+      text = stringr::str_squish(...) %>% stringr::str_remove_all("\\\r")))
 }
 
 #' @title
 #' Read all Excel sheets using [readxl::read_excel()] recursively
 #'
 #' @description
-#' The Excel file is read and the values are placed in a list of tibbles, with each
-#' sheet in a separate element in the list. If the Excel file has only one sheet,
-#' the output is a single tibble.
+#' The Excel file is read and the values are placed in a list of tibbles, with
+#' each sheet in a separate element in the list. If the Excel file has only one
+#' sheet, the output is a single tibble.
 #'
 #' @param filename A character string of the path of the Excel file.
 #' @param sheets A vector containing only the sheets to be read.
@@ -198,14 +203,18 @@ read_excel_allsheets <- function(filename, sheets = "") {
       pull(.data$value)
 
     if(length(sheets_name) != length(sheets)){
-      message("{",sheets[!(sheets %in% sheets_name)] %>% toString, "} sheet name(s) not found in the excel file")}}
+      message("{",sheets[!(sheets %in% sheets_name)] %>% toString, "}
+              sheet name(s) not found in the excel file")}}
 
-  if(purrr::is_empty(sheets_name)){message("The sheet name(s) you provided do not exist")}else{
+  if(purrr::is_empty(sheets_name)){
+    message("The sheet name(s) you provided do not exist")}else{
     x <- lapply(sheets_name,
                 function(X) readxl::read_excel(
                   path      = filename,
                   sheet     = X,
-                  guess_max = suppressWarnings(readxl::read_excel(filename, sheet = X) %>% nrow)))
+                  guess_max =
+                    suppressWarnings(
+                      readxl::read_excel(filename, sheet = X) %>% nrow)))
     names(x) <- sheets_name
     if(length(x) == 1){return(x[[1]])}else{return(x)}
   }
@@ -226,7 +235,8 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' [xlsx::write.xlsx()]
 #'
 #' @return
-#' Nothing to be returned. The file is created at the path declared in the environnement.
+#' Nothing to be returned. The file is created at the path declared in the
+#' environment.
 #'
 #' @examples
 #' \dontrun{
@@ -261,9 +271,9 @@ write_excel_allsheets <- function(list, filename){
 #' Read a csv file using read_csv and avoid errors
 #'
 #' @description
-#' The csv file is read twice to detect the number of lines to use in attributing
-#' the column type ('guess_max' parameter of read_csv). This avoids common errors
-#' when reading csv files.
+#' The csv file is read twice to detect the number of lines to use in
+#' attributing the column type ('guess_max' parameter of read_csv). This avoids
+#' common errors when reading csv files.
 #'
 #' @param filename A character string of the path of the csv file.
 #'
@@ -292,16 +302,16 @@ read_csv_any_formats <- function(filename){
 #' Add an index column at the first place of a tibble
 #'
 #' @description
-#' Add an index, possibly by group, at the first place of a data frame or a tibble
-#' The name by default is 'index' but can be named. If 'index' already exists, or
-#' the given name, the column can be forced to be created, and replace the other
-#' one
+#' Add an index, possibly by group, at the first place of a data frame or a
+#' tibble The name by default is 'index' but can be named. If 'index' already
+#' exists, or the given name, the column can be forced to be created, and
+#' replace the other one.
 #'
 #' @param tbl tibble or data frame
 #' @param name_index A character string of the name of the column.
 #' @param start integer indicating firt index number. 1 by default.
-#' @param .force TRUE or FALSE, that parameter indicates wheter or not the column
-#' is created if already exists. FALSE by default.
+#' @param .force TRUE or FALSE, that parameter indicates whether or not the
+#' column is created if already exists. FALSE by default.
 #'
 #' @return
 #' A tibble or a data frame containing one extra first column 'index' or
@@ -350,9 +360,9 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 #' Get the paths of branches in a list
 #'
 #' @description
-#' Function that recursively go through a list object and store in a tibble the path
-#' of each element in the list. The paths can be after that edited and accessed using
-#' [fabR::parceval()] for example.
+#' Function that recursively go through a list object and store in a tibble the
+#' path of each element in the list. The paths can be after that edited and
+#' accessed using [fabR::parceval()] for example.
 #'
 #' @param list_obj R list object to be evaluated
 #' @param .map_list non usable parameter. This parameter is only there to ensure
@@ -384,7 +394,9 @@ get_path_list <- function(list_obj, .map_list = NULL){
     .map_list <-
       tibble(root_name = quote(list_obj) %>% as.character()) %>%
       mutate(
-        leaf_class = eval(parse(text = paste0(.data$root_name," %>% class %>% toString()"))))
+        leaf_class =
+          eval(parse(
+            text = paste0(.data$root_name," %>% class %>% toString()"))))
 
     .map_list <- list(
       map_list = .map_list,
@@ -395,19 +407,33 @@ get_path_list <- function(list_obj, .map_list = NULL){
 
   }else{
 
-    while(stringr::str_detect(.map_list$map_list$leaf_class %>% toString, "list")){
+    while(stringr::str_detect(
+      .map_list$map_list$leaf_class %>% toString, "list")){
 
       .map_list$map_list <-
         .map_list$map_list %>%
         rowwise() %>%
         mutate(
-          leaf_name = names(eval(parse(text = .data$root_name))) %>% toString()) %>%
+          leaf_name = names(eval(parse(text = .data$root_name))) %>%
+            toString()) %>%
         tidyr::separate_rows(.data$leaf_name, sep = ", ") %>%
         rowwise() %>%
         mutate(
-          leaf_class2  = eval(parse(text = paste0(.data$root_name,"[[",shQuote(.data$leaf_name),"]] %>% class %>% toString()"))),
-          leaf_name   = ifelse(.data$leaf_class2 == "list", paste0("[[",shQuote(.data$leaf_name),"]]"),paste0("[",shQuote(.data$leaf_name),"]")),
-          root_name   = ifelse(.data$leaf_class == "list",  paste0(.data$root_name,.data$leaf_name),.data$root_name),
+          leaf_class2  =
+            eval(
+              parse(text = paste0(.data$root_name,"[[",shQuote(.data$leaf_name),
+                                  "]] %>% class %>% toString()"))),
+
+          leaf_name   =
+            ifelse(.data$leaf_class2 == "list",
+                   paste0("[[",shQuote(.data$leaf_name),"]]"),
+                   paste0("[",shQuote(.data$leaf_name),"]")),
+
+          root_name   =
+            ifelse(.data$leaf_class == "list",
+                   paste0(.data$root_name,.data$leaf_name),
+                   .data$root_name),
+
           leaf_class = .data$leaf_class2) %>%
         select(.data$root_name, .data$leaf_class)
 
@@ -425,10 +451,10 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' Shortcut to create beautiful names in a list
 #'
 #' @description
-#' Generate a name for an element in a list. This function is targeted for functions
-#' creations which handle lists. Those lists may need names to go through each elements.
-#' This function works with [stats::setNames()] and allows the user to provide name
-#' shorter, more user-friendly in their lists.
+#' Generate a name for an element in a list. This function is targeted for
+#' functions creations which handle lists. Those lists may need names to go
+#' through each elements. This function works with [stats::setNames()] and
+#' allows the user to provide name shorter, more user-friendly in their lists.
 #'
 #' @param args_list A list of character string of same length of list_elem
 #' @param list_elem A list of character string of same length of args_list
@@ -442,8 +468,8 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' @examples
 #' \dontrun{
 #'
-#' # make_name_list generates names that are informative through a line of code or
-#' # function. tibble(iris), iris %>% tibble and
+#' # make_name_list generates names that are informative through a line of code
+#' # or function. tibble(iris), iris %>% tibble and
 #' # list(iris = tibble(mytibble) %>% select(Species))
 #' # will have 'iris' as name.
 #'
@@ -451,8 +477,9 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #'   setNames(make_name_list(list(tibble(iris), tibble(mtcars)), args_list =
 #'     c("IRIS %>% complicated_code","complicated_function(MTCARS)")))
 #'
-#' # make_name_list can be used when a function uses arguments provided by the user
-#' # to generate a list. The name is simplified and given to the list itself
+#' # make_name_list can be used when a function uses arguments provided by the
+#' # user to generate a list. The name is simplified and given to the list
+#' # itself
 #' library(tidyverse)
 #' my_function = function(df){
 #'   .fargs <- as.list(match.call(expand.dots = TRUE))
@@ -491,11 +518,11 @@ make_name_list <- function(args_list, list_elem){
 
   if(length(list_elem) != length(name_list)) {
     warning(
-"\nThe names of your elements in your list might have been wrongly parsed. Please
-verify the names of your elements and reparse.\n", call. = FALSE)
+"\nThe names of your elements in your list might have been wrongly parsed.
+Please verify the names of your elements and reparse.\n", call. = FALSE)
   }
 
-  return(name_list[c(1:length(list_elem))])
+  return(name_list[c(seq_len(length(list_elem)))])
 
 }
 
@@ -503,13 +530,15 @@ verify the names of your elements and reparse.\n", call. = FALSE)
 #' Create objects of type "logical".
 #'
 #' @description
-#' Create or test for objects of type "logical", and the basic logical constants.
+#' Create or test for objects of type "logical", and the basic logical
+#' constants.
 #' This function is a wrapper of the function [base::as.logical()] and evaluates
 #' if the object to be coerced can be interpreted as a boolean. Any object :
 #' NA, NA_integer, NA_Date_, (...),
 #' 0, 0L, F, FALSE, false, FaLsE, (...),
 #' 1, 1L,T,  TRUE,  true, TrUe, (...),
-#' will be converted as NA, FALSE and TRUE. Any other other will return an error.
+#' will be converted as NA, FALSE and TRUE. Any other other will return an
+#' error.
 #'
 #' @param x Object to be coerced or tested. Can be a vector.
 #'
@@ -551,7 +580,7 @@ as_any_boolean <- function(x){
   x <- str_squish(x)
 
   xtemp <- x
-  for(i in 1:length(x)){
+  for(i in seq_len(length(x))){
     # stop()}
 
     xtemp[i] <-
@@ -566,7 +595,8 @@ as_any_boolean <- function(x){
 
       }, silent = TRUE)))
 
-    if(toString(xtemp[i]) == "NaN") stop("x is not in a standard unambiguous format")
+    if(toString(xtemp[i]) == "NaN")
+      stop("x is not in a standard unambiguous format")
   }
 
     x <- as.logical(xtemp)
@@ -575,7 +605,7 @@ as_any_boolean <- function(x){
 
 
 #' @title
-#' Create objects of type "symbol".
+#' Create objects of type "symbol"
 #'
 #' @description
 #' Create or test for objects of type "symbol".
@@ -608,7 +638,7 @@ as_any_symbol <- function(x){
     x <- as.symbol(x)}
 
   if(as.symbol(x) == 'x' & typeof(substitute(x)) == "symbol"){
-    x = substitute(x)}
+    x <- substitute(x)}
 
   return(x)
 }
@@ -617,18 +647,19 @@ as_any_symbol <- function(x){
 #' Collects and Generates documentation of a package in a tibble format.
 #'
 #' @description
-#' This function crawls and aggregates roxygen documentation into a tibble format.
-#' To work properly, elements must be separated with the named fields at title,
-#' at description, at ...), each at will be used as column name. The column name
-#' will also have 80 character to show the margin limit of each chunck of documentation.
+#' This function crawls and aggregates roxygen documentation into a tibble
+#' format. To work properly, elements must be separated with the named fields at
+#' title, at description, at ...), each at will be used as column name. The
+#' column name will also have 80 character to show the margin limit of each
+#' chunk of documentation.
 #'
-#' @param folder_r A character string identifying the folder to index. If not specified,
-#' 'R/' is the default.
+#' @param folder_r A character string identifying the folder to index. If not
+#' specified, 'R/' is the default.
 #'
 #' @return
-#' A tibble where each line represents a function described in a package, and each
-#' column is documentation field. Most commun fields (title, description, details,
-#' param, see also, return and examples are placed ahead).
+#' A tibble where each line represents a function described in a package, and
+#' each column is documentation field. Most commun fields (title, description,
+#' details, param, see also, return and examples are placed ahead).
 #'
 #' @examples
 #' \dontrun{
@@ -647,35 +678,55 @@ collect_roxygen <- function(folder_r = "R"){
   # collect
   idx <- file_index_create(folder_r)
   doc <- tibble()
-  for(i in idx$file_path){doc <- bind_rows(doc,tibble(value = readLines(i), page = basename(i)))}
+  for(i in idx$file_path){
+    doc <- bind_rows(doc,tibble(value = readLines(i), page = basename(i)))}
 
   doc <-
   # trim
     doc %>%
     mutate(value = str_squish(.data$`value`)) %>%
-    filter(str_detect(.data$`value`,"^#'") | str_detect(.data$`value`, '<- function\\(')) %>%
+    filter(str_detect(.data$`value`,"^#'") |
+             str_detect(.data$`value`, '<- function\\(')) %>%
 
   # classify
     mutate(
-      class = ifelse(str_detect(.data$`value`,"<- function\\(")    ,"FUNCTION"   ,NA_character_),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@title")      ,"TITLE"      ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@description"),"DESCRIPTION",.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@details")    ,"DETAILS"    ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@format")     ,"FORMAT"     ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@seealso")    ,"SEEALSO"    ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@param")      ,"PARAM"      ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@return")     ,"RETURN"     ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@examples")   ,"EXAMPLES"   ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@import")     ,"IMPORT"     ,.data$`class`),
-      class = ifelse(str_detect(.data$`value`,"^#' \\@export")     ,"EXPORT"     ,.data$`class`)) %>%
-    mutate(value = ifelse(.data$`class` %in% "FUNCTION", stringr::str_remove(.data$`value`,"<- function.+$"),.data$`value`)) %>%
+      class = ifelse(str_detect(.data$`value`,"<- function\\(")    ,
+                     "FUNCTION"   ,NA_character_),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@title")      ,
+                     "TITLE"      ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@description"),
+                     "DESCRIPTION",.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@details")    ,
+                     "DETAILS"    ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@format")     ,
+                     "FORMAT"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@seealso")    ,
+                     "SEEALSO"    ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@param")      ,
+                     "PARAM"      ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@return")     ,
+                     "RETURN"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@examples")   ,
+                     "EXAMPLES"   ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@import")     ,
+                     "IMPORT"     ,.data$`class`),
+      class = ifelse(str_detect(.data$`value`,"^#' \\@export")     ,
+                     "EXPORT"     ,.data$`class`)) %>%
+    mutate(value =
+             ifelse(
+               .data$`class` %in% "FUNCTION",
+               stringr::str_remove(.data$`value`,"<- function.+$"),
+               .data$`value`)) %>%
     mutate(across(everything(), ~stringr::str_squish(.))) %>%
     filter(.data$`value` != "#'")
 
   doc <-
     doc %>%
     add_index() %>%
-    mutate(class_2 = ifelse(.data$`class` == 'TITLE', paste0("function_",.data$`index`), NA)) %>%
+    mutate(class_2 =
+             ifelse(
+               .data$`class` == 'TITLE',
+               paste0("function_",.data$`index`), NA)) %>%
     fill(.data$`class_2`,.direction = "down") %>%
     fill(.data$`class`,.direction = "down") %>%
     select(-.data$`index`)
@@ -684,22 +735,23 @@ collect_roxygen <- function(folder_r = "R"){
   doc <-
     doc %>%
     group_by(.data$`class_2`, .data$`class`, .data$`page`) %>%
-    summarise(value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
+    summarise(
+      value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
     pivot_wider(names_from = .data$`class`, values_from = .data$`value`) %>%
     ungroup %>%
     select(
       `page` = .data$`page`,
-      `name----------------------------------------------------------------------------` = matches('FUNCTION'   ),
-      `title---------------------------------------------------------------------------` = matches('TITLE'      ),
-      `description---------------------------------------------------------------------` = matches('DESCRIPTION'),
-      `details-------------------------------------------------------------------------` = matches('DETAILS'    ),
-      `format--------------------------------------------------------------------------` = matches('FORMAT'     ),
-      `seealso-------------------------------------------------------------------------` = matches('SEEALSO'    ),
-      `param---------------------------------------------------------------------------` = matches('PARAM'      ),
-      `return--------------------------------------------------------------------------` = matches('RETURN'     ),
-      `examples------------------------------------------------------------------------` = matches('EXAMPLE'    ),
-      `import--------------------------------------------------------------------------` = matches('IMPORT'     ),
-      `export--------------------------------------------------------------------------` = matches('EXPORT'     )) %>%
+      matches('FUNCTION'   ),
+      matches('TITLE'      ),
+      matches('DESCRIPTION'),
+      matches('DETAILS'    ),
+      matches('FORMAT'     ),
+      matches('SEEALSO'    ),
+      matches('PARAM'      ),
+      matches('RETURN'     ),
+      matches('EXAMPLE'    ),
+      matches('IMPORT'     ),
+      matches('EXPORT'     )) %>%
     add_index()
 
   return(doc)

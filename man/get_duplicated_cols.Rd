@@ -7,11 +7,10 @@
 get_duplicated_cols(tbl)
 }
 \arguments{
-\item{tbl}{R object(dataframe or tibble) of the input tbl}
+\item{tbl}{R object(dataframe or tibble) of the input tibble}
 }
 \value{
-A tibble indicating which columns which values is the same in
-the tibble
+A tibble indicating which columns which values is the same in the tibble
 }
 \description{
 This helper function extracts the names of the columns in a tibble having

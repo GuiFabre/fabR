@@ -7,7 +7,7 @@
 get_duplicated_rows(tbl, id_col = NULL)
 }
 \arguments{
-\item{tbl}{R object(dataframe or tibble) of the input tbl}
+\item{tbl}{R object(dataframe or tibble) of the input tibble}
 
 \item{id_col}{A character string specifying the column to ignore in
 identification of repeated observations. If NULL (by default), all of the
@@ -15,8 +15,7 @@ columns will be taken in account for repeated observation identification.
 The row number will be used to identify those observations.}
 }
 \value{
-A tibble indicating which row which values is the same in
-the tibble
+A tibble indicating which row which values is the same in the tibble
 }
 \description{
 This helper function extracts the row number (or first column value) in a
@@ -27,7 +26,8 @@ useful to identify repeated observation across different ids)
 \examples{
 \dontrun{
 
-# the row numbers are returned to identify which observations have repeated values
+# the row numbers are returned to identify which observations have repeated
+# values
 library(tidyverse)
 get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 
