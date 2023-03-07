@@ -23,7 +23,7 @@ Can be the full string or substring (matching by regex is supported)}
 \item{file_name}{A character string a file name to search by.
 Can be the full string or substring (matching by regex is supported).}
 
-\item{extension}{A character string a file extention to search by.
+\item{extension}{A character string a file extension to search by.
 Can be the full string or substring (matching by regex is supported).}
 
 \item{file_type}{A character string a file type to search by.

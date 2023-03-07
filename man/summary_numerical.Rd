@@ -26,7 +26,7 @@ applied to both grouped and ungrouped data.}
 \item{negate}{If TRUE, return non-matching elements.}
 
 \item{missing_values}{Vector listing values to exclude from valid values.
-Those values will not be exclud from counting, but will be separated from
+Those values will not be excluded from counting, but will be separated from
 valid values.}
 
 \item{out}{parameter that specifies the output expected: can be either 'DT',

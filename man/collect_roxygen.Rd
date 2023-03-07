@@ -12,7 +12,7 @@ specified, 'R/' is the default.}
 }
 \value{
 A tibble where each line represents a function described in a package, and
-each column is documentation field. Most commun fields (title, description,
+each column is documentation field. Most common fields (title, description,
 details, param, see also, return and examples are placed ahead).
 }
 \description{

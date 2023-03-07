@@ -93,7 +93,7 @@ silently_run <- function(...){
 #'
 #' @description
 #' Shortcut to [base::parse()] and [base::eval()] evaluate R expression in a
-#' character string, and turns it into runable R code. This function is targeted
+#' character string, and turns it into actual R code. This function is targeted
 #' for interaction with external files (where expression is stored in text
 #' format) ; for tidy elements where code expression is generated using
 #' [dplyr::mutate()], combined with [base::paste0()] ; in for while, map, etc.
@@ -309,7 +309,7 @@ read_csv_any_formats <- function(filename){
 #'
 #' @param tbl tibble or data frame
 #' @param name_index A character string of the name of the column.
-#' @param start integer indicating firt index number. 1 by default.
+#' @param start integer indicating first index number. 1 by default.
 #' @param .force TRUE or FALSE, that parameter indicates whether or not the
 #' column is created if already exists. FALSE by default.
 #'
@@ -658,7 +658,7 @@ as_any_symbol <- function(x){
 #'
 #' @return
 #' A tibble where each line represents a function described in a package, and
-#' each column is documentation field. Most commun fields (title, description,
+#' each column is documentation field. Most common fields (title, description,
 #' details, param, see also, return and examples are placed ahead).
 #'
 #' @examples

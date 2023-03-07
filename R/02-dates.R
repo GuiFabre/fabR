@@ -152,7 +152,7 @@ guess_date_format <- function(tbl, col = NULL){
 #'
 #' @return
 #' A character string of the possible date formats given a parameter to be
-#' tested. The length of the vector is the lenght of the input object.
+#' tested. The length of the vector is the length of the input object.
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],

@@ -1,18 +1,15 @@
 Package: fabR
 Type: Package
-Title: Wrapper Functions Collection Used In Data Pipelines 
-Version: 1.1.0
-Author: Guillaume Fabre
-Authors@R: 
-    c(person(given = "Guillaume",
-             family = "Fabre",
-             role = c("aut", "cre"),
-             email = "guijoseph.fabre@gmail.com"))
+Title: Wrapper Functions Collection Used in Data Pipelines 
+Version: 1.1.0.1
+Date: 2023-03-06
+Author: Guillaume Fabre <guijoseph.fabre@gmail.com> [aut, cre]
 Maintainer: Guillaume Fabre <guijoseph.fabre@gmail.com> 
-Description: The goal of this package is to provide wrapper functions in the data 
-    cleaning and cleansing processe. These function helps in messages and interaction
-    with the user, keep track of information in pipelines, help in the wrangling,
-    munging, assessement and visualization of data frame-like material.
+Description: The goal of this package is to provide wrapper functions in the 
+    data cleaning and cleansing processes. These function helps in messages and 
+    interaction with the user, keep track of information in pipelines, help in 
+    the wrangling, munging, assessment and visualization of data frame-like 
+    material.
 License: GPL-3
 Depends: R (>= 3.4)
 Imports: dplyr,
@@ -38,5 +35,7 @@ RoxygenNote: 7.2.3
 Encoding: UTF-8
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    spelling
 VignetteBuilder: knitr
+Language: en-US

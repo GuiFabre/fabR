@@ -4,9 +4,9 @@
 \name{fabR-package}
 \alias{fabR}
 \alias{fabR-package}
-\title{fabR: Wrapper Functions Collection Used In Data Pipelines}
+\title{fabR: Wrapper Functions Collection Used in Data Pipelines}
 \description{
-The goal of this package is to provide wrapper functions in the data cleaning and cleansing processe. These function helps in messages and interaction with the user, keep track of information in pipelines, help in the wrangling, munging, assessement and visualization of data frame-like material.
+The goal of this package is to provide wrapper functions in the data cleaning and cleansing processes. These function helps in messages and interaction with the user, keep track of information in pipelines, help in the wrangling, munging, assessment and visualization of data frame-like material.
 }
 \seealso{
 Useful links:
@@ -14,10 +14,6 @@ Useful links:
   \item \url{https://github.com/GuiFabre/fabR/}
   \item Report bugs at \url{https://github.com/GuiFabre/fabR/issues}
 }
-
-}
-\author{
-\strong{Maintainer}: Guillaume Fabre \email{guijoseph.fabre@gmail.com}
 
 }
 \keyword{internal}

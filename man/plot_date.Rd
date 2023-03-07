@@ -30,13 +30,13 @@ applied to both grouped and ungrouped data.}
 These values will not be excluded from counting - but will be displayed
 separately from valid values.}
 
-\item{time}{parameter following lubridate synthaxe to specify the period of
+\item{time}{parameter following lubridate syntax to specify the period of
 time to consider. Can be ymd, mdy, year, months, etc. See lubridate
 documentation.}
 
 \item{out}{parameter that specifies the output expected: can be either
 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 the code in a string (usable directly with eval/parse functions) and cat
 provides indented code in the console.}
 
@@ -49,7 +49,7 @@ A lollipop plot object
 }
 \description{
 This function draws a lollipop plot of the values of time related column.
-the 'time' parameter uses lubridate synthax to specify the period of time to
+the 'time' parameter uses lubridate syntax to specify the period of time to
 consider. Missing values can be given as input to non-valid and valid values
 separately, or grouped by another column. The output can be editable (using
 plotly library) or static (using ggplot2 library). The R-code is also

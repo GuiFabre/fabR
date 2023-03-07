@@ -40,3 +40,5 @@ test.R
 inst/doc
 docs
 _pkgdown.yml
+inst/WORDLIST
+tests/

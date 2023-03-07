@@ -11,7 +11,7 @@ add_index(tbl, name_index = "index", start = 1, .force = FALSE)
 
 \item{name_index}{A character string of the name of the column.}
 
-\item{start}{integer indicating firt index number. 1 by default.}
+\item{start}{integer indicating first index number. 1 by default.}
 
 \item{.force}{TRUE or FALSE, that parameter indicates whether or not the
 column is created if already exists. FALSE by default.}

@@ -18,7 +18,7 @@ That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
 }
 \value{
 A character string of the possible date formats given a parameter to be
-tested. The length of the vector is the lenght of the input object.
+tested. The length of the vector is the length of the input object.
 }
 \description{
 This function takes a character string or a vector. This vector is evaluates

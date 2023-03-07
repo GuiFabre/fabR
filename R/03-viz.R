@@ -22,7 +22,7 @@
 #' @param max integer specifying the x-th first most cited words
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -150,7 +150,7 @@ plot_main_word <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -259,7 +259,7 @@ plot_histogram <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -353,7 +353,7 @@ plot_box <- function(
 #'
 #' @description
 #' This function draws a lollipop plot of the values of time related column.
-#' the 'time' parameter uses lubridate synthax to specify the period of time to
+#' the 'time' parameter uses lubridate syntax to specify the period of time to
 #' consider. Missing values can be given as input to non-valid and valid values
 #' separately, or grouped by another column. The output can be editable (using
 #' plotly library) or static (using ggplot2 library). The R-code is also
@@ -368,12 +368,12 @@ plot_box <- function(
 #' @param missing_values Vector listing values to exclude from valid values.
 #' These values will not be excluded from counting - but will be displayed
 #' separately from valid values.
-#' @param time parameter following lubridate synthaxe to specify the period of
+#' @param time parameter following lubridate syntax to specify the period of
 #' time to consider. Can be ymd, mdy, year, months, etc. See lubridate
 #' documentation.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -505,7 +505,7 @@ plot_date <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -614,7 +614,7 @@ plot_bar <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -723,7 +723,7 @@ plot_density <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -852,7 +852,7 @@ plot_pie <- function(
 #' separately from valid values.
 #' @param out parameter that specifies the output expected: can be either
 #' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 #' the code in a string (usable directly with eval/parse functions) and cat
 #' provides indented code in the console.
 #' @param group_by A character string of one column in the tbl that can be
@@ -1091,7 +1091,7 @@ summary_text <- function(
 #' applied to both grouped and ungrouped data.
 #' @param negate If TRUE, return non-matching elements.
 #' @param missing_values Vector listing values to exclude from valid values.
-#' Those values will not be exclud from counting, but will be separated from
+#' Those values will not be excluded from counting, but will be separated from
 #' valid values.
 #' @param out parameter that specifies the output expected: can be either 'DT',
 #' 'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives
@@ -1217,7 +1217,7 @@ summary_numerical <- function(
 #' applied to both grouped and ungrouped data.
 #' @param negate If TRUE, return non-matching elements.
 #' @param missing_values Vector listing values to exclude from valid values.
-#' Those values will not be exclud from counting, but will be separated from
+#' Those values will not be excluded from counting, but will be separated from
 #' valid values.
 #' @param out parameter that specifies the output expected: can be either 'DT',
 #' 'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives

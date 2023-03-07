@@ -34,7 +34,7 @@ separately from valid values.}
 
 \item{out}{parameter that specifies the output expected: can be either
 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-'plotly-cat'. gglot2 renders a static plot, plotly a dynamic plot, code gives
+'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
 the code in a string (usable directly with eval/parse functions) and cat
 provides indented code in the console.}
 

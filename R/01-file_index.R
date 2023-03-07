@@ -37,7 +37,7 @@
 file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 
   message(
-    "Your files contained in your R environnement are currently being indexed.
+    "Your files contained in your R environment are currently being indexed.
     Please wait...\n")
 
   index <- tibble(
@@ -142,7 +142,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 #' Can be the full string or substring (matching by regex is supported)
 #' @param file_name A character string a file name to search by.
 #' Can be the full string or substring (matching by regex is supported).
-#' @param extension A character string a file extention to search by.
+#' @param extension A character string a file extension to search by.
 #' Can be the full string or substring (matching by regex is supported).
 #' @param file_type A character string a file type to search by.
 #' Can be the full string or substring (matching by regex is supported).
@@ -208,7 +208,7 @@ file_index_search <- function(
 #' @description
 #' Reads all files from a file index tibble as R objects to generate in the
 #' environment or R scripts to be sourced. Any other file types will be opened
-#' in browser (html files) or in environnement. If no index tibble is provided,
+#' in browser (html files) or in environment. If no index tibble is provided,
 #' the function creates one from the working directory.
 #'
 #' @details
@@ -220,7 +220,7 @@ file_index_search <- function(
 #' Can be the full string or substring (matching by regex is supported)
 #' @param file_name A character string a file name to search by.
 #' Can be the full string or substring (matching by regex is supported).
-#' @param extension A character string a file extention to search by.
+#' @param extension A character string a file extension to search by.
 #' Can be the full string or substring (matching by regex is supported).
 #' @param file_type A character string a file type to search by.
 #' Can be the full string or substring (matching by regex is supported).
