@@ -23,7 +23,10 @@ https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-t
 \examples{
 \donttest{
 
-unlink(write_excel_allsheets(list = list(iris = iris, mtcars = mtcars), filename = tempfile()))
+unlink(
+  write_excel_allsheets(
+    list = list(iris = iris, mtcars = mtcars),
+    filename = tempfile()))
 
 }
 

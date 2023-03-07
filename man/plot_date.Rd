@@ -36,9 +36,9 @@ documentation.}
 
 \item{out}{parameter that specifies the output expected: can be either
 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code gives
-the code in a string (usable directly with eval/parse functions) and cat
-provides indented code in the console.}
+'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
+gives the code in a string (usable directly with eval/parse functions) and
+cat provides indented code in the console.}
 
 \item{group_by}{A character string of one column in the tbl that can be
 taken as a grouping column. The visual element will be grouped and displayed
