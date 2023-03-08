@@ -5,7 +5,7 @@
 \title{Draw lollipop plot of one (possibly grouped) time-related column in a tibble}
 \usage{
 plot_date(
-  tbl = "storms_see_example",
+  tbl = "dplyr::storms",
   col = "annual",
   filter = "c()",
   negate = FALSE,
@@ -56,11 +56,11 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\donttest{
+{
 
 ##### Example 1 -------------------------------------------------------------
 # cat output generated as a template when no argument provided
-# plot_date()
+plot_date()
 
 ##### Example 2 -------------------------------------------------------------
 # graph of number of storms per month

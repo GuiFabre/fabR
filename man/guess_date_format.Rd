@@ -32,7 +32,7 @@ refers to the day and 03 refers to the month, since that order works for the
 first element, and doesn't otherwise.
 }
 \examples{
-\donttest{
+{
 
 library(tidyr)
 

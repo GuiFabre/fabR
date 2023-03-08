@@ -31,7 +31,7 @@
 #' object to be evaluated.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(tidyr)
 #'
@@ -169,7 +169,7 @@ guess_date_format <- function(tbl, col = NULL){
 #' [fabR::guess_date_format()],[fabR::as_any_date()]
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' time <- c(
 #'   "1983-07-19",
@@ -256,7 +256,7 @@ which_any_date <- function(
 #' A R Object of class 'Date'.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(dplyr)
 #' library(tidyr)

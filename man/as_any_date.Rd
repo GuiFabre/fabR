@@ -35,7 +35,7 @@ NA, and a warning, since there is an ambiguity that cannot be solved, unless
 the user provides the format to apply.
 }
 \examples{
-\donttest{
+{
 
 library(dplyr)
 library(tidyr)

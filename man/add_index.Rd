@@ -27,7 +27,7 @@ exists, or the given name, the column can be forced to be created, and
 replace the other one.
 }
 \examples{
-\donttest{
+{
 
 add_index(iris, "my_index")
 

@@ -25,7 +25,7 @@ when parceval is used in a different environment, such as in a function.
 Prefer eval(parse(text = ...) instead.
 }
 \examples{
-\donttest{
+{
 
 ##### Example 1 -------------------------------------------------------------
 # Simple assignation will assign 'b' in parceval environment (which is
@@ -33,14 +33,10 @@ Prefer eval(parse(text = ...) instead.
 # Double assignation will put 'b' in .GlobalEnv.
 # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
 
-# a <- 1
-# parceval("b <<- 1")
-# print(a)
-# print(b)
-# parceval("b <<- b + a")
-# print(b)
-# my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
-# parceval(my_code)
+a <- 1
+parceval("print(a)")
+my_code <- paste0("a <- a + ",rep(1,3), "; message('value of a: ', a)")
+parceval(my_code)
 
 ##### Example 2 -------------------------------------------------------------
 # use rowwise to directly use parceval in a tibble, or use a for loop.

@@ -21,7 +21,7 @@ https://github.com/jtr13/bookdown-template/archive/refs/heads/master.zip
 folder
 }
 \examples{
-\donttest{
+{
 
 unlink(template_visual_report(tempdir()))
 

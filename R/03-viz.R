@@ -36,7 +36,7 @@
 #' A bar plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -167,7 +167,7 @@ plot_main_word <- function(
 #' A hist plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -279,7 +279,7 @@ plot_histogram <- function(
 #' A box plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -396,11 +396,11 @@ plot_box <- function(
 #' A lollipop plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
-#' # plot_date()
+#' plot_date()
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # graph of number of storms per month
@@ -421,7 +421,7 @@ plot_box <- function(
 #' @importFrom rlang .data
 #' @export
 plot_date <- function(
-    tbl = "storms_see_example",
+    tbl = "dplyr::storms",
     col = "annual",
     filter = 'c()',
     negate = FALSE,
@@ -532,7 +532,7 @@ plot_date <- function(
 #' A bar plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -644,7 +644,7 @@ plot_bar <- function(
 #' A density plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -757,7 +757,7 @@ plot_density <- function(
 #' A pie plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -888,7 +888,7 @@ plot_pie <- function(
 #' A pie plot object
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -1027,7 +1027,7 @@ plot_pie_valid_value <- function(
 #' it.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -1136,7 +1136,7 @@ summary_text <- function(
 #' it.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -1265,7 +1265,7 @@ summary_numerical <- function(
 #' it.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # cat output generated as a template when no argument provided
@@ -1360,7 +1360,7 @@ summary_category <- function(
 #' report
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' unlink(template_visual_report(tempdir()))
 #'

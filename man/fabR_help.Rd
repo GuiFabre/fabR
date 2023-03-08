@@ -15,7 +15,7 @@ the package. The user accesses the description of the latest version of the
 package, the vignettes, and the list of functions.
 }
 \examples{
-\donttest{
+{
 
 # call the help center!
 fabR_help()

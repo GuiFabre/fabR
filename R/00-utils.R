@@ -10,7 +10,7 @@
 #' Nothing to be returned. The function opens a web package.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' # call the help center!
 #' fabR_help()
@@ -42,7 +42,7 @@ fabR_help <- function(){
 #' console.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' message_on_prompt("Do you want to continue? Press `enter` or `esc`")
 #'
@@ -75,7 +75,7 @@ message_on_prompt <- function(...){
 #' [base::invisible()], [base::suppressWarnings()], [base::suppressMessages()]
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' as.integer("text")
 #' silently_run(as.integer("text"))
@@ -115,7 +115,7 @@ silently_run <- function(...){
 #'
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # Simple assignation will assign 'b' in parceval environment (which is
@@ -123,14 +123,10 @@ silently_run <- function(...){
 #' # Double assignation will put 'b' in .GlobalEnv.
 #' # (similar to assign(x = "b",value = 1,envir = .GlobalEnv))
 #'
-#' # a <- 1
-#' # parceval("b <<- 1")
-#' # print(a)
-#' # print(b)
-#' # parceval("b <<- b + a")
-#' # print(b)
-#' # my_code <- paste0("b <<- b + ",rep(1,3), "; message('value of b: ', b)")
-#' # parceval(my_code)
+#' a <- 1
+#' parceval("print(a)")
+#' my_code <- paste0("a <- a + ",rep(1,3), "; message('value of a: ', a)")
+#' parceval(my_code)
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # use rowwise to directly use parceval in a tibble, or use a for loop.
@@ -189,7 +185,7 @@ parceval <- function(...){
 #' [readxl::read_excel()]
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' try(read_excel_allsheets(filename = tempfile()), silent = TRUE)
 #'
@@ -247,7 +243,7 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' environment.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' unlink(
 #'   write_excel_allsheets(
@@ -294,7 +290,7 @@ write_excel_allsheets <- function(list, filename){
 #' A tibble corresponding to the csv read.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 #'
@@ -331,7 +327,7 @@ read_csv_any_formats <- function(filename){
 #' any given name.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' add_index(iris, "my_index")
 #'
@@ -389,7 +385,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 #' class of each leaf (can be a list, or R objects).
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(dplyr)
 #' get_path_list(
@@ -483,7 +479,7 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' A character string simplified to be used as names in a list.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(tidyr)
 #' library(magrittr)
@@ -572,7 +568,7 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 #' [base::as.logical()]
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(dplyr)
 #'
@@ -642,7 +638,7 @@ as_any_boolean <- function(x){
 #' Object of type "symbol".
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' as_any_symbol(coucou)
 #' as_any_symbol("coucou")
@@ -687,7 +683,7 @@ as_any_symbol <- function(x){
 #' details, param, see also, return and examples are placed ahead).
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(tidyr)
 #' try({tibble(collect_roxygen(tempfile()))}, silent = FALSE)

@@ -21,7 +21,7 @@ This function is inspired by the function proposed in
 https://statmethods.wordpress.com/2014/06/19/quickly-export-multiple-r-objects-to-an-excel-workbook/
 }
 \examples{
-\donttest{
+{
 
 unlink(
   write_excel_allsheets(

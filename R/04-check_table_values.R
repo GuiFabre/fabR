@@ -11,7 +11,7 @@
 #' A tibble indicating which columns which values is the same in the tibble
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' library(dplyr)
 #' mtcars_duplicated <-
@@ -89,7 +89,7 @@ get_duplicated_cols <- function(tbl){
 #' A tibble indicating which row which values is the same in the tibble
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' # the row numbers are returned to identify which observations have repeated
 #' # values
@@ -153,7 +153,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # All columns have observation
@@ -199,7 +199,7 @@ get_all_na_cols <- function(tbl){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # All rows have observation
@@ -247,7 +247,7 @@ get_all_na_rows <- function(tbl){
 #' columns or the names of the empty columns.
 #'
 #' @examples
-#' \donttest{
+#' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # All columns have distinct observation

@@ -24,7 +24,7 @@ either on the whole columns or excluding the first column (id) (which can be
 useful to identify repeated observation across different ids)
 }
 \examples{
-\donttest{
+{
 
 # the row numbers are returned to identify which observations have repeated
 # values

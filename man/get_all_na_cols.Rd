@@ -18,7 +18,7 @@ This helper function extracts the names of the columns in a tibble having NA
 values for all observations.
 }
 \examples{
-\donttest{
+{
 
 ##### Example 1 -------------------------------------------------------------
 # All columns have observation

@@ -52,7 +52,7 @@ editable for coding recycling purpose. The user can download the datatable in
 csv format.
 }
 \examples{
-\donttest{
+{
 
 ##### Example 1 -------------------------------------------------------------
 # cat output generated as a template when no argument provided

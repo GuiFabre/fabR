@@ -18,7 +18,7 @@ attributing the column type ('guess_max' parameter of read_csv). This avoids
 common errors when reading csv files.
 }
 \examples{
-\donttest{
+{
 
 try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 

@@ -24,7 +24,7 @@ will be converted as NA, FALSE and TRUE. Any other other will return an
 error.
 }
 \examples{
-\donttest{
+{
 
 library(dplyr)
 

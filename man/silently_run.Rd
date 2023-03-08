@@ -20,7 +20,7 @@ is targeted for function creators where user experience enhancement is
 sought.
 }
 \examples{
-\donttest{
+{
 
 as.integer("text")
 silently_run(as.integer("text"))

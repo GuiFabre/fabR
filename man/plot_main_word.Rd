@@ -55,7 +55,7 @@ plotly library) or static (using ggplot2 library). The R-code is also
 editable for coding recycling purpose.
 }
 \examples{
-\donttest{
+{
 
 ##### Example 1 -------------------------------------------------------------
 # cat output generated as a template when no argument provided

@@ -17,7 +17,7 @@ Object of type "symbol".
 Create or test for objects of type "symbol".
 }
 \examples{
-\donttest{
+{
 
 as_any_symbol(coucou)
 as_any_symbol("coucou")

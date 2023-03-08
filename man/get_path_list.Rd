@@ -22,7 +22,7 @@ path of each element in the list. The paths can be after that edited and
 accessed using \code{\link[=parceval]{parceval()}} for example.
 }
 \examples{
-\donttest{
+{
 
 library(dplyr)
 get_path_list(

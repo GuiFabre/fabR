@@ -17,7 +17,7 @@ This helper function extracts the names of the columns in a tibble having
 identical values for all observations.
 }
 \examples{
-\donttest{
+{
 
 library(dplyr)
 mtcars_duplicated <-

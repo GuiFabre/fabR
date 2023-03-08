@@ -9,9 +9,10 @@
 1. corrections have been made
 * Second release:
 1. use the Authors@R in description
-2. replace \dontrun with \donttest where possible
+2. replace \dontrun with \ where possible
 3. ensure that functions do not write by default in the user env.
 4. suppress print in the file index functions
 5. ensure there is no default path in writing functions, and replace by tempfile()/tempdir()
 6. addition of haven and xlsx in the package dependancies
-
+* 3rd release:
+1. uncomment all examples

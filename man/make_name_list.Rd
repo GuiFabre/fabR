@@ -21,7 +21,7 @@ through each elements. This function can works with \code{\link[stats:setNames]{
 allows the user to provide name shorter, more user-friendly in their lists.
 }
 \examples{
-\donttest{
+{
 
 library(tidyr)
 library(magrittr)

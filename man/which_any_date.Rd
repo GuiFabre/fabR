@@ -36,7 +36,7 @@ either March the 2nd or February the 3rd. The function will provide
 NA.
 }
 \examples{
-\donttest{
+{
 
 time <- c(
   "1983-07-19",
