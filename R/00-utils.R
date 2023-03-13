@@ -340,6 +340,7 @@ read_csv_any_formats <- function(filename){
 #' @export
 add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
+  class_tbl <- toString(class(tbl))
 
   tbl_index <-
     data.frame(index = NA_integer_) %>%
@@ -361,6 +362,8 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
       bind_cols(tbl_index,tbl %>% select(-any_of(name_index))) %>%
       mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
   }
+
+  if(stringr::str_detect(class_tbl,"tbl")) tbl <- tibble(tbl)
 
   return(tbl)
 }
