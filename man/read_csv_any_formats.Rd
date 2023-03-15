@@ -23,5 +23,4 @@ common errors when reading csv files.
 try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 
 }
-
 }

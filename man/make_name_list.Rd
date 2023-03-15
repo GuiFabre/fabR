@@ -24,7 +24,6 @@ allows the user to provide name shorter, more user-friendly in their lists.
 {
 
 library(tidyr)
-library(magrittr)
 
 #### Example 1 --------------------------------------------------------------
 # make_name_list generates names that are informative through a line of code

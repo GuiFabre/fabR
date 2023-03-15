@@ -77,7 +77,6 @@
 #' }
 #'
 #' @import dplyr lubridate tidyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 guess_date_format <- function(tbl, col = NULL){
@@ -186,7 +185,6 @@ guess_date_format <- function(tbl, col = NULL){
 #' }
 #'
 #' @import dplyr lubridate stringr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 which_any_date <- function(
@@ -292,7 +290,6 @@ which_any_date <- function(
 #' }
 #'
 #' @import dplyr lubridate stringr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 as_any_date <- function(

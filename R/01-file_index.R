@@ -33,7 +33,6 @@
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
@@ -149,7 +148,6 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 #' }
 #'
 #' @import dplyr fs
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 file_index_search <- function(
@@ -244,7 +242,6 @@ file_index_search <- function(
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 file_index_read <- function(

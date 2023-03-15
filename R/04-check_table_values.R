@@ -26,7 +26,6 @@
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_duplicated_cols <- function(tbl){
@@ -99,7 +98,6 @@ get_duplicated_cols <- function(tbl){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_duplicated_rows <- function(tbl, id_col = NULL){
@@ -167,7 +165,6 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_all_na_cols <- function(tbl){
@@ -213,7 +210,6 @@ get_all_na_cols <- function(tbl){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_all_na_rows <- function(tbl){
@@ -260,7 +256,6 @@ get_all_na_rows <- function(tbl){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_unique_value_cols <- function(tbl){
