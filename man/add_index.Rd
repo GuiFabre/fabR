@@ -29,7 +29,17 @@ replace the other one.
 \examples{
 {
 
+##### Example 1 -------------------------------------------------------------
+# add an index for the tibble
 add_index(iris, "my_index")
+
+##### Example 2 -------------------------------------------------------------
+# add an index for the grouped tibble
+library(tidyr)
+library(dplyr)
+
+my_tbl <- tibble(iris) \%>\% group_by(Species) \%>\% slice(1:3)
+fabR::add_index(my_tbl, "my_index")
 
 }
 

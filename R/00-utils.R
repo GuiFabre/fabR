@@ -49,7 +49,6 @@ fabR_help <- function(){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 message_on_prompt <- function(...){
@@ -83,7 +82,6 @@ message_on_prompt <- function(...){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 silently_run <- function(...){
@@ -157,7 +155,6 @@ silently_run <- function(...){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 parceval <- function(...){
@@ -192,7 +189,6 @@ parceval <- function(...){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 read_excel_allsheets <- function(filename, sheets = "") {
@@ -253,7 +249,6 @@ read_excel_allsheets <- function(filename, sheets = "") {
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 write_excel_allsheets <- function(list, filename){
@@ -295,8 +290,6 @@ write_excel_allsheets <- function(list, filename){
 #' try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 #'
 #' }
-#'
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 read_csv_any_formats <- function(filename){
@@ -329,18 +322,28 @@ read_csv_any_formats <- function(filename){
 #' @examples
 #' {
 #'
+#' ##### Example 1 -------------------------------------------------------------
+#' # add an index for the tibble
 #' add_index(iris, "my_index")
+#'
+#' ##### Example 2 -------------------------------------------------------------
+#' # add an index for the grouped tibble
+#' library(tidyr)
+#' library(dplyr)
+#'
+#' my_tbl <- tibble(iris) %>% group_by(Species) %>% slice(1:3)
+#' fabR::add_index(my_tbl, "my_index")
 #'
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @export
 add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
   class_tbl <- toString(class(tbl))
+  group_name <- group_vars(tbl)
 
   tbl_index <-
     data.frame(index = NA_integer_) %>%
@@ -352,16 +355,15 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
       stop(paste0("\n\nThe column ",name_index," already exists.\n",
                   "Please specifie another name or use .force = TRUE\n"))}
 
-    tbl <-
-      bind_cols(tbl_index,tbl) %>%
-      mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
-  }
+    tbl <- bind_cols(tbl_index,tbl)
+  }else{
+    tbl <- bind_cols(tbl_index,tbl %>% select(-any_of(name_index)))}
 
-  if(.force == TRUE){
-    tbl <-
-      bind_cols(tbl_index,tbl %>% select(-any_of(name_index))) %>%
-      mutate(across(all_of(name_index), ~ as.integer(row_number() + start - 1)))
-  }
+
+  if(length(group_name)) tbl <- group_by(tbl, !!as.symbol(group_name))
+
+  tbl <- tbl %>% mutate(across(all_of(name_index),
+                               ~ as.integer(row_number() + start - 1)))
 
   if(stringr::str_detect(class_tbl,"tbl")) tbl <- tibble(tbl)
 
@@ -400,7 +402,6 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 get_path_list <- function(list_obj, .map_list = NULL){
@@ -485,7 +486,6 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' {
 #'
 #' library(tidyr)
-#' library(magrittr)
 #'
 #' #### Example 1 --------------------------------------------------------------
 #' # make_name_list generates names that are informative through a line of code
@@ -516,7 +516,6 @@ get_path_list <- function(list_obj, .map_list = NULL){
 #' }
 #'
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 make_name_list <- function(args_list, list_elem){
@@ -586,7 +585,6 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 #' }
 #'
 #' @import dplyr stringr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @export
@@ -649,7 +647,6 @@ as_any_boolean <- function(x){
 #' }
 #'
 #' @import dplyr stringr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 as_any_symbol <- function(x){
@@ -694,7 +691,6 @@ as_any_symbol <- function(x){
 #' }
 #'
 #' @import dplyr tidyr stringr
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 collect_roxygen <- function(folder_r = "R"){
