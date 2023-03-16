@@ -360,7 +360,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
     tbl <- bind_cols(tbl_index,tbl %>% select(-any_of(name_index)))}
 
 
-  if(length(group_name)) tbl <- group_by(tbl, !!as.symbol(group_name))
+  if(length(group_name)) tbl <- group_by_at(tbl, group_name)
 
   tbl <- tbl %>% mutate(across(all_of(name_index),
                                ~ as.integer(row_number() + start - 1)))
