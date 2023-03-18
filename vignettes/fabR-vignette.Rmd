@@ -29,14 +29,18 @@ of data frame-like material.
 
 You can install the development version of fabR from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("GuiFabre/fabR")
+``` {r setup}
+install.packages("fabR",repos = "https://cloud.r-project.org/")
+
+# install.package("devtools")
+# devtools::install_github(repo = "https://github.com/guifabre/fabR", 
+#  auth_token = "ghp_xxx",force = TRUE)
+
 ```
 
 ## Example
 
-```{r setup}
+```{r}
 library(fabR)
 fabR_help()
 ```

@@ -296,9 +296,15 @@ as_any_date <- function(
     x = as.character(),
     format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
 
-  date_test <- which_any_date(x, format)
+  date_test <- guess_date_format(tibble(x))
 
-  wrn3 <- wrn4 <- FALSE
+  if(date_test$`% values formated` == 100){
+    date_test <- rep(date_test$`Date format`,length(x))
+  }else{
+    date_test <- which_any_date(x, format)
+  }
+
+  wrn3 <- wrn4 <- 0
 
   for(i in seq_len(length(date_test))){
     # stop()}
@@ -307,23 +313,23 @@ as_any_date <- function(
     else if(
       is.na(date_test[i]) & is.na(x[i])){date_test[i] <- NA_Date_}
     else if(
-      is.na(date_test[i]) & !is.na(x[i])){date_test[i] <- NA_Date_;wrn3 <- TRUE}
+      is.na(date_test[i]) & !is.na(x[i])){date_test[i] <- NA_Date_;wrn3 <- i}
     else if(
-      str_detect(date_test[i], ",")){date_test[i] <- NA_Date_;wrn4 <- TRUE}
+      str_detect(date_test[i], ",")){date_test[i] <- NA_Date_;wrn4 <- i}
     else {date_test[i] <- do.call(date_test[i], list(x[i])) %>% as.character}
 
   }
 
-  if(wrn3)
+  if(wrn3 > 0)
     warning(
       call. = FALSE,
       "All formats failed to parse for some values.",
       "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
-  if(wrn4)
+  if(wrn4 > 0)
     warning(
       call. = FALSE,
-      "Ambiguous date format (",date_test[i],"). Please provide format.",
+      "Ambiguous date format (",x[wrn4],"). Please provide format.",
       "\n","\n\nUseful tip:"," Use which_any_date(x) to get formats.")
 
   date_final <- ymd(date_test)
