@@ -590,8 +590,9 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 #' @export
 as_any_boolean <- function(x){
 
-  if(length(x) == 0) return(as.logical(x))
-  if(typeof(x) == "logical") return(x)
+  if(length(x)     == 0)         return(as.logical(x))
+  if(all(is.na(x)))              return(as.logical(x))
+  if(typeof(x)     == "logical") return(x)
 
   # check if the col is empty
   if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_boolean(x = x[[1]])) }
@@ -601,25 +602,26 @@ as_any_boolean <- function(x){
 
   x <- str_squish(x)
 
-  xtemp <- x
-  for(i in seq_len(length(x))){
+  xtemp <- tibble(x = unique(x), xtemp = unique(x))
+  for(i in seq_len(nrow(xtemp))){
     # stop()}
 
-    xtemp[i] <-
-      suppressWarnings(suppressMessages(try({
-        case_when(
-          is.na(x[i])                                          ~ NA_character_,
-          toString(tolower(x[i]))   %in% c("1", "t","true")    ~ "TRUE" ,
-          toString(as.numeric(x[i])) ==    "1"                 ~ "TRUE",
-          toString(tolower(x[i]))   %in% c("0", "f","false")   ~ "FALSE",
-          toString(as.numeric(x[i])) ==    "0"                 ~ "FALSE",
-          TRUE                                                 ~ "NaN")
+    if(is.na(xtemp$xtemp[i]))
+      xtemp$xtemp[i] <- NA_character_ else
+    if(toString(tolower(xtemp$xtemp[i])) %in% c("1","t","true"))
+      xtemp$xtemp[i] <- "TRUE" else
+    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "1")
+      xtemp$xtemp[i] <- "TRUE" else
+    if(toString(tolower(xtemp$xtemp[i])) %in% c("0", "f","false"))
+      xtemp$xtemp[i] <- "FALSE" else
+    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "0")
+      xtemp$xtemp[i] <- "FALSE" else xtemp$xtemp[i] <- "NaN"
 
-      }, silent = TRUE)))
-
-    if(toString(xtemp[i]) == "NaN")
+    if(toString(xtemp$xtemp[i]) == "NaN")
       stop("x is not in a standard unambiguous format")
   }
+
+  xtemp <- tibble(x = x) %>% left_join(xtemp,by = 'x') %>% pull('xtemp')
 
   x <- as.logical(xtemp)
   return(x)
