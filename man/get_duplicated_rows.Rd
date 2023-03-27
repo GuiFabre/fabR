@@ -31,6 +31,12 @@ useful to identify repeated observation across different ids)
 library(dplyr)
 get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 
+get_duplicated_rows(
+  tbl = bind_rows(mtcars,mtcars[1,]) \%>\%
+        add_index() \%>\%
+        mutate(index = paste0('obs_',index)),
+  id_col = 'index')
+
 }
 
 }

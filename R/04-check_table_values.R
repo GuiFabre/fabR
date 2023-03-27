@@ -95,6 +95,12 @@ get_duplicated_cols <- function(tbl){
 #' library(dplyr)
 #' get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
 #'
+#' get_duplicated_rows(
+#'   tbl = bind_rows(mtcars,mtcars[1,]) %>%
+#'         add_index() %>%
+#'         mutate(index = paste0('obs_',index)),
+#'   id_col = 'index')
+#'
 #' }
 #'
 #' @import dplyr
@@ -116,27 +122,26 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test <- tbl %>% ungroup %>% select(!! id_col, everything())
   }
 
-  sample_num <-
-    ifelse(ncol(test) > 100 , min(50, round(ncol(test)*0.25)),ncol(test))
+  sample_num <- ifelse(ncol(test) > 50,50,ncol(test))
 
   test1 <-
-    test %>% slice(1:100) %>%
+    test %>%
     select(sample(seq_along(2:ncol(test)) + 1, sample_num, replace = TRUE)) %>%
     rowwise() %>%
     mutate_all(~ digest::digest(.,algo = "md5")) %>%
     mutate_all(~ stringr::str_sub(., 1, 5)) %>%
     tidyr::unite(col = "row_duplicate", sep = "") %>%
-    mutate(id_duplicate = tbl[[1]][1:100]) %>%
+    mutate(id_duplicate = tbl[[1]]) %>%
     select(2, 1) %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
     filter(n > 1)
-  test1
 
-  if(nrow(test1) > 0){
+  if(nrow(test1) > 0 & sample_num != ncol(test)){
     test2 <-
       test %>%
       filter(if_any(.cols = 1, ~ . %in% c(unique(test1$id_duplicate)))) %>%
+      select(-1) %>%
       rowwise() %>%
       mutate_all(~ digest::digest(.,algo = "md5")) %>%
       mutate_all(~ stringr::str_sub(., 1, 5)) %>%
@@ -283,7 +288,7 @@ get_all_na_rows <- function(tbl){
 #' @import dplyr
 #' @importFrom rlang .data
 #' @export
-get_unique_value_cols <- function(tbl = dataset){
+get_unique_value_cols <- function(tbl){
 
   # identify columns containing one value
   test <-
