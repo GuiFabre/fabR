@@ -299,6 +299,7 @@ get_all_na_rows <- function(tbl, id_col = NULL){
     bind_cols(tbl[1]) %>%
     filter(.data$is_na == 1) %>%
     select(value = last_col()) %>%
+    mutate(value = as.character(.data$`value`)) %>%
     mutate(
       condition = "[INFO] - Empty observation") %>%
     distinct
