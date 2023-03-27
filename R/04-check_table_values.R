@@ -116,21 +116,46 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test <- tbl %>% ungroup %>% select(!! id_col, everything())
   }
 
-  test <-
-    test %>%
-    select(sample(seq_along(2:length(test)), 50, replace = TRUE)) %>%
+  sample_num <-
+    ifelse(ncol(test) > 100 , min(50, round(ncol(test)*0.25)),ncol(test))
+
+  test1 <-
+    test %>% slice(1:100) %>%
+    select(sample(seq_along(2:ncol(test)) + 1, sample_num, replace = TRUE)) %>%
     rowwise() %>%
     mutate_all(~ digest::digest(.,algo = "md5")) %>%
-    mutate_all(~ stringr::str_sub(., 1, 2)) %>%
+    mutate_all(~ stringr::str_sub(., 1, 5)) %>%
     tidyr::unite(col = "row_duplicate", sep = "") %>%
-    mutate(id_duplicate = tbl[[1]]) %>%
+    mutate(id_duplicate = tbl[[1]][1:100]) %>%
     select(2, 1) %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
-    filter(n > 1) %>%
+    filter(n > 1)
+  test1
+
+  if(nrow(test1) > 0){
+    test2 <-
+      test %>%
+      filter(if_any(.cols = 1, ~ . %in% c(unique(test1$id_duplicate)))) %>%
+      rowwise() %>%
+      mutate_all(~ digest::digest(.,algo = "md5")) %>%
+      mutate_all(~ stringr::str_sub(., 1, 5)) %>%
+      tidyr::unite(col = "row_duplicate", sep = "") %>%
+      mutate(id_duplicate = unique(test1$id_duplicate)) %>%
+      select(2, 1) %>%
+      group_by(.data$row_duplicate) %>%
+      add_count() %>%
+      filter(n > 1)
+
+    test <- test2
+
+  }else{ test <- test1 }
+
+  test <-
+    test %>%
     group_by(.data$row_duplicate) %>%
     summarise_all(
-      ~ paste("[INFO] - Possible duplicated observations:",
+      ~ paste("[INFO] - Duplicated observations :",
               paste0(., collapse = " ; "))) %>%
     ungroup() %>% select(condition = .data$id_duplicate)
 
@@ -258,7 +283,7 @@ get_all_na_rows <- function(tbl){
 #' @import dplyr
 #' @importFrom rlang .data
 #' @export
-get_unique_value_cols <- function(tbl){
+get_unique_value_cols <- function(tbl = dataset){
 
   # identify columns containing one value
   test <-
@@ -267,6 +292,11 @@ get_unique_value_cols <- function(tbl){
       cols = everything(),
       names_to = "name_col",
       values_to = "condition") %>%
+    mutate(
+      value =
+        ifelse(.data$condition == 1,
+               unique(pull(tbl[.data$`name_col`]))[1],
+               NA_character_)) %>%
     filter(.data$condition == 1) %>%
     mutate(
       condition = "[INFO] - Unique value in the column")
