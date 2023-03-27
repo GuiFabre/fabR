@@ -122,7 +122,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test <- tbl %>% ungroup %>% select(!! id_col, everything())
   }
 
-  sample_num <- ifelse(ncol(test) > 50,50,ncol(test))
+  sample_num <- ifelse(ncol(test) > 20,20,ncol(test))
 
   test1 <-
     test %>%
