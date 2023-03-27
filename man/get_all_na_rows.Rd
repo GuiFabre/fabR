@@ -4,10 +4,15 @@
 \alias{get_all_na_rows}
 \title{Extract columns that are all 'NA' from a tibble}
 \usage{
-get_all_na_rows(tbl)
+get_all_na_rows(tbl, id_col = NULL)
 }
 \arguments{
 \item{tbl}{R object(dataframe or tibble) of the input tibble}
+
+\item{id_col}{A character string specifying the column to ignore in
+identification of repeated observations. If NULL (by default), all of the
+columns will be taken in account for repeated observation identification.
+The row number will be used to identify those observations.}
 }
 \value{
 A vector string indicating either that the tibble does not have empty
@@ -27,7 +32,9 @@ get_all_na_cols(iris)
 ##### Example 2 -------------------------------------------------------------
 # One row doesn't have any observations
 library(dplyr)
-get_all_na_rows(bind_rows(iris, tibble(Species = NA)))
+get_all_na_rows(bind_rows(iris, tibble(Species = c(NA,NA))))
+get_all_na_rows(bind_rows(iris, tibble(Species =  c('an_id', 'another_id'))),
+                id_col = 'Species')
 
 }
 
