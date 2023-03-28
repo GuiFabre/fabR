@@ -53,7 +53,7 @@ get_duplicated_cols <- function(tbl){
     add_count() %>%
     filter(n > 1)
 
-  if(nrow(test1) > 0 & sample_num != nrow(tbl)){
+  if(nrow(test1) > 0){
 
     test2 <-
       bind_rows(
@@ -167,7 +167,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     add_count() %>%
     filter(n > 1)
 
-  if(nrow(test1) > 0 & sample_num != ncol(test)){
+  if(nrow(test1) > 0){
     test2 <-
       test %>%
       filter(if_any(.cols = 1, ~ . %in% c(unique(test1$id_duplicate)))) %>%
