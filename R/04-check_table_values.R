@@ -156,13 +156,11 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 
   test1 <-
     test %>%
-    select(sample(seq_along(2:ncol(test)) + 1, sample_num, replace = TRUE)) %>%
+    select(1, sample(seq_along(2:ncol(test)) + 1, sample_num, replace = TRUE)) %>%
     rowwise() %>%
-    mutate(across(everything(), ~ digest::digest(.,algo = "md5"))) %>%
-    mutate(across(everything(), ~ stringr::str_sub(., 1, 5))) %>%
-    tidyr::unite(col = "row_duplicate", sep = "") %>%
-    mutate(id_duplicate = tbl[[1]]) %>%
-    select(2, 1) %>%
+    mutate(across(-1, ~ digest::digest(.,algo = "md5"))) %>%
+    mutate(across(-1, ~ stringr::str_sub(., 1, 5))) %>%
+    tidyr::unite(-1, col = "row_duplicate", sep = "") %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
     filter(n > 1)
@@ -170,14 +168,13 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   if(nrow(test1) > 0){
     test2 <-
       test %>%
-      filter(if_any(.cols = 1, ~ . %in% c(unique(test1$id_duplicate)))) %>%
-      select(-1) %>%
+      filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
+      # select(-1) %>%
       rowwise() %>%
-      mutate(across(everything(), ~ digest::digest(.,algo = "md5"))) %>%
-      mutate(across(everything(), ~ stringr::str_sub(., 1, 5))) %>%
-      tidyr::unite(col = "row_duplicate", sep = "") %>%
-      mutate(id_duplicate = unique(test1$id_duplicate)) %>%
-      select(2, 1) %>%
+      mutate(across(-1, ~ digest::digest(.,algo = "md5"))) %>%
+      mutate(across(-1, ~ stringr::str_sub(., 1, 5))) %>%
+      tidyr::unite(-1, col = "row_duplicate", sep = "") %>%
+      # select(2, 1) %>%
       group_by(.data$row_duplicate) %>%
       add_count() %>%
       filter(n > 1)
@@ -192,7 +189,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     summarise_all(
       ~ paste("[INFO] - Duplicated observations :",
               paste0(., collapse = " ; "))) %>%
-    ungroup() %>% select(condition = .data$id_duplicate)
+    ungroup() %>% select(condition = 2)
 
   return(test)
 }
