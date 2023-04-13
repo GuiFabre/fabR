@@ -355,9 +355,10 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
       stop(paste0("\n\nThe column ",name_index," already exists.\n",
                   "Please specifie another name or use .force = TRUE\n"))}
 
-    tbl <- bind_cols(tbl_index,tbl)
+    tbl <- suppressMessages(bind_cols(tbl_index,tbl))
   }else{
-    tbl <- bind_cols(tbl_index,tbl %>% select(-any_of(name_index)))}
+    tbl <- suppressMessages(bind_cols(tbl_index,tbl %>%
+                                        select(-any_of(name_index))))}
 
 
   if(length(group_name)) tbl <- group_by_at(tbl, group_name)
