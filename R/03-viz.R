@@ -1371,7 +1371,7 @@ template_visual_report <- function(to){
                exdir = paste0(to,"/temp_bookdown_report/file"))
 
   file.remove(paste0(to,"/temp_bookdown_report/file.zip"))
-  path <- "/temp_bookdown_report/file/bookdown-template-master"
+  path <- "/temp_bookdown_report/file/bookdown-template-main"
   file.remove(paste0(to,path,"/02-tears.Rmd"))
   file.remove(paste0(to,path,"/03-race.Rmd"))
   file.remove(paste0(to,path,"/README.md"))
