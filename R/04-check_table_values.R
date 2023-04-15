@@ -156,7 +156,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 
   test1 <-
     test %>%
-    select(1, sample(seq_along(2:ncol(test)) + 1, sample_num, replace = TRUE)) %>%
+    select(1, sample(seq_along(2:ncol(test))+1, sample_num, replace = TRUE)) %>%
     rowwise() %>%
     mutate(across(-1, ~ digest::digest(.,algo = "md5"))) %>%
     mutate(across(-1, ~ stringr::str_sub(., 1, 5))) %>%
