@@ -173,6 +173,8 @@ parceval <- function(...){
 #'
 #' @param filename A character string of the path of the Excel file.
 #' @param sheets A vector containing only the sheets to be read.
+#' @param keep_as_list A Boolean to say whether the object should be a list or
+#' a tibble, when there is only one sheet provided. FALSE by default.
 #'
 #' @return
 #' A list of tibbles corresponding to the sheets read, or a single tibble
@@ -188,34 +190,35 @@ parceval <- function(...){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr readxl purrr
 #' @importFrom rlang .data
 #' @export
-read_excel_allsheets <- function(filename, sheets = "") {
+read_excel_allsheets <- function(filename, sheets = "", keep_as_list = FALSE) {
 
   if(toString(sheets) == ""){
-    sheets_name <- readxl::excel_sheets(filename)
+    sheets_name <- excel_sheets(filename)
   }else{
     sheets_name <-
-      readxl::excel_sheets(filename) %>%
+      excel_sheets(filename) %>%
       as_tibble %>% filter(.data$value %in% c(sheets)) %>%
       pull(.data$value)
 
     if(length(sheets_name) != length(sheets)){
-      message("{",sheets[!(sheets %in% sheets_name)] %>% toString, "}
-              sheet name(s) not found in the excel file")}}
+      stop(call. = FALSE,
+      "{",sheets[(sheets %in% sheets_name)] %>% toString, "}
+Sheet name(s) not found in the excel file")}}
 
-  if(purrr::is_empty(sheets_name)){
-    message("The sheet name(s) you provided do not exist")}else{
+  if(is_empty(sheets_name)){
+    stop(call. = FALSE, "The sheet name(s) you provided do not exist")}else{
       x <- lapply(sheets_name,
-                  function(X) readxl::read_excel(
+                  function(X) read_excel(
                     path      = filename,
                     sheet     = X,
                     guess_max =
                       suppressWarnings(
-                        readxl::read_excel(filename, sheet = X) %>% nrow)))
+                        read_excel(filename, sheet = X) %>% nrow)))
       names(x) <- sheets_name
-      if(length(x) == 1){return(x[[1]])}else{return(x)}
+      if(length(x) == 1 & keep_as_list == FALSE){return(x[[1]])}else{return(x)}
     }
 }
 
