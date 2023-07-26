@@ -4,12 +4,15 @@
 \alias{read_excel_allsheets}
 \title{Read all Excel sheets using \code{\link[readxl:read_excel]{readxl::read_excel()}} recursively}
 \usage{
-read_excel_allsheets(filename, sheets = "")
+read_excel_allsheets(filename, sheets = "", keep_as_list = FALSE)
 }
 \arguments{
 \item{filename}{A character string of the path of the Excel file.}
 
 \item{sheets}{A vector containing only the sheets to be read.}
+
+\item{keep_as_list}{A Boolean to say whether the object should be a list or
+a tibble, when there is only one sheet provided. FALSE by default.}
 }
 \value{
 A list of tibbles corresponding to the sheets read, or a single tibble
