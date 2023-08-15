@@ -27,7 +27,8 @@ assessment and visualization of data frame-like material.
 
 ## Installation
 
-You can install the development version of fabR from [GitHub](https://github.com/) with:
+You can install the development version of fabR from [GitHub](https://github.com/) 
+with:
 
 ``` {r setup}
 install.packages("fabR",repos = "https://cloud.r-project.org/")
