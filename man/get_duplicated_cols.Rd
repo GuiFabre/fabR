@@ -20,14 +20,14 @@ identical values for all observations.
 {
 
 library(dplyr)
-mtcars_duplicated <-
- mtcars \%>\%
- mutate(
-  cyl_2 = cyl,
-  cyl_3 = cyl,
-  mpg_2 = mpg)
+tbl <-
+  mtcars \%>\%
+  mutate(
+   cyl_2 = cyl,
+   cyl_3 = cyl,
+   mpg_2 = mpg)
 
- get_duplicated_cols(mtcars_duplicated)
+ get_duplicated_cols(tbl)
 
 }
 

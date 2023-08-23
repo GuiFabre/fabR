@@ -14,18 +14,20 @@
 #' {
 #'
 #' library(dplyr)
-#' mtcars_duplicated <-
-#'  mtcars %>%
-#'  mutate(
-#'   cyl_2 = cyl,
-#'   cyl_3 = cyl,
-#'   mpg_2 = mpg)
+#' tbl <-
+#'   mtcars %>%
+#'   mutate(
+#'    cyl_2 = cyl,
+#'    cyl_3 = cyl,
+#'    mpg_2 = mpg)
 #'
-#'  get_duplicated_cols(mtcars_duplicated)
+#'  get_duplicated_cols(tbl)
 #'
 #' }
 #'
-#' @import dplyr tidyr
+#' @import dplyr tidyr stringr
+#' @importFrom janitor remove_empty
+#' @importFrom digest digest
 #' @importFrom rlang .data
 #' @export
 get_duplicated_cols <- function(tbl){
@@ -37,15 +39,15 @@ get_duplicated_cols <- function(tbl){
 
   test1 <-
     bind_rows(
-      tbl %>% janitor::remove_empty("cols") %>%
+      tbl %>% remove_empty("cols") %>%
         mutate(across(everything(), as.character)) %>%
         slice_sample(n = sample_num, replace = TRUE)) %>%
     rowwise() %>%
-    mutate(across(everything(), ~ digest::digest(.,algo = "md5"))) %>%
-    mutate(across(everything(), ~ stringr::str_sub(., 1, 5))) %>%
+    mutate(across(everything(), ~ digest(.,algo = "md5"))) %>%
+    mutate(across(everything(), ~ str_sub(., 1, 5))) %>%
     ungroup() %>%
     summarise_all(~ paste0(.,collapse = "")) %>%
-    tidyr::pivot_longer(
+    pivot_longer(
       everything(),
       names_to = "condition",
       values_to = "col_1") %>%
@@ -61,11 +63,11 @@ get_duplicated_cols <- function(tbl){
           select(all_of(test1$condition)) %>%
           mutate(across(everything(), as.character))) %>%
       rowwise() %>%
-      mutate(across(everything(), ~ digest::digest(.,algo = "md5"))) %>%
-      mutate(across(everything(), ~ stringr::str_sub(., 1, 5))) %>%
+      mutate(across(everything(), ~ digest(.,algo = "md5"))) %>%
+      mutate(across(everything(), ~ str_sub(., 1, 5))) %>%
       ungroup() %>%
       summarise_all(~ paste0(.,collapse = "")) %>%
-      tidyr::pivot_longer(
+      pivot_longer(
         everything(),
         names_to = "condition",
         values_to = "col_1") %>%
@@ -83,24 +85,24 @@ get_duplicated_cols <- function(tbl){
     summarise(
       across(
         everything(),
-        ~ paste("[INFO] - Possible duplicated columns:",
+        ~ paste("Possible duplicated columns:",
                 paste0(., collapse = " ; "))),.groups = "drop") %>%
-    ungroup() %>% select(.data$condition) %>%
-    tidyr::separate(
-      col = .data$condition,
-      into = c("to_remove","name_col"),
+    ungroup() %>% select("condition") %>%
+    separate(
+      col = "condition",
+      into = c("to_remove","col_name"),
       sep = "\\:",
       remove = FALSE) %>%
-    tidyr::separate_rows(.data$name_col, sep = ";") %>%
-    select(-.data$to_remove) %>%
-    mutate(across(everything(), ~stringr::str_squish(.))) %>%
+    separate_rows("col_name", sep = ";") %>%
+    select(-"to_remove") %>%
+    mutate(across(everything(), ~str_squish(.))) %>%
     mutate(across(everything(), ~as.character(.)))
 
   return(test)
 }
 
 #' @title
-#' Extract observations(rows) that have same values in a tibble
+#' Extract observations (rows) that have same values in a tibble
 #'
 #' @description
 #' This helper function extracts the row number (or first column value) in a
@@ -133,7 +135,9 @@ get_duplicated_cols <- function(tbl){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr stringr tidyr
+#' @importFrom janitor remove_empty
+#' @importFrom digest digest
 #' @importFrom rlang .data
 #' @export
 get_duplicated_rows <- function(tbl, id_col = NULL){
@@ -141,7 +145,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   test <- tibble(condition = as.character(), name_var = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
-  test <- tbl %>% janitor::remove_empty("cols")
+  test <- tbl %>% remove_empty("cols")
 
   if(is.null(id_col)) {
     tbl <- tbl %>% ungroup %>% add_index("__Mlstr_index__",.force = TRUE)
@@ -158,9 +162,9 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test %>%
     select(1, sample(seq_along(2:ncol(test))+1, sample_num, replace = TRUE)) %>%
     rowwise() %>%
-    mutate(across(-1, ~ digest::digest(.,algo = "md5"))) %>%
-    mutate(across(-1, ~ stringr::str_sub(., 1, 5))) %>%
-    tidyr::unite(-1, col = "row_duplicate", sep = "") %>%
+    mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
+    mutate(across(-1, ~ str_sub(., 1, 5))) %>%
+    unite(-1, col = "row_duplicate", sep = "") %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
     filter(n > 1)
@@ -171,9 +175,9 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
       filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
       # select(-1) %>%
       rowwise() %>%
-      mutate(across(-1, ~ digest::digest(.,algo = "md5"))) %>%
-      mutate(across(-1, ~ stringr::str_sub(., 1, 5))) %>%
-      tidyr::unite(-1, col = "row_duplicate", sep = "") %>%
+      mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
+      mutate(across(-1, ~ str_sub(., 1, 5))) %>%
+      unite(-1, col = "row_duplicate", sep = "") %>%
       # select(2, 1) %>%
       group_by(.data$row_duplicate) %>%
       add_count() %>%
@@ -187,9 +191,91 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test %>%
     group_by(.data$row_duplicate) %>%
     summarise_all(
-      ~ paste("[INFO] - Duplicated observations :",
+      ~ paste("Duplicated observations :",
               paste0(., collapse = " ; "))) %>%
     ungroup() %>% select(condition = 2)
+
+  return(test)
+}
+
+#' @title
+#' Extract observations (rows) that have same values in a tibble (no ID)
+#'
+#' @description
+#' This helper function extracts the row number (or first column value) in a
+#' tibble having identical values for all columns. This function can be used
+#' either on the whole columns or excluding the first column (id) (which can be
+#' useful to identify repeated observation across different ids)
+#'
+#' @param tbl R object(dataframe or tibble) of the input tibble
+#'
+#' @return
+#' A tibble indicating which row which values is the same in the tibble
+#'
+#' @examples
+#' {
+#'
+#' # the row numbers are returned to identify which observations have repeated
+#' # values
+#' library(dplyr)
+#'
+#' get_duplicated_rows2(tbl = bind_rows(mtcars,mtcars[1,]))
+#'
+#' }
+#'
+#' @import dplyr stringr tidyr
+#' @importFrom janitor remove_empty
+#' @importFrom digest digest
+#' @importFrom rlang .data
+#' @export
+get_duplicated_rows2 <- function(tbl){
+
+  test <- tibble(condition = as.character(), name_var = as.character())
+  if(tbl %>% nrow() == 0) return(test)
+
+  test <- tbl %>% remove_empty("cols")
+
+  tbl <- tbl %>% ungroup %>% add_index("fabR::index",.force = TRUE)
+  test <- test %>% ungroup %>% add_index("fabR::index",.force = TRUE)
+
+  sample_num <- ifelse(ncol(test) > 20,20,ncol(test))
+
+  test1 <-
+    test %>%
+    select(1, sample(seq_along(2:ncol(test))+1, sample_num, replace = TRUE)) %>%
+    rowwise() %>%
+    mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
+    mutate(across(-1, ~ str_sub(., 1, 5))) %>%
+    unite(-1, col = "row_duplicate", sep = "") %>%
+    group_by(.data$row_duplicate) %>%
+    add_count() %>%
+    filter(n > 1)
+
+  if(nrow(test1) > 0){
+    test2 <-
+      test %>%
+      filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
+      # select(-1) %>%
+      rowwise() %>%
+      mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
+      mutate(across(-1, ~ str_sub(., 1, 5))) %>%
+      unite(-1, col = "row_duplicate", sep = "") %>%
+      # select(2, 1) %>%
+      group_by(.data$row_duplicate) %>%
+      add_count() %>%
+      filter(n > 1)
+
+    test <- test2
+
+  }else{ test <- test1 }
+
+  test <-
+    test %>%
+    group_by(.data$row_duplicate) %>%
+    summarise(
+      row_number = paste0(.data$`fabR::index`, collapse = " ; ")) %>%
+    mutate(condition = "Duplicated observations") %>%
+    ungroup() %>% select("condition", "row_number")
 
   return(test)
 }
@@ -221,7 +307,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr tidyr
 #' @importFrom rlang .data
 #' @export
 get_all_na_cols <- function(tbl){
@@ -229,22 +315,26 @@ get_all_na_cols <- function(tbl){
   # identify columns containing all NA's
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(
+    pivot_longer(
       cols = everything(),
-      names_to = "name_col", values_to = "condition") %>%
+      names_to = "col_name", values_to = "condition") %>%
     filter(.data$condition == 0) %>%
     mutate(
-      condition = "[INFO] - Empty column")
+      condition = "Empty column") %>%
+    select("condition","col_name")
 
   return(test)
 }
 
+
+
+
 #' @title
-#' Extract columns that are all 'NA' from a tibble
+#' Extract observations (rows) that have all NA values in a tibble
 #'
 #' @description
-#' This helper function extracts the names of the columns in a tibble having NA
-#' values for all observations.
+#' This helper function extracts the row number(s) having NA value for all
+#' columns.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tibble
 #' @param id_col A character string specifying the column to ignore in
@@ -254,14 +344,14 @@ get_all_na_cols <- function(tbl){
 #'
 #' @return
 #' A vector string indicating either that the tibble does not have empty
-#' columns or the names of the empty columns.
+#' observation or the row number of the empty observations.
 #'
 #' @examples
 #' {
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # All rows have observation
-#' get_all_na_cols(iris)
+#' get_all_na_rows(iris)
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # One row doesn't have any observations
@@ -298,18 +388,74 @@ get_all_na_rows <- function(tbl, id_col = NULL){
     select(value = last_col()) %>%
     mutate(value = as.character(.data$`value`)) %>%
     mutate(
-      condition = "[INFO] - Empty observation") %>%
+      condition = "Empty observation") %>%
     distinct
 
   return(test)
 }
 
 #' @title
-#' Extract columns that are all 'NA' from a tibble
+#' Extract observations (rows) that have all NA values in a tibble (no ID)
 #'
 #' @description
-#' This helper function extracts the names of the columns in a tibble having NA
-#' values for all observations.
+#' This helper function extracts the row number(s) having NA values for all
+#' columns.
+#'
+#' @param tbl R object(dataframe or tibble) of the input tibble
+#'
+#' @return
+#' A vector string indicating either that the tibble does not have empty
+#' observation or the row number of the empty observations.
+#'
+#' @examples
+#' {
+#'
+#' ##### Example 1 -------------------------------------------------------------
+#' # All rows have observation
+#' get_all_na_rows2(iris)
+#'
+#' ##### Example 2 -------------------------------------------------------------
+#' # One row doesn't have any observations
+#' library(dplyr)
+#' get_all_na_rows2(tbl = bind_rows(iris, tibble(Species = c(NA,NA))))
+#'
+#' }
+#'
+#' @import dplyr
+#' @importFrom rlang .data
+#' @export
+get_all_na_rows2 <- function(tbl){
+
+  test <- tibble(condition = as.character(), name_var = as.character())
+  if(tbl %>% nrow() == 0) return(test)
+
+  tbl <- tbl %>% ungroup %>% add_index("fabR::index",.force = TRUE)
+
+  # identify participants containing all NA's except ID
+  test <- tbl %>% select(-1)
+  test <- test %>% mutate(is_na = rowSums(is.na(test)))
+  test <-
+    test %>%
+    tibble %>%
+    mutate(is_na = ncol(test) - .data$is_na) %>%
+    bind_cols(tbl[1]) %>%
+    filter(.data$is_na == 1) %>%
+    select(row_number = last_col()) %>%
+    mutate(row_number = as.character(.data$`row_number`)) %>%
+    mutate(
+      condition = "Empty observation") %>%
+    select("condition", "row_number")
+
+  return(test)
+}
+
+
+#' @title
+#' Extract columns that have unique values in a tibble
+#'
+#' @description
+#' This helper function extracts the names of the columns in a tibble having
+#' unique value for all observations.
 #'
 #' @param tbl R object(dataframe or tibble) of the input tibble
 #'
@@ -326,11 +472,11 @@ get_all_na_rows <- function(tbl, id_col = NULL){
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # One column doesn't have distinct observations
-#' get_unique_value_cols(iris[1:50,])
+#' get_unique_value_cols(tbl = iris[1:50,])
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr tidyr
 #' @importFrom rlang .data
 #' @export
 get_unique_value_cols <- function(tbl){
@@ -343,19 +489,20 @@ get_unique_value_cols <- function(tbl){
   # identify columns containing one value
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
-    tidyr::pivot_longer(
+    pivot_longer(
       cols = everything(),
-      names_to = "name_col",
+      names_to = "col_name",
       values_to = "condition") %>%
     rowwise() %>%
     mutate(
       value =
         ifelse(.data$condition == 1,
-               toString(max(pull(tbl[.data$name_col]),na.rm = TRUE)),
+               toString(max(pull(tbl[.data$`col_name`]),na.rm = TRUE)),
                NA_character_)) %>%
     filter(.data$condition == 1) %>%
     mutate(
-      condition = "[INFO] - Unique value in the column")
+      condition = "Unique value in the column") %>%
+    select("condition","col_name","value")
 
   return(test)
 }

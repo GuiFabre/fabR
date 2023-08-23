@@ -2,7 +2,7 @@
 % Please edit documentation in R/04-check_table_values.R
 \name{get_all_na_rows}
 \alias{get_all_na_rows}
-\title{Extract columns that are all 'NA' from a tibble}
+\title{Extract observations (rows) that have all NA values in a tibble}
 \usage{
 get_all_na_rows(tbl, id_col = NULL)
 }
@@ -16,18 +16,18 @@ The row number will be used to identify those observations.}
 }
 \value{
 A vector string indicating either that the tibble does not have empty
-columns or the names of the empty columns.
+observation or the row number of the empty observations.
 }
 \description{
-This helper function extracts the names of the columns in a tibble having NA
-values for all observations.
+This helper function extracts the row number(s) having NA value for all
+columns.
 }
 \examples{
 {
 
 ##### Example 1 -------------------------------------------------------------
 # All rows have observation
-get_all_na_cols(iris)
+get_all_na_rows(iris)
 
 ##### Example 2 -------------------------------------------------------------
 # One row doesn't have any observations
