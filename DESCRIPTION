@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions Collection Used in Data Pipelines 
-Version: 1.2.1
+Version: 2.0.0
 Authors@R: c(
     person("Guillaume", "Fabre", 
         role = c("aut", "cre"),
@@ -32,7 +32,7 @@ Imports: dplyr,
     bookdown,
     xfun,
     lifecycle
-URL: https://github.com/GuiFabre/fabR/
+URL: https://github.com/GuiFabre/fabR
 BugReports: https://github.com/GuiFabre/fabR/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
