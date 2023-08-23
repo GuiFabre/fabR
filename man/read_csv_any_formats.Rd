@@ -23,4 +23,8 @@ common errors when reading csv files.
 try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 
 }
+
+}
+\seealso{
+\code{\link[readr:read_delim]{readr::read_csv()}}, \code{\link[readr:read_delim]{readr::read_delim()}}
 }

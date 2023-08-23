@@ -32,7 +32,7 @@
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr fs stringr purrr tidyr
 #' @importFrom rlang .data
 #' @export
 file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
@@ -42,7 +42,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
     Please wait...\n")
 
   index <- tibble(
-    folder_path = tools::file_path_as_absolute(folder),
+    folder_path = path_abs(folder),
     file_path  = NA_character_,
     file_name  = NA_character_,
     extension = NA_character_,
@@ -50,11 +50,11 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
     to_eval = NA_character_)
 
   all_files_list <-
-    stringr::str_subset(
+    str_subset(
       list.files(folder, full.names = TRUE, recursive = TRUE),
       pattern = pattern, negate = negate)
 
-  if(purrr::is_empty(all_files_list)){
+  if(is_empty(all_files_list)){
     message("Your folder is empty or do not exists.")
   }else{
 
@@ -62,14 +62,14 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
       index <-
         index %>%
         add_row(
-          file_path = tools::file_path_as_absolute(i)) %>%
-        tidyr::fill(.data$folder_path,.direction = "down")}
+          file_path = path_abs(i)) %>%
+        fill(.data$folder_path,.direction = "down")}
 
     index <-
       index %>% filter(!is.na(.data$file_path)) %>%
       mutate(
         file_name = paste0(basename(.data$file_path)),
-        extension = tools::file_ext(.data$file_path),
+        extension = path_ext(.data$file_path),
         extension =
           ifelse(nchar(.data$extension) == 0,.data$file_name,.data$extension),
         to_eval = case_when(
@@ -147,7 +147,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
 #'
 #' }
 #'
-#' @import dplyr fs
+#' @import dplyr fs stringr
 #' @importFrom rlang .data
 #' @export
 file_index_search <- function(
@@ -159,16 +159,16 @@ file_index_search <- function(
 
   index <-
     index %>%
-    filter(stringr::str_detect(
+    filter(str_detect(
       string = .data$file_path,
       pattern = !! file_path)) %>%
-    filter(stringr::str_detect(
+    filter(str_detect(
       string = .data$file_name,
       pattern = !! file_name)) %>%
-    filter(stringr::str_detect(
+    filter(str_detect(
       string = .data$file_type,
       pattern = !! file_type)) %>%
-    filter(stringr::str_detect(
+    filter(str_detect(
       string = .data$extension,
       pattern = !! extension))
 
@@ -176,7 +176,7 @@ file_index_search <- function(
     # visualization of the dir tree
     temporary_folder <- path_temp() %>% basename
     dir_create(temporary_folder)
-    folder_tp <- stringr::str_remove(
+    folder_tp <- str_remove(
       string = index$file_path,
       pattern = dirname(index$folder_path))
     for(i in folder_tp){
@@ -205,7 +205,7 @@ file_index_search <- function(
 #' spss and sav files will be read using the function [haven::read_spss()],
 #' dta files will be read using the function [haven::read_dta()],
 #' sas7bdat and sas files will be read using the function [haven::read_sas()],
-#' R scripts, Rmd and md files be read using the function [base::readLines()],
+#' R scripts, Rmd and md files be read using the function [readLines()],
 #' The whole files will be created in a list, which name is the name of the
 #' file.
 #'
@@ -225,7 +225,7 @@ file_index_search <- function(
 #'
 #' @seealso
 #' [read_excel_allsheets()], [read_csv_any_formats()], [haven::read_spss()],
-#' [haven::read_dta()], [haven::read_sas()], [base::readLines()]
+#' [haven::read_dta()], [haven::read_sas()], [readLines()]
 #'
 #' @return
 #' R objects generated in the environment or R scripts. R object names are
@@ -241,8 +241,10 @@ file_index_search <- function(
 #'
 #' }
 #'
-#' @import dplyr
+#' @import dplyr stringr fs haven
 #' @importFrom rlang .data
+#' @importFrom usethis edit_file
+#' @importFrom utils browseURL
 #' @export
 file_index_read <- function(
   index,
@@ -268,7 +270,7 @@ file_index_read <- function(
 
     for(i in seq_len(nrow(index))){
 
-      if(stringr::str_detect(
+      if(str_detect(
         index$to_eval[i],
         "^source\\('|^utils::browseURL\\('|^usethis::edit_file\\('|^load\\('")){
         index$to_eval[i] %>% parceval()
@@ -282,14 +284,14 @@ file_index_read <- function(
         if(assign == TRUE){
 
           try({assign(
-            x = tools::file_path_sans_ext(index$file_name[i]),
+            x = path_ext_remove(index$file_name[i]),
             value = index$to_eval[i] %>% parceval(),
             envir = .envir)
             message("the R object: ",index$file_name[i]," has been created")})
 
         }else{
 
-          file_name <- tools::file_path_sans_ext(index$file_name[i])
+          file_name <- path_ext_remove(index$file_name[i])
           files_append[[file_name]] <- index$to_eval[i] %>% parceval()
 
         }}}

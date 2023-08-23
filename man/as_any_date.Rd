@@ -28,7 +28,7 @@ specify the wanted matching format (and can be helped using
 for the values as a whole.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+Contrary to lubridate library or \code{\link[=as.Date]{as.Date()}}, the function evaluates
 the different possibilities for a date. For example, c('02-03-1982') can be
 either March the 2nd or February the 3rd. The function will cast the value as
 NA, and a warning, since there is an ambiguity that cannot be solved, unless
@@ -74,6 +74,6 @@ time \%>\% mutate(new_time = as_any_date(time))
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
 \code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
-\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=which_any_date]{which_any_date()}}
 }

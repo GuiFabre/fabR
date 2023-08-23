@@ -39,7 +39,7 @@ library(tidyr)
 library(dplyr)
 
 my_tbl <- tibble(iris) \%>\% group_by(Species) \%>\% slice(1:3)
-fabR::add_index(my_tbl, "my_index")
+add_index(my_tbl, "my_index")
 
 }
 

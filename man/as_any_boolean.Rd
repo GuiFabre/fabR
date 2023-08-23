@@ -15,7 +15,7 @@ An logical object of the same size.
 \description{
 Create or test for objects of type "logical", and the basic logical
 constants.
-This function is a wrapper of the function \code{\link[base:logical]{base::as.logical()}} and evaluates
+This function is a wrapper of the function \code{\link[=as.logical]{as.logical()}} and evaluates
 if the object to be coerced can be interpreted as a boolean. Any object :
 NA, NA_integer, NA_Date_, (...),
 0, 0L, F, FALSE, false, FaLsE, (...),
@@ -40,5 +40,5 @@ tibble(values = c(0,1L,0,TRUE,"t","F","FALSE")) \%>\%
 
 }
 \seealso{
-\code{\link[base:logical]{base::as.logical()}}
+\code{\link[=as.logical]{as.logical()}}
 }
