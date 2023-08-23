@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions Collection Used in Data Pipelines 
-Version: 1.1.1.0001
+Version: 1.2.1
 Authors@R: c(
     person("Guillaume", "Fabre", 
         role = c("aut", "cre"),
@@ -16,30 +16,28 @@ License: GPL-3
 Depends: R (>= 3.4)
 Imports: dplyr,
     rlang,
-    lubridate,
-    ggplot2,
-    digest,
-    fs,
-    janitor,
-    tidytext,
-    purrr,
-    readr,
-    readxl,
+    utils,
+    usethis,
     stringr,
     tidyr,
+    purrr,
+    janitor,
+    fs,
+    readr,
+    readxl,
     writexl,
-    DT
+    haven,
+    lubridate,
+    digest,
+    bookdown,
+    xfun,
+    lifecycle
 URL: https://github.com/GuiFabre/fabR/
 BugReports: https://github.com/GuiFabre/fabR/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Encoding: UTF-8
-Suggests: 
-    knitr,
-    rmarkdown,
-    stats,
-    haven,
-    xlsx,
-    viridis,
+Suggests: knitr,
+    stats
 VignetteBuilder: knitr
 Language: en-US
