@@ -5,7 +5,8 @@
 
 ## Creation of NEWS feed !!
 
-`NEWS.md` for the development version use “(development version)”
+Addition of `NEWS.md` for the development version use “(development
+version)”.
 
 ## Bug fixes and improvements
 
@@ -131,7 +132,7 @@ are supposed to extract for all observations.
 ## Write and read excel and csv
 
 - `read_csv_any_formats()` The csv file is read twice to detect the
-  number of lines to use in attributing the column type ('guess_max'
+  number of lines to use in attributing the column type (‘guess_max’
   parameter of read_csv). This avoids common errors when reading csv
   files.
 
