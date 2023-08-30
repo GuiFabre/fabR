@@ -3,7 +3,7 @@
 0 errors | 0 warnings | 0 note
 
 
-# Latest submission : fabR 1.2.1
+# Latest submission : fabR 2.0.0
 
 ## Bug fixes and improvements
 
@@ -60,7 +60,7 @@ of each function but help enhance the performance of the function.
  _ as_any_boolean()
  - get_duplicated_rows()
  _ get_duplicated_cols()
- - get_qll_na_rows()
+ - get_all_na_rows()
  
 * https://win-builder.r-project.org/incoming_pretest/fabR_1.1.0_20230307_011952/Windows/00check.log
 1. corrections have been made

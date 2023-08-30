@@ -1,7 +1,7 @@
 
 # fabR (development version)
 
-# fabR 1.2.1
+# fabR 2.0.0
 
 ## Creation of NEWS feed !!
 

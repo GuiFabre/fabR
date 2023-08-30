@@ -33,8 +33,9 @@ get_all_na_rows(iris)
 # One row doesn't have any observations
 library(dplyr)
 get_all_na_rows(bind_rows(iris, tibble(Species = c(NA,NA))))
-get_all_na_rows(bind_rows(iris, tibble(Species =  c('an_id', 'another_id'))),
-                id_col = 'Species')
+get_all_na_rows(
+  tbl = bind_rows(iris, tibble(Species =  c('id_151', 'id_152'))),
+  id_col = 'Species')
 
 }
 

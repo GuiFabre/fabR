@@ -14,7 +14,7 @@
 template_visual_report <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "template_visual_report(to)", "bookdown_template(bookdown_path)")
+    "2.0.0", "template_visual_report(to)", "bookdown_template(bookdown_path)")
   # Unquote-splice to avoid argument matching
   bookdown_template(...)
 
@@ -37,7 +37,7 @@ template_visual_report <- function(...) {
 plot_main_word <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_main_word(tbl)",
+    "2.0.0", "plot_main_word(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -60,7 +60,7 @@ plot_main_word <- function(...) {
 plot_histogram <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_histogram(tbl)",
+    "2.0.0", "plot_histogram(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -83,7 +83,7 @@ plot_histogram <- function(...) {
 plot_box <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_box(tbl)",
+    "2.0.0", "plot_box(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -106,7 +106,7 @@ plot_box <- function(...) {
 plot_bar <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_bar(tbl)",
+    "2.0.0", "plot_bar(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -129,7 +129,7 @@ plot_bar <- function(...) {
 plot_date <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_date(tbl)",
+    "2.0.0", "plot_date(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -152,7 +152,7 @@ plot_date <- function(...) {
 plot_density <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_density(tbl)",
+    "2.0.0", "plot_density(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -175,7 +175,7 @@ plot_density <- function(...) {
 plot_pie <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_pie(tbl)",
+    "2.0.0", "plot_pie(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -198,7 +198,7 @@ plot_pie <- function(...) {
 plot_pie_valid_value <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "plot_pie_valid_value(tbl)",
+    "2.0.0", "plot_pie_valid_value(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -221,7 +221,7 @@ plot_pie_valid_value <- function(...) {
 summary_text <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "summary_text(tbl)",
+    "2.0.0", "summary_text(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -244,7 +244,7 @@ summary_text <- function(...) {
 summary_numerical <- function(...) {
 
   deprecate_warn(
-    "1.2.1", "summary_numerical(tbl)",
+    "2.0.0", "summary_numerical(tbl)",
     "madshapR::variable_visualize(dataset)")
 
   return(NULL)
@@ -267,7 +267,7 @@ summary_numerical <- function(...) {
 summary_category <- function(...) {
 
   deprecate_warn(
-    "1.2.1",
+    "2.0.0",
     "summary_category(tbl)",
     "madshapR::variable_visualize(dataset)")
 
