@@ -32,7 +32,7 @@
 #' @export
 get_duplicated_cols <- function(tbl){
 
-  test <- tibble(condition = as.character(), name_var = as.character())
+  test <- tibble(condition = as.character(), col_name = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
   sample_num <- ifelse(nrow(tbl) > 500,500,nrow(test))
@@ -94,7 +94,7 @@ get_duplicated_cols <- function(tbl){
       sep = "\\:",
       remove = FALSE) %>%
     separate_rows("col_name", sep = ";") %>%
-    select(-"to_remove") %>%
+    select("condition", "col_name") %>%
     mutate(across(everything(), ~str_squish(.))) %>%
     mutate(across(everything(), ~as.character(.)))
 
@@ -142,7 +142,7 @@ get_duplicated_cols <- function(tbl){
 #' @export
 get_duplicated_rows <- function(tbl, id_col = NULL){
 
-  test <- tibble(condition = as.character(), name_var = as.character())
+  test <- tibble(condition = as.character(), row_number = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
   test <- tbl %>% remove_empty("cols")
@@ -233,6 +233,10 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
 #' @export
 get_all_na_cols <- function(tbl){
 
+
+  test <- tibble(condition = as.character(), col_name = as.character())
+  if(tbl %>% nrow() == 0) return(test)
+
   # identify columns containing all NA's
   test <-
     tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
@@ -246,9 +250,6 @@ get_all_na_cols <- function(tbl){
 
   return(test)
 }
-
-
-
 
 
 #' @title
@@ -290,7 +291,7 @@ get_all_na_cols <- function(tbl){
 #' @export
 get_all_na_rows <- function(tbl, id_col = NULL){
 
-  test <- tibble(condition = as.character(), name_var = as.character())
+  test <- tibble(condition = as.character(), row_number = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
   if(is.null(id_col)) {
@@ -350,7 +351,11 @@ get_all_na_rows <- function(tbl, id_col = NULL){
 #' @export
 get_unique_value_cols <- function(tbl){
 
-  test <- tibble(condition = as.character(), name_var = as.character())
+  test <- tibble(
+    condition = as.character(),
+    col_name = as.character(),
+    value = as.character())
+
   if(tbl %>% nrow() == 0) return(test)
 
   tbl <- tbl %>% mutate(across(everything(),as.character))
