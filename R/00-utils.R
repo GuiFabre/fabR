@@ -123,8 +123,6 @@ silently_run <- function(...){
 #'
 #' a <- 1
 #' parceval("print(a)")
-#' my_code <- paste0("a <- a + ",rep(1,3), "; message('value of a: ', a)")
-#' parceval(my_code)
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # use rowwise to directly use parceval in a tibble, or use a for loop.
@@ -200,7 +198,7 @@ read_excel_allsheets <- function(filename, sheets = "", keep_as_list = FALSE) {
   }else{
     sheets_name <-
       excel_sheets(filename) %>%
-      as_tibble %>% filter(.data$value %in% c(sheets)) %>%
+      as_tibble %>% dplyr::filter(.data$value %in% c(sheets)) %>%
       pull(.data$value)
 
     if(length(sheets_name) != length(sheets)){
@@ -716,7 +714,7 @@ collect_roxygen <- function(folder_r = "R"){
     # trim
     doc %>%
     mutate(value = str_squish(.data$`value`)) %>%
-    filter(str_detect(.data$`value`,"^#'") |
+    dplyr::filter(str_detect(.data$`value`,"^#'") |
              str_detect(.data$`value`, '<- function\\(')) %>%
 
     # classify
@@ -749,7 +747,7 @@ collect_roxygen <- function(folder_r = "R"){
                str_remove(.data$`value`,"<- function.+$"),
                .data$`value`)) %>%
     mutate(across(everything(), ~str_squish(.))) %>%
-    filter(.data$`value` != "#'")
+    dplyr::filter(.data$`value` != "#'")
 
   doc <-
     doc %>%

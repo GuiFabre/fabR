@@ -66,7 +66,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
         fill(.data$folder_path,.direction = "down")}
 
     index <-
-      index %>% filter(!is.na(.data$file_path)) %>%
+      index %>% dplyr::filter(!is.na(.data$file_path)) %>%
       mutate(
         file_name = paste0(basename(.data$file_path)),
         extension = path_ext(.data$file_path),
@@ -159,16 +159,16 @@ file_index_search <- function(
 
   index <-
     index %>%
-    filter(str_detect(
+    dplyr::filter(str_detect(
       string = .data$file_path,
       pattern = !! file_path)) %>%
-    filter(str_detect(
+    dplyr::filter(str_detect(
       string = .data$file_name,
       pattern = !! file_name)) %>%
-    filter(str_detect(
+    dplyr::filter(str_detect(
       string = .data$file_type,
       pattern = !! file_type)) %>%
-    filter(str_detect(
+    dplyr::filter(str_detect(
       string = .data$extension,
       pattern = !! extension))
 
@@ -262,7 +262,7 @@ file_index_read <- function(
       file_name = file_name,
       extension = extension,
       file_type = file_type) %>%
-    filter(!is.na(.data$to_eval))
+    dplyr::filter(!is.na(.data$to_eval))
 
   files_append <- list()
 

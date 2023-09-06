@@ -53,7 +53,7 @@ get_duplicated_cols <- function(tbl){
       values_to = "col_1") %>%
     group_by(.data$col_1) %>%
     add_count() %>%
-    filter(n > 1)
+    dplyr::filter(n > 1)
 
   if(nrow(test1) > 0){
 
@@ -73,7 +73,7 @@ get_duplicated_cols <- function(tbl){
         values_to = "col_1") %>%
       group_by(.data$col_1) %>%
       add_count() %>%
-      filter(n > 1)
+      dplyr::filter(n > 1)
 
     test <- test2
 
@@ -168,12 +168,12 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     unite(-1, col = "row_duplicate", sep = "") %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
-    filter(n > 1)
+    dplyr::filter(n > 1)
 
   if(nrow(test1) > 0){
     test2 <-
       test %>%
-      filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
+      dplyr::filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
       # select(-1) %>%
       rowwise() %>%
       mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
@@ -182,7 +182,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
       # select(2, 1) %>%
       group_by(.data$row_duplicate) %>%
       add_count() %>%
-      filter(n > 1)
+      dplyr::filter(n > 1)
 
     test <- test2
 
@@ -243,7 +243,7 @@ get_all_na_cols <- function(tbl){
     pivot_longer(
       cols = everything(),
       names_to = "col_name", values_to = "condition") %>%
-    filter(.data$condition == 0) %>%
+    dplyr::filter(.data$condition == 0) %>%
     mutate(
       condition = "Empty column") %>%
     select("condition","col_name")
@@ -308,7 +308,7 @@ get_all_na_rows <- function(tbl, id_col = NULL){
     tibble %>%
     mutate(is_na = ncol(test) - .data$is_na) %>%
     bind_cols(tbl[1]) %>%
-    filter(.data$is_na == 1) %>%
+    dplyr::filter(.data$is_na == 1) %>%
     select(row_number = last_col()) %>%
     mutate(row_number = as.character(.data$`row_number`)) %>%
     mutate(
@@ -373,7 +373,7 @@ get_unique_value_cols <- function(tbl){
         ifelse(.data$condition == 1,
                toString(max(pull(tbl[.data$`col_name`]),na.rm = TRUE)),
                NA_character_)) %>%
-    filter(.data$condition == 1) %>%
+    dplyr::filter(.data$condition == 1) %>%
     mutate(
       condition = "Unique value in the column") %>%
     select("condition","col_name","value")

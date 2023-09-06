@@ -35,8 +35,6 @@ Prefer eval(parse(text = ...) instead.
 
 a <- 1
 parceval("print(a)")
-my_code <- paste0("a <- a + ",rep(1,3), "; message('value of a: ', a)")
-parceval(my_code)
 
 ##### Example 2 -------------------------------------------------------------
 # use rowwise to directly use parceval in a tibble, or use a for loop.
