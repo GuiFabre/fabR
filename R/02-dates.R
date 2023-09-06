@@ -52,14 +52,19 @@
 #' # Ambiguous dates --------------------------------------------------------
 #' time <-
 #'   tibble(time = c(
-#'   "1983-19-07",
-#'   "2003-01-14",
-#'   "2010-09-29",
 #'   "2023-12-12",
 #'   "2009-09-03",
-#'   "1509-11-30",
 #'   "1809-01-01"))
 #' guess_date_format(time)
+#'
+#' time <-
+#'   tibble(time = c(
+#'   "1983-19-07",
+#'   "1983-10-13",
+#'   "2009-09-03",
+#'   "1509-11-30"))
+#' guess_date_format(time)
+#'
 #'
 #' ##### Example 3 -------------------------------------------------------------
 #' # Non date format dates --------------------------------------------------
@@ -76,7 +81,7 @@
 #'
 #' }
 #'
-#' @import dplyr lubridate tidyr
+#' @import dplyr lubridate tidyr stringr
 #' @importFrom rlang .data
 #' @export
 guess_date_format <- function(tbl, col = NULL){
@@ -90,13 +95,14 @@ guess_date_format <- function(tbl, col = NULL){
     `% values formated` = as.numeric())
 
   for(i in tbl %>% names){
+    # stop()}
 
     test <-
       bind_rows(
         test,
         tbl %>%
           select(var = all_of(i)) %>%
-          filter(!is.na(.data$var)) %>%
+          dplyr::filter(!is.na(.data$var)) %>%
           distinct() %>%
           rowwise() %>%
           mutate(
@@ -117,20 +123,32 @@ guess_date_format <- function(tbl, col = NULL){
             `% values formated` =
               round(100*(.data$nb_values / (
                 tbl %>% select(var = all_of(i)) %>%
-                  distinct %>% filter(!is.na(.data$var)) %>% nrow)),2),
+                  distinct %>% dplyr::filter(!is.na(.data$var)) %>% nrow)),2),
             `% values formated` =
               ifelse(is.na(.data$`% values formated`),
                      0,.data$`% values formated`),
             `Date match` = case_when(
               .data$`% values formated` == 0   ~ "No match",
               .data$`% values formated` == 100 ~ paste0("Exact match"),
-              TRUE                       ~ paste0("Closest match")),
-          )  %>%
+              TRUE                       ~ paste0("Ambiguous match")),
+          ) %>%
+          group_by(
+            .data$name_var,.data$`Date match`,.data$`% values formated`,
+            .data$nb_values) %>%
+          summarise(
+            "Date format" = paste0(.data$`Date format`,collapse = ", "),
+            .groups = 'keep') %>%
+          ungroup() %>%
           arrange(-.data$nb_values) %>%
           slice(1) %>%
-          select(-.data$nb_values)
-      )
-  }
+          mutate(
+            `Date match` = ifelse(
+              str_detect(.data$`Date format`,'\\,') &
+                .data$`% values formated` != 0,
+              "Ambiguous match",.data$`Date match`)) %>%
+          select(-"nb_values")
+    )}
+
   return(test)
 }
 
@@ -262,17 +280,9 @@ which_any_date <- function(
 #'
 #' ##### Example 1 -------------------------------------------------------------
 #' # Ambiguous dates -----------------------------------------------------------
-#' time <-
-#'   tibble(time = c(
-#'   "1983 07-19",
-#'   "2003-01-14",
-#'   "2010-09-29",
-#'   "2023/12/12",
-#'   "2009-09-03",
-#'   "1809-01-01"))
-#'
-#' time %>% mutate(new_time = as_any_date(time))
-#' time %>% mutate(new_time = as_any_date(time, format = "ymd"))
+#' as_any_date('19 02 12')
+#' as_any_date('19 02 12', format = "ymd")
+#' as_any_date('19 02 12', format = "dym")
 #'
 #' ##### Example 2 -------------------------------------------------------------
 #' # Non-ambiguous dates -------------------------------------------------------
@@ -280,7 +290,6 @@ which_any_date <- function(
 #'   tibble(time = c(
 #'   "1983 07-19",
 #'   "14-01-1925",
-#'   "2010-09-29",
 #'   "12/13/2015",
 #'   "2009-09-13",
 #'   "2025 jan the 30th",
@@ -299,7 +308,7 @@ as_any_date <- function(
 
   date_test <- guess_date_format(tibble(x))
 
-  if(date_test$`% values formated` == 100){
+  if(date_test$`Date match` == "Exact match"){
     date_test <- rep(date_test$`Date format`,length(x))
   }else{
     date_test <- which_any_date(x, format)
