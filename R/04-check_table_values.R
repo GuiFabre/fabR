@@ -150,7 +150,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   if(is.null(id_col)) {
     tbl <-   tbl %>% ungroup %>% add_index("fabR::index",.force = TRUE)
     test <-  tbl
-    id_col = "__Mlstr_index__"
+    id_col <- "__Mlstr_index__"
   }else{
 
     tbl  <- tbl %>% ungroup %>% select(!! id_col, everything())
