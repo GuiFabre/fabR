@@ -10,9 +10,14 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
-)
+  eval = FALSE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE)
+
 ```
+
 
 # fabR
 
@@ -27,21 +32,18 @@ assessment and visualization of data frame-like material.
 
 ## Installation
 
-You can install the development version of fabR from [GitHub](https://github.com/) 
-with:
+You can install the package from CRAN, or the development version of fabR from
+[GitHub](https://github.com/):
 
 ``` {r setup}
-install.packages("fabR",repos = "https://cloud.r-project.org/")
+# To update the R package in your R environment you may first need to remove 
+# it, and use the exit command quit() to terminate the current R session.
 
-# install.package("devtools")
-# devtools::install_github(repo = "https://github.com/guifabre/fabR", 
-#  auth_token = "ghp_xxx",force = TRUE)
+# To install the R package:
+install.packages('fabR')
+library(fabR) 
 
-```
-
-## Example
-
-```{r}
-library(fabR)
+#if you need help with the package, please use:
 fabR_help()
+
 ```

@@ -38,7 +38,7 @@ plot_main_word <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_main_word(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -61,7 +61,7 @@ plot_histogram <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_histogram(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -84,7 +84,7 @@ plot_box <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_box(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -107,7 +107,7 @@ plot_bar <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_bar(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -130,7 +130,7 @@ plot_date <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_date(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -153,7 +153,7 @@ plot_density <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_density(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -176,7 +176,7 @@ plot_pie <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_pie(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -199,7 +199,7 @@ plot_pie_valid_value <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_pie_valid_value(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -222,7 +222,7 @@ summary_text <- function(...) {
 
   deprecate_warn(
     "2.0.0", "summary_text(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -245,7 +245,7 @@ summary_numerical <- function(...) {
 
   deprecate_warn(
     "2.0.0", "summary_numerical(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
@@ -269,7 +269,7 @@ summary_category <- function(...) {
   deprecate_warn(
     "2.0.0",
     "summary_category(tbl)",
-    "variable_visualize(dataset)")
+    "madshapR::variable_visualize(dataset)")
 
   return(NULL)
 
