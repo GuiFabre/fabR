@@ -32,13 +32,13 @@ Imports: dplyr,
     bookdown,
     xfun,
     lifecycle
-Suggests: Matrix
+Suggests: knitr,
+    stats,
+    Matrix
 URL: https://github.com/GuiFabre/fabR
 BugReports: https://github.com/GuiFabre/fabR/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Encoding: UTF-8
-Suggests: knitr,
-    stats
 VignetteBuilder: knitr
 Language: en-US
