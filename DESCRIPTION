@@ -32,6 +32,7 @@ Imports: dplyr,
     bookdown,
     xfun,
     lifecycle
+Suggests: Matrix
 URL: https://github.com/GuiFabre/fabR
 BugReports: https://github.com/GuiFabre/fabR/issues
 Roxygen: list(markdown = TRUE)
