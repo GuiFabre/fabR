@@ -28,7 +28,7 @@ template_visual_report <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -38,7 +38,7 @@ plot_main_word <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_main_word(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -51,7 +51,7 @@ plot_main_word <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -61,7 +61,7 @@ plot_histogram <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_histogram(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -74,7 +74,7 @@ plot_histogram <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -84,7 +84,7 @@ plot_box <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_box(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -97,7 +97,7 @@ plot_box <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -107,7 +107,7 @@ plot_bar <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_bar(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -120,7 +120,7 @@ plot_bar <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -130,7 +130,7 @@ plot_date <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_date(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -143,7 +143,7 @@ plot_date <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -153,7 +153,7 @@ plot_density <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_density(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -166,7 +166,7 @@ plot_density <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -176,7 +176,7 @@ plot_pie <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_pie(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -189,7 +189,7 @@ plot_pie <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -199,7 +199,7 @@ plot_pie_valid_value <- function(...) {
 
   deprecate_warn(
     "2.0.0", "plot_pie_valid_value(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -212,7 +212,7 @@ plot_pie_valid_value <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -222,7 +222,7 @@ summary_text <- function(...) {
 
   deprecate_warn(
     "2.0.0", "summary_text(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -235,7 +235,7 @@ summary_text <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -245,7 +245,7 @@ summary_numerical <- function(...) {
 
   deprecate_warn(
     "2.0.0", "summary_numerical(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 
@@ -258,7 +258,7 @@ summary_numerical <- function(...) {
 #' `r lifecycle::badge("deprecated")`
 #'
 #' For any fabR::plot_xxx() or summary_xxx() use
-#' [madshapR::variable_visualize()] instead.
+#' variable_visualize() in the package madshapR instead.
 #'
 #' @name deprecated
 #' @keywords internal
@@ -269,7 +269,7 @@ summary_category <- function(...) {
   deprecate_warn(
     "2.0.0",
     "summary_category(tbl)",
-    "madshapR::variable_visualize(dataset)")
+    "variable_visualize(dataset)")
 
   return(NULL)
 

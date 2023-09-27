@@ -48,56 +48,56 @@ Use \code{\link[=bookdown_template]{bookdown_template()}} instead of \code{templ
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 For any fabR::plot_xxx() or summary_xxx() use
-\code{\link[madshapR:variable_visualize]{madshapR::variable_visualize()}} instead.
+variable_visualize() in the package madshapR instead.
 }
 \keyword{internal}
