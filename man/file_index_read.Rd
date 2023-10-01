@@ -55,7 +55,7 @@ csv files will be read using the function \code{\link[=read_csv_any_formats]{rea
 spss and sav files will be read using the function \code{\link[haven:read_spss]{haven::read_spss()}},
 dta files will be read using the function \code{\link[haven:read_dta]{haven::read_dta()}},
 sas7bdat and sas files will be read using the function \code{\link[haven:read_sas]{haven::read_sas()}},
-R scripts, Rmd and md files be read using the function \code{\link[base:readLines]{base::readLines()}},
+R scripts, Rmd and md files be read using the function \code{\link[=readLines]{readLines()}},
 The whole files will be created in a list, which name is the name of the
 file.
 }
@@ -70,5 +70,5 @@ file_index_read(index, file_name = my_file_name)
 }
 \seealso{
 \code{\link[=read_excel_allsheets]{read_excel_allsheets()}}, \code{\link[=read_csv_any_formats]{read_csv_any_formats()}}, \code{\link[haven:read_spss]{haven::read_spss()}},
-\code{\link[haven:read_dta]{haven::read_dta()}}, \code{\link[haven:read_sas]{haven::read_sas()}}, \code{\link[base:readLines]{base::readLines()}}
+\code{\link[haven:read_dta]{haven::read_dta()}}, \code{\link[haven:read_sas]{haven::read_sas()}}, \code{\link[=readLines]{readLines()}}
 }

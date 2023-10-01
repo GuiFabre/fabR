@@ -28,7 +28,7 @@ specify the wanted matching format (and can be helped using
 for the values as a whole.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+Contrary to lubridate library or \code{\link[=as.Date]{as.Date()}}, the function evaluates
 the different possibilities for a date. For example, c('02-03-1982') can be
 either March the 2nd or February the 3rd. The function will cast the value as
 NA, and a warning, since there is an ambiguity that cannot be solved, unless
@@ -42,17 +42,9 @@ library(tidyr)
 
 ##### Example 1 -------------------------------------------------------------
 # Ambiguous dates -----------------------------------------------------------
-time <-
-  tibble(time = c(
-  "1983 07-19",
-  "2003-01-14",
-  "2010-09-29",
-  "2023/12/12",
-  "2009-09-03",
-  "1809-01-01"))
-
-time \%>\% mutate(new_time = as_any_date(time))
-time \%>\% mutate(new_time = as_any_date(time, format = "ymd"))
+as_any_date('19 02 12')
+as_any_date('19 02 12', format = "ymd")
+as_any_date('19 02 12', format = "dym")
 
 ##### Example 2 -------------------------------------------------------------
 # Non-ambiguous dates -------------------------------------------------------
@@ -60,7 +52,6 @@ time <-
   tibble(time = c(
   "1983 07-19",
   "14-01-1925",
-  "2010-09-29",
   "12/13/2015",
   "2009-09-13",
   "2025 jan the 30th",
@@ -74,6 +65,6 @@ time \%>\% mutate(new_time = as_any_date(time))
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
 \code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
-\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=which_any_date]{which_any_date()}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/04-check_table_values.R
 \name{get_duplicated_rows}
 \alias{get_duplicated_rows}
-\title{Extract observations(rows) that have same values in a tibble}
+\title{Extract observations (rows) that have same values in a tibble}
 \usage{
 get_duplicated_rows(tbl, id_col = NULL)
 }
@@ -29,7 +29,7 @@ useful to identify repeated observation across different ids)
 # the row numbers are returned to identify which observations have repeated
 # values
 library(dplyr)
-get_duplicated_rows(bind_rows(mtcars,mtcars[1,]))
+get_duplicated_rows(tbl = bind_rows( tbl = mtcars, mtcars[1,]))
 
 get_duplicated_rows(
   tbl = bind_rows(mtcars,mtcars[1,]) \%>\%

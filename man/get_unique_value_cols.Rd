@@ -2,7 +2,7 @@
 % Please edit documentation in R/04-check_table_values.R
 \name{get_unique_value_cols}
 \alias{get_unique_value_cols}
-\title{Extract columns that are all 'NA' from a tibble}
+\title{Extract columns that have unique values in a tibble}
 \usage{
 get_unique_value_cols(tbl)
 }
@@ -14,8 +14,8 @@ A vector string indicating either that the tibble does not have empty
 columns or the names of the empty columns.
 }
 \description{
-This helper function extracts the names of the columns in a tibble having NA
-values for all observations.
+This helper function extracts the names of the columns in a tibble having
+unique value for all observations.
 }
 \examples{
 {
@@ -26,7 +26,7 @@ get_unique_value_cols(iris)
 
 ##### Example 2 -------------------------------------------------------------
 # One column doesn't have distinct observations
-get_unique_value_cols(iris[1:50,])
+get_unique_value_cols(tbl = iris[1:50,])
 
 }
 

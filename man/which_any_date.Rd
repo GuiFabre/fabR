@@ -29,7 +29,7 @@ the best matching format can be used to mutate a column using
 \code{\link[=as_any_date]{as_any_date()}}.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+Contrary to lubridate library or \code{\link[=as.Date]{as.Date()}}, the function evaluates
 the different possibilities for a date. For example, c('02-03-1982') can be
 either March the 2nd or February the 3rd. The function will provide
 "mdy, dmy" as possible formats. If no format is found, the function returns
@@ -56,6 +56,6 @@ which_any_date(time)
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
 \code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
-\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=as_any_date]{as_any_date()}}
 }

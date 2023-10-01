@@ -15,7 +15,7 @@ error, nothing will be returned in that case.
 }
 \description{
 Shortcut avoiding user to get messages, warnings and being stopped by an
-error. The usage is very similar to \code{\link[base:warning]{base::suppressWarnings()}}. This function
+error. The usage is very similar to \code{\link[=suppressWarnings]{suppressWarnings()}}. This function
 is targeted for function creators where user experience enhancement is
 sought.
 }
@@ -29,5 +29,5 @@ silently_run(as.integer("text"))
 
 }
 \seealso{
-\code{\link[base:invisible]{base::invisible()}}, \code{\link[base:warning]{base::suppressWarnings()}}, \code{\link[base:message]{base::suppressMessages()}}
+\code{\link[=invisible]{invisible()}}, \code{\link[=suppressWarnings]{suppressWarnings()}}, \code{\link[=suppressMessages]{suppressMessages()}}
 }

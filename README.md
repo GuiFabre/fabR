@@ -31,6 +31,5 @@ github web site:
 
 ``` r
 library(fabR)
-#> Warning: le package 'fabR' a été compilé avec la version R 4.2.3
 fabR_help()
 ```

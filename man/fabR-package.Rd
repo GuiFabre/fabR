@@ -11,7 +11,7 @@ The goal of this package is to provide wrapper functions in the data cleaning an
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/GuiFabre/fabR/}
+  \item \url{https://github.com/GuiFabre/fabR}
   \item Report bugs at \url{https://github.com/GuiFabre/fabR/issues}
 }
 

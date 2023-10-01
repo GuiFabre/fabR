@@ -25,7 +25,7 @@ the best matching format can be used to mutate a column using
 \code{\link[=as_any_date]{as_any_date()}}.
 }
 \details{
-Contrary to lubridate library or \code{\link[base:as.Date]{base::as.Date()}}, the function evaluates
+Contrary to lubridate library or \code{\link[=as.Date]{as.Date()}}, the function evaluates
 the column as a whole, and does not cast the column if there is ambiguity
 between values. For example, ('19-07-1983', '02-03-1982') implies that 02
 refers to the day and 03 refers to the month, since that order works for the
@@ -53,14 +53,19 @@ guess_date_format(time)
 # Ambiguous dates --------------------------------------------------------
 time <-
   tibble(time = c(
-  "1983-19-07",
-  "2003-01-14",
-  "2010-09-29",
   "2023-12-12",
   "2009-09-03",
-  "1509-11-30",
   "1809-01-01"))
 guess_date_format(time)
+
+time <-
+  tibble(time = c(
+  "1983-19-07",
+  "1983-10-13",
+  "2009-09-03",
+  "1509-11-30"))
+guess_date_format(time)
+
 
 ##### Example 3 -------------------------------------------------------------
 # Non date format dates --------------------------------------------------
@@ -81,6 +86,6 @@ guess_date_format(time)
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
 \code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
-\code{\link[lubridate:as_date]{lubridate::as_date()}},
+\code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=which_any_date]{which_any_date()}},\code{\link[=as_any_date]{as_any_date()}}
 }

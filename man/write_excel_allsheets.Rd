@@ -2,7 +2,7 @@
 % Please edit documentation in R/00-utils.R
 \name{write_excel_allsheets}
 \alias{write_excel_allsheets}
-\title{Write all Excel sheets using \code{\link[xlsx:write.xlsx]{xlsx::write.xlsx()}} recursively}
+\title{Write all Excel sheets using \code{\link[writexl:write_xlsx]{writexl::write_xlsx()}} recursively}
 \usage{
 write_excel_allsheets(list, filename)
 }
@@ -32,5 +32,5 @@ unlink(
 
 }
 \seealso{
-\code{\link[xlsx:write.xlsx]{xlsx::write.xlsx()}}
+\code{\link[writexl:write_xlsx]{writexl::write_xlsx()}}
 }

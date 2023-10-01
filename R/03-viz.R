@@ -1,1404 +1,85 @@
 #' @title
-#' Draw bar plot of one (possibly grouped) open-text column in a tibble
+#' Create a bookdown template.
 #'
 #' @description
-#' This function draws a bar plot of the values of open text column. This
-#' plot shows the x-th first most cited words in a column having open text
-#' values using tidytext library.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
+#' This helper function creates a template for a bookdown.
 #'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in') This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param max integer specifying the x-th first most cited words
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
+#' @param bookdown_path A character string identifying the folder path where
+#' the bookdown will be generated.
 #'
-#' @seealso
-#' [ggplot2::ggplot()]
+#' @param overwrite whether to overwrite existing files. FALSE by default.
 #'
 #' @return
-#' A bar plot object
+#' A folder containing all files (Rmd, yml, css) to generate the bookdown.
+#'
+#' @seealso [bookdown_render()],[bookdown_open()]
 #'
 #' @examples
 #' {
 #'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_main_word()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # words contained in Species
-#' plot_main_word(tbl = "iris", col = "Species", out = "ggplot2")
+#' bookdown_path = tempdir()
+#' bookdown_template(bookdown_path, overwrite = TRUE)
 #'
 #' }
 #'
-#' @import dplyr ggplot2 tidytext
+#' @import dplyr fs utils
 #' @importFrom rlang .data
+#' @importFrom readr write_lines
 #' @export
-plot_main_word <- function(
-    tbl = "iris",
-    col = "Species",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    max = 10,
-    out = "ggplot2-cat",
-    group_by = NULL){
+bookdown_template <- function(bookdown_path, overwrite = FALSE){
 
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <- ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
+  # check input
+  if(!is.logical(overwrite))
+    stop(call. = FALSE,'`overwrite` must be TRUE or FALSE (TRUE by default).')
 
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
+  if(!is.character(bookdown_path))
+    stop(call. = FALSE,'`bookdown_path` must be a character string.')
 
-  plot <- paste0(
-    tbl_name," %>% "                                                      ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                 ,"\n",
-    "  filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>% "  ,"\n",
-    "  group_by(",group_by,") %>%"                                        ,"\n",
-    "  mutate(",col," = as.character(",col,")) %>%"                       ,"\n",
-    "  tidytext::unnest_tokens(output = word, input = ",col,") %>%"       ,"\n",
-    "  anti_join(tidytext::stop_words) %>%"                               ,"\n",
-    "  count(word, sort = TRUE) %>%"                                      ,"\n",
-    "  mutate(word = reorder(word, n)) %>%"                               ,"\n",
-    "  slice(seq_len(min(",max,",nrow(.)))) "                                  )
+  if(!dir.exists(bookdown_path)) dir_create(bookdown_path)
 
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(word, n)) +"                                          ,"\n",
-      "  geom_col() +"                                                    ,"\n",
-      "  coord_flip() +"                                                  ,"\n",
-      "  labs(x = 'Word', y = ' Count',"                                  ,"\n",
-      "       title = 'Frequent words in ",col,"') +"                     ,"\n",
-      "  geom_text(aes(label = n), hjust = 1.2, colour = 'white') +"      ,"\n",
-      "  theme(plot.title = element_text(hjust = 0.5),"                   ,"\n",
-      "        axis.title.x = "                                           ,"\n",
-      "          element_text(face='bold', colour='darkblue', size = 12),","\n",
-      "        axis.title.y = "                                           ,"\n",
-      "          element_text(face='bold', colour='darkblue', size = 12))",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
+  if(overwrite == FALSE){
+
+    if(length(dir(bookdown_path,
+       pattern =
+       "^_bookdown.yml$|^_output\\.yml$|^style\\.css$|^index\\.Rmd$")) > 0){
+
+      stop(call. = FALSE,
+'The path folder already exists or is not empty.
+Please provide another name folder or add `overwrite = TRUE` as parameter.')
+
+    }
   }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                                   ,"\n",
-      "  ggplot(aes(word, n)) +"                                          ,"\n",
-      "  geom_col() +"                                                    ,"\n",
-      "  coord_flip() +"                                                  ,"\n",
-      "  labs(x = 'Word', y = ' Count',"                                  ,"\n",
-      "       title = 'Frequent words in ",col,"') +"                     ,"\n",
-      "  geom_text(aes(label = n), hjust = 1.2, colour = 'white') +"      ,"\n",
-      "  theme(plot.title = element_text(hjust = 0.5),"                   ,"\n",
-      "       axis.title.x = "                                            ,"\n",
-      "          element_text(face='bold', colour='darkblue', size = 12),","\n",
-      "       axis.title.y = "                                            ,"\n",
-      "          element_text(face='bold', colour='darkblue', size = 12))",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw histogram of one (possibly grouped) column in a tibble
-#'
-#' @description
-#' This function draws a histogram plot of the values of a column.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in') This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A hist plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_histogram()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of Petal.Length
-#' plot_histogram(tbl = iris, col = "Petal.Length", out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_histogram <- function(
-    tbl = "airquality",
-    col = "Ozone",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                       ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "  ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  ))  "     )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = ", col,
-      ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +" ,"\n",
-      "  geom_histogram(color = '#e9ecef',alpha = 0.9, stat = 'count') +" ,"\n",
-      "  ggtitle('distribution of ",col,"') +"                            ,"\n",
-      "  theme(plot.title = element_text(size = 15))",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot, " %>% "                                  ,"\n",
-      "  ggplot(aes(x = ", col,
-      ifelse(!is.null(group_by),paste0(", fill = ", group_by),""),")) +"  ,"\n",
-      "  geom_histogram(color = '#e9ecef',alpha = 0.9, stat = 'count') +" ,"\n",
-      "  ggtitle('distribution of ",col,"') +"                            ,"\n",
-      "  theme(plot.title = element_text(size = 15))",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw box plot of one (possibly grouped) column in a tibble
-#'
-#' @description
-#' This function draws a box plot of the values of a column.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to values in'). This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A box plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_box()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of Petal.Length
-#' plot_box(tbl = iris, col = "Petal.Length", out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_box <- function(
-    tbl = "airquality",
-    col = "Month",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                      ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% " ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  )) %>% " ,"\n",
-    "  mutate(participants = 'participants')"             )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = ",group_by,", y = ",col,", fill = ",group_by,"))+","\n",
-      "  geom_boxplot() + "                                               ,"\n",
-      "  coord_flip() +"                                                  ,"\n",
-      "  theme(legend.position='none',plot.title=element_text(size=11)) +","\n",
-      "  ggtitle('Box plot representation of ",col,"') +"                 ,"\n",
-      "  ylab('') +"                                                      ,"\n",
-      "  xlab('')"                                                        )
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                                  ,"\n",
-      "  ggplot(aes(x = ",group_by,",y = ",col,",fill = ",group_by,")) +","\n",
-      "  geom_boxplot() + "                                              ,"\n",
-      "  coord_flip() +"                                                 ,"\n",
-      "  theme(legend.position='none',plot.title=element_text(size=11))+","\n",
-      "  ggtitle('Box plot representation of ",col,"') +"                ,"\n",
-      "  ylab('') +"                                                     ,"\n",
-      "  xlab('') )"                                                     )
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw lollipop plot of one (possibly grouped) time-related column in a tibble
-#'
-#' @description
-#' This function draws a lollipop plot of the values of time related column.
-#' the 'time' parameter uses lubridate syntax to specify the period of time to
-#' consider. Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in'). This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param time parameter following lubridate syntax to specify the period of
-#' time to consider. Can be ymd, mdy, year, months, etc. See lubridate
-#' documentation.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A lollipop plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_date()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of number of storms per month
-#' library(dplyr)
-#' annual_storms <-
-#'   dplyr::storms %>% sample_n(100) %>%
-#'   mutate(annual = as_any_date(paste(year,month,day),"ymd"))
-#' plot_date(
-#'  tbl = annual_storms,
-#'  col = "annual",
-#'  time = "month",
-#'  out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_date <- function(
-    tbl = "dplyr::storms",
-    col = "annual",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    time = "day",
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                       ,"\n",
-    "  mutate(",col," = ",time,"(as.Date(",col,"))) %>% "  ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "  ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  )) %>% "  ,"\n",
-    "  group_by(",col,",",group_by,") %>%"                 ,"\n",
-    "  tally "                                             )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = ",col,", y = n",
-         ifelse(!is.null(group_by),paste0(", color = ",group_by),""),"))+","\n",
-      "  geom_segment("                                                   ,"\n",
-      "  aes(x=",col,",xend=",col,",y=0,yend = n),color='grey')+"         ,"\n",
-      "  geom_point(size=4) +"                                            ,"\n",
-      "  theme("                                                          ,"\n",
-      "    panel.grid.major.x = element_blank(),"                         ,"\n",
-      "    panel.border = element_blank(),"                               ,"\n",
-      "    axis.ticks.x = element_blank()) +"                             ,"\n",
-      "  xlab('distribution of dates - in ",time,"') +"                   ,"\n",
-      "  ylab('Number of participants') ",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                                   ,"\n",
-      "  ggplot(aes(x = ",col,", y = n",
-         ifelse(!is.null(group_by),paste0(", color = ",group_by),""),"))+","\n",
-      "  geom_segment("                                                   ,"\n",
-      "  aes(x=",col,",xend=",col,",y=0,yend=n),color='grey')+"           ,"\n",
-      "  geom_point(size=4) +"                                            ,"\n",
-      "  theme("                                                          ,"\n",
-      "    panel.grid.major.x = element_blank(),"                         ,"\n",
-      "    panel.border = element_blank(),"                               ,"\n",
-      "    axis.ticks.x = element_blank()) +"                             ,"\n",
-      "  xlab('distribution of dates - in ",time,"') +"                   ,"\n",
-      "  ylab('Number of participants') ",
-      ifelse(
-        !is.null(group_by), paste0("+ \n  facet_wrap(~ ",group_by,")"),"")," )")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw bar plot of one (possibly grouped) column in a tibble
-#'
-#' @description
-#' This function draws a bar plot of the values of a column.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in') This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A bar plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_bar()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of Species
-#' plot_bar(tbl = "dplyr::storms", col = "status", out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_bar <- function(
-    tbl = "dplyr::storms",
-    col = "status",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                        ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "   ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  )) %>% "   ,"\n",
-    "  mutate(",col," = ",col," %>% as.character ) "        )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                            ,"\n",
-      "  ggplot(aes(x = ",col,", fill =  ",col," )) + "       ,"\n",
-      "  geom_bar() + "                                       ,"\n",
-      "  viridis::scale_fill_viridis(discrete = TRUE) + "     ,"\n",
-      "  theme(legend.position = 'right') ",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                       ,"\n",
-      "  ggplot(aes(x = ",col,", fill =  ",col," )) + "       ,"\n",
-      "  geom_bar() + "                                       ,"\n",
-      "  viridis::scale_fill_viridis(discrete = TRUE) + "     ,"\n",
-      "  theme(legend.position = 'right')",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-
-#' @title
-#' Draw density plot of one (possibly grouped) column in a tibble
-#'
-#' @description
-#' This function draws a density line plot of the values of a column.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in') This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A density plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_density()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of Petal.Length
-#' plot_density(tbl = iris, col = "Petal.Length", out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_density <- function(
-    tbl = "iris",
-    col = "Sepal.Length",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                       ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "  ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"  ))     "  )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = ", col,
-      ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +" ,"\n",
-      "  geom_density( color = '#e9ecef'",
-      ifelse(!is.null(group_by),"",", fill='#69b3a2'"),", alpha = 0.8) + ","\n",
-      "  theme(legend.position = 'right') " ,
-      ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),""))
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-    plot <- paste0(
-      "plotly::ggplotly(", plot," %>% "                                   ,"\n",
-      "  ggplot(aes(x = ", col,
-      ifelse(!is.null(group_by), paste0(", fill = ", group_by),""),")) +" ,"\n",
-      "  geom_density( color = '#e9ecef'",
-      ifelse(!is.null(group_by),"",", fill = '#69b3a2'"),",alpha = 0.8) +","\n",
-      "  theme(legend.position = 'right')",
-      ifelse(
-        !is.null(group_by),paste0("+ \n  facet_wrap(~",group_by,")"),"")," ) ")
-
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw pie chart of one (possibly grouped) column in a tibble
-#'
-#' @description
-#' This function draws a pie plot of the values of column.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in'). This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#'
-#' @return
-#' A pie plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_pie()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of status in storms
-#' plot_pie(tbl = "dplyr::storms", col = "status", out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_pie <- function(
-    tbl = "dplyr::storms",
-    col = "status",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name,                                         " %>% " ,"\n",
-    "  filter(", negate, "(",col," %in% ", filter, "))  %>% " ,"\n",
-    "  filter(!(" , col, " %in% ", missing_values,"  )) %>% " ,"\n",
-    "  mutate(", col, " = ", col, " %>% as.character )  %>% " ,"\n",
-    "  mutate(group_by = ",group_by,") %>% "                  ,"\n",
-    "  group_by(",col,",group_by) %>% "                       ,"\n",
-    "  tally "                                                )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = '', y = n, fill = ",col,")) +"                    ,"\n",
-      "  geom_bar(stat='identity', width=1, position = position_fill()) +","\n",
-      "  coord_polar('y', start=0) + "                                    ,"\n",
-      "  theme_void() + "                                                 ,"\n",
-      "  viridis::scale_fill_viridis(discrete = TRUE) + "                 ,"\n",
-      "  theme(legend.position = 'right') ",
-      ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~group_by)"),""))
-
-  }
-
-  if(stringr::str_detect(out,"plotly")){
-
-    count_category <-
-      c(0:(eval(parse(text = stringr::str_squish(plot))) %>%
-             pull(group_by) %>% unique %>% length))
-
-    plot <- paste0(
-      "plotly::plot_ly() %>%"                                             ,"\n",
-      paste(
-        paste0(
-        "plotly::add_pie(data = ",
-        plot,
-        " %>% filter(group_by == \nunique(",
-        plot," %>% pull(group_by)) %>% .[",count_category + 1,"])",",
-          labels = ~",col,",
-          text = ~group_by,
-          values = ~n,
-          domain = list(row = 0, column = ",count_category,")) %>%"),
-        collapse = "\n")  ,"\n",
-      "       plotly::layout(title = 'Pie Plots with Subplots', showlegend=TRUE,
-             grid=list(rows=1, columns=",max(count_category)+1,"),
-             xaxis=list(showgrid=FALSE,zeroline=FALSE,showticklabels=FALSE),
-             yaxis=list(showgrid=FALSE,zeroline=FALSE,showticklabels=FALSE)) ")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Draw pie chart of one column in a tibble (valid and non-valid values)
-#'
-#' @description
-#' This function draws a pie plot of the values of a column separating valid,
-#' non-valid and missing values.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in') This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either
-#' 'ggplot2', 'plotly','ggplot2-code', 'plotly-code','ggplot2-cat' or
-#' 'plotly-cat'. ggplot2 renders a static plot, plotly a dynamic plot, code
-#' gives the code in a string (usable directly with eval/parse functions) and
-#' cat provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [ggplot2::ggplot()]
-#'
-#' @return
-#' A pie plot object
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' plot_pie_valid_value()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # graph of Species (virginica is as missing values)
-#' plot_pie_valid_value(
-#'   tbl = "dplyr::storms",
-#'   col = "status",
-#'   missing_values = "'other low'" ,
-#'   out = "ggplot2")
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-plot_pie_valid_value <- function(
-    tbl = "dplyr::storms",
-    col = "status",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = "'other low'",
-    out = "ggplot2-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  plot <- paste0(
-    tbl_name," %>% "                                                     ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                ,"\n",
-    "  mutate(",col," = ",col," %>% as.character )  %>% "                ,"\n",
-    "  mutate( "                                                         ,"\n",
-    "    ",col," = case_when("                                           ,"\n",
-    "      is.na(",col,")                     ~ 'missing value',"        ,"\n",
-    "      !(",col," %in% ",missing_values,") ~ 'valid value', "         ,"\n",
-    "      TRUE                               ~ 'not valid value')) %>% ","\n",
-    "  mutate(group_by = ",group_by,")  %>% "                            ,"\n",
-    "  group_by(",col,",group_by)               %>% "                    ,"\n",
-    "  tally "                                                          )
-
-  if(stringr::str_detect(out,"ggplot2")){
-    plot <- paste0(
-      plot," %>% "                                                        ,"\n",
-      "  ggplot(aes(x = '', y = n, fill = ",col,")) +"                    ,"\n",
-      "  geom_bar(stat='identity',width = 1,position = position_fill()) +","\n",
-      "  coord_polar('y', start=0) + "                                    ,"\n",
-      "  theme_void() + "                                                 ,"\n",
-      "  viridis::scale_fill_viridis(discrete = TRUE) + "                 ,"\n",
-      "  theme(legend.position = 'right') ",
-      ifelse(!is.null(group_by),paste0("+ \n  facet_wrap(~group_by)"),""))
-
-  }
-
-
-  if(stringr::str_detect(out,"plotly")){
-
-    count_category <-
-      c(seq_along(0:length(eval(parse(text = stringr::str_squish(plot))) %>%
-             pull(group_by) %>% unique)))
-
-    plot <- paste0(
-      "plotly::plot_ly() %>%","\n",
-      paste(
-        paste0("plotly::add_pie(data = ",
-        plot," %>% filter(group_by == \nunique(",
-        plot," %>% pull(group_by)) %>% .[",count_category + 1,"])",",
-          labels = ~",col,",
-          text = ~group_by,
-          values = ~n,
-          domain = list(row = 0, column = ",count_category,")) %>%"),
-        collapse = "\n")  ,"\n",
-      "     plotly::layout(title = 'Pie Plots with Subplots', showlegend = TRUE,
-              grid=list(rows=1, columns=",max(count_category)+1,"),
-              xaxis=list(showgrid=FALSE,zeroline=FALSE,showticklabels=FALSE),
-              yaxis=list(showgrid=FALSE,zeroline=FALSE,showticklabels=FALSE))")
-  }
-
-  if(stringr::str_detect(out,"code")) {
-    return(plot)
-  }else if(stringr::str_detect(out,"cat")) {
-    return(plot %>% cat)
-  }else if(out == "plotly" | out == "ggplot2"){
-    return(plot %>% parceval)
-  }else {
-    return(
-      message("Valide 'out' attributes are 'ggplot2', 'plotly',",
-              "'ggplot2-code', 'plotly-code',",
-              "'ggplot2-cat', 'plotly-cat'"))}
-}
-
-#' @title
-#' Create summary table of one (possibly grouped) text-type column in a tibble
-#'
-#' @description
-#' This function creates a datatable of the values of a column with separate
-#' valid, non-valid and missing values.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose. The user can download the datatable in
-#' csv format.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in'). This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#' @param out parameter that specifies the output expected: can be either 'DT',
-#' 'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [DT::datatable()]
-#'
-#' @return
-#' A datatable (editable) object or a R script in a character string to create
-#' it.
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' summary_text()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # summary table of Species
-#' summary_text(tbl = "dplyr::storms", col = "status", out = "DT")
-#'
-#' }
-#'
-#' @import dplyr ggplot2 DT janitor
-#' @importFrom rlang .data
-#' @export
-summary_text <- function(
-    tbl = "dplyr::storms",
-    col = "status",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "DT-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  summary <- paste0(
-    tbl_name," %>% "                                                      ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                 ,"\n",
-    "  filter(!(", col," %in% ", missing_values,")) %>% "                 ,"\n",
-    "  mutate(", col," = as.character(",col, ")) %>% "                    ,"\n",
-    "  group_by(", col,",", group_by,") %>% count %>% "                   ,"\n",
-    "  select(2, 3, 1) %>% mutate(",col," = replace_na(",col,",'-')) %>% ","\n",
-    "  rename(`Values` = 1, `Number of answers` = 2) %>% "                ,"\n",
-    "  arrange(`Values`,desc(`Number of answers`)) %>% "                  ,"\n",
-    "  mutate(`Values` = na_if(`Values`,'')) %>%"                         ,"\n",
-    "    janitor::remove_empty(which = 'cols') %>%"                       ,"\n",
-    "  DT::datatable( "                                                   ,"\n",
-    "    class = 'cell-border stripe', rownames = FALSE,"                 ,"\n",
-    "    filter = 'top', editable = FALSE, extensions = 'Buttons', "      ,"\n",
-    "    options = list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('csv') ))")
-
-  if(stringr::str_detect(out,"code")) {
-    return(summary)
-  }else if(stringr::str_detect(out,"cat")){
-    return(summary %>% cat)
-  }else if(out == "DT") {
-    return(summary %>% parceval)
-  }else {
-    return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
-
-}
-
-#' @title
-#' Create summary tibble of a (possibly grouped) numerical-type column
-#'
-#' @description
-#' This function creates datatable of the values of a column separating valid,
-#' non-valid and missing values.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose. The user can download the datatable in
-#' csv format.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string specifying a column of interest
-#' @param filter A character string specifying the values to filter. (equivalent
-#' to 'values in'). This determines which values should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' These values will not be excluded from counting - but will be displayed
-#' separately from valid values.
-#'
-#' @param tbl A character string or tibble
-#' @param col A character string of a column of interest
-#' @param filter A character string to subset the rows, applying the expressions
-#' to the column values to determine which rows should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' Those values will not be excluded from counting, but will be separated from
-#' valid values.
-#' @param out parameter that specifies the output expected: can be either 'DT',
-#' 'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [DT::datatable()]
-#'
-#' @return
-#' A datatable (editable) object or a R script in a character string to create
-#' it.
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' summary_numerical()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # summary table of Petal.Length
-#' summary_numerical(tbl = iris, col = "Petal.Length", out = "DT")
-#'
-#' }
-#'
-#' @import dplyr ggplot2 DT
-#' @importFrom rlang .data
-#' @export
-summary_numerical <- function(
-    tbl = "iris",
-    col = "col",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "DT-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  summary <- paste0(
-    tbl_name," %>% "                                                   ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "              ,"\n",
-    "  group_by(",group_by,") %>% "                                    ,"\n",
-    "  select(",col,") %>% "                                           ,"\n",
-    "  rename(group = 1) %>% "                                         ,"\n",
-    "  mutate(group = ifelse(group == '', ' ', group)) %>% "           ,"\n",
-    "  summarise( "                                                    ,"\n",
-    "    nbr.val = sum(!is.na(",col,")), "                             ,"\n",
-    "    nbr.na  = sum(is.na(",col,")), "                              ,"\n",
-    "    min = min(",col,", na.rm = TRUE), "                           ,"\n",
-    "    max = max(",col,", na.rm = TRUE), "                           ,"\n",
-    "    range = max - min, "                                          ,"\n",
-    "    median = median(",col,", na.rm = TRUE), "                     ,"\n",
-    "    mean = mean(",col,", na.rm = TRUE), "                         ,"\n",
-    "    std.dev = sd(",col,", na.rm = TRUE)) %>% "                    ,"\n",
-    "  tidyr::pivot_longer(!group) %>% "                               ,"\n",
-    "  tidyr::pivot_wider(names_from = group, "                        ,"\n",
-    "  names_glue = '{group}<br>(all answers)') %>%"                   ,"\n",
-    " full_join(     "                                                 ,"\n",
-    tbl_name," %>% "                                                   ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "              ,"\n",
-    "  filter(!(",col," %in% ",missing_values,"| is.na(",col,"))) %>% ","\n",
-    "  group_by(",group_by,") %>% "                                    ,"\n",
-    "  select(",col,") %>% "                                           ,"\n",
-    "  rename(group = 1) %>% "                                         ,"\n",
-    "  mutate(group = ifelse(group == '', ' ', group)) %>% "           ,"\n",
-    "  summarise( "                                                    ,"\n",
-    "    nbr.val = sum(!is.na(",col,")), "                             ,"\n",
-    "    nbr.na  = sum(is.na(",col,")), "                              ,"\n",
-    "    min = min(",col,", na.rm = TRUE), "                           ,"\n",
-    "    max = max(",col,", na.rm = TRUE), "                           ,"\n",
-    "    range = max - min, "                                          ,"\n",
-    "    median = median(",col,", na.rm = TRUE), "                     ,"\n",
-    "    mean = mean(",col,", na.rm = TRUE), "                         ,"\n",
-    "    std.dev = sd(",col,", na.rm = TRUE)) %>% "                    ,"\n",
-    "  tidyr::pivot_longer(!group) %>% "                               ,"\n",
-    "  tidyr::pivot_wider(names_from = group, "                        ,"\n",
-    "  names_glue = '{group}<br>(only valid answers)')) %>%"           ,"\n",
-    "  select(' ' = name, order(colnames(.))) %>% "                    ,"\n",
-    "  mutate_at(.vars = -1, ~ round(., 2)) %>% "                      ,"\n",
-    "  DT::datatable( "                                                ,"\n",
-    "    class = 'cell-border stripe', rownames = TRUE,"               ,"\n",
-    "    editable = FALSE, extensions = 'Buttons',"                    ,"\n",
-    "    options = list(scrollX=TRUE,dom='Brtip',buttons='csv'),escape=FALSE)")
-
-  if(stringr::str_detect(out,"code")) {
-    return(summary)
-  }else if(stringr::str_detect(out,"cat")){
-    return(summary %>% cat)
-  }else if(out == "DT") {
-    return(summary %>% parceval)
-  }else {
-    return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
-
-}
-
-#' @title
-#' Create summary tibble of one (possibly grouped) category-type column
-#'
-#' @description
-#' This function creates datatable of the values of a column separating valid,
-#' non-valid and missing values.
-#' Missing values can be given as input to non-valid and valid values
-#' separately, or grouped by another column. The output can be editable (using
-#' plotly library) or static (using ggplot2 library). The R-code is also
-#' editable for coding recycling purpose. The user can download the datatable in
-#' csv format.
-#'
-#' @param tbl A character string or tibble specifying the input tibble
-#' @param col A character string of a column of interest
-#' @param filter A character string to subset the rows, applying the expressions
-#' to the column values to determine which rows should be retained. It can be
-#' applied to both grouped and ungrouped data.
-#' @param negate If TRUE, return non-matching elements.
-#' @param missing_values Vector listing values to exclude from valid values.
-#' Those values will not be excluded from counting, but will be separated from
-#' valid values.
-#' @param out parameter that specifies the output expected: can be either 'DT',
-#' 'DT-code' and 'DT-cat'. DT renders a datatable using DT library, code gives
-#' the code in a string (usable directly with eval/parse functions) and cat
-#' provides indented code in the console.
-#' @param group_by A character string of one column in the tbl that can be
-#' taken as a grouping column. The visual element will be grouped and displayed
-#' by this column.
-#'
-#' @seealso
-#' [DT::datatable()]
-#'
-#' @return
-#' A datatable (editable) object or a R script in a character string to create
-#' it.
-#'
-#' @examples
-#' {
-#'
-#' ##### Example 1 -------------------------------------------------------------
-#' # cat output generated as a template when no argument provided
-#' summary_category()
-#'
-#' ##### Example 2 -------------------------------------------------------------
-#' # summary table of Petal.Length
-#' summary_category(tbl = iris, col = "Species", out = "DT")
-#'
-#' }
-#'
-#' @import dplyr ggplot2 DT janitor
-#' @importFrom rlang .data
-#' @export
-summary_category <- function(
-    tbl = "iris",
-    col = "col",
-    filter = 'c()',
-    negate = FALSE,
-    missing_values = 'c()',
-    out = "DT-cat",
-    group_by = NULL){
-
-  group_by <-
-    ifelse(is.null(group_by) | toString(group_by) == col,"\'\'",group_by)
-  negate <-
-    ifelse(negate == TRUE | (filter == 'c()' & negate == FALSE),"!","")
-
-  tbl_name <-
-    if(class(tbl)[1] == "character") {tbl}else{as.character(substitute(tbl)) }
-  tbl <-
-    if(class(tbl)[1] == "character") { parceval(tbl) }else{ tbl}
-
-  summary <- paste0(
-    tbl_name," %>% "                                                      ,"\n",
-    "  filter(",negate,"(",col," %in% ",filter, ")) %>% "                 ,"\n",
-    "  group_by(",col,", group_by = ",group_by,") %>% count %>% "         ,"\n",
-    "  mutate(prop_no_mis = NA_real_) %>% "                               ,"\n",
-    "  group_by(group_by) %>% "                                           ,"\n",
-    "  select(group_by, everything()) %>% "                               ,"\n",
-    "  mutate(prop_no_mis = paste0(round(n/sum(n),digits=2)*100,'%')) %>%","\n",
-    "  full_join( "                                                       ,"\n",
-    tbl_name," %>% "                                                      ,"\n",
-    "    filter(",negate,"(",col," %in% ",filter, ")) %>% "               ,"\n",
-    "    filter(!(",col," %in% ",missing_values," | is.na(",col,"))) %>%" ,"\n",
-    "      group_by(",col,", group_by = ",group_by,") %>% count %>% "     ,"\n",
-    "      mutate(prop_tot = NA_real_) %>% "                              ,"\n",
-    "      group_by(group_by) %>% "                                       ,"\n",
-    "      select(group_by, everything()) %>% "                           ,"\n",
-    "      mutate(prop_tot=paste0(round(n/sum(n),digits=2)*100,'%')))%>%" ,"\n",
-    "  mutate(prop_tot = replace_na(prop_tot,'-')) %>% "                  ,"\n",
-    "  rename(`Grouping variable` = 1, "                                  ,"\n",
-    "          `Category code` = 2, "                                     ,"\n",
-    "          `Number of answers` = 3 ,"                                 ,"\n",
-    "          `Proportion - all` = 4 , "                                 ,"\n",
-    "          `Proportion - valid values` = 5) %>% "                     ,"\n",
-    "  select(1, 2, 3, 4, 5) %>% "                                        ,"\n",
-    "  mutate(`Grouping variable` = na_if(`Grouping variable`,'')) %>% "  ,"\n",
-    "  arrange(`Grouping variable`,`Category code`) %>% "                 ,"\n",
-    "    janitor::remove_empty('cols') %>% "                              ,"\n",
-    "  DT::datatable( "                                                   ,"\n",
-    "    class = 'cell-border stripe', rownames = FALSE,"                 ,"\n",
-    "    filter = 'top', editable = FALSE, extensions = 'Buttons', "      ,"\n",
-    "    options = list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('csv') ))")
-
-  if(stringr::str_detect(out,"code")) {
-    return(summary)
-  }else if(stringr::str_detect(out,"cat")){
-    return(summary %>% cat)
-  }else if(out == "DT") {
-    return(summary %>% parceval)
-  }else {
-    return(message("Valide 'out' attributes are 'DT', 'DT-code','DT-cat'"))}
-
-}
-
-#' @title
-#' Create a bookdown template for the visual report
-#'
-#' @description
-#' This helper function creates a template for the visual report bookdown. This
-#' template is taken from the following link:
-#' https://github.com/jtr13/bookdown-template/archive/refs/heads/master.zip
-#' folder
-#'
-#' @param to A character string of a path where the bookdown report will be
-#' placed
-#'
-#' @return
-#' A folder containing all files (Rmd, yml, docs, ...) to generate bookdown
-#' report
-#'
-#' @examples
-#' {
-#'
-#' unlink(template_visual_report(tempdir()))
-#'
-#' }
-#'
-#' @import dplyr ggplot2
-#' @importFrom rlang .data
-#' @export
-template_visual_report <- function(to){
-
-  try({unlink(paste0(to,"/temp_bookdown_report/"), recursive = TRUE)},
-    silent = TRUE)
-  fs::dir_create(paste0(to,"/temp_bookdown_report"))
-
-  utils::download.file(
-    "https://github.com/jtr13/bookdown-template/archive/refs/heads/master.zip",
-    paste0(to,"/temp_bookdown_report/file.zip"))
-  utils::unzip(paste0(to,"/temp_bookdown_report/file.zip"),
-               exdir = paste0(to,"/temp_bookdown_report/file"))
-
-  file.remove(paste0(to,"/temp_bookdown_report/file.zip"))
-  file.rename(
-    from = paste0(to,"/temp_bookdown_report/file/bookdown-template-main"),
-    to   = paste0(to,"/temp_bookdown_report/file/bookdown-template-master"))
-
-  path <- "/temp_bookdown_report/file/bookdown-template-master"
-  file.remove(paste0(to,path,"/02-tears.Rmd"))
-  file.remove(paste0(to,path,"/03-race.Rmd"))
-  file.remove(paste0(to,path,"/README.md"))
-  file.remove(paste0(to,path,"/docs/index.html"))
-  file.remove(paste0(to,path,"/docs/the-pool-of-tears.html"))
-  file.remove(paste0(to,path,"/docs/a-caucus-race-and-a-long-tale.html"))
-  file.remove(paste0(to,path,"/docs/search_index.json"))
 
   paste0(
-    'book_filename: "bookdownproj"
+'book_filename: "bookdownproj"
 output_dir: docs
 delete_merged_file: true
-edit: https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/master/%s
-view: https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/master/%s
 language:
   ui:
     chapter_name: ""
 
-') %>% readr::write_lines(
-  file = paste0(to,path,"/_bookdown.yml"),append = FALSE)
+') %>% write_lines(
+  file = paste0(bookdown_path,"/_bookdown.yml"),append = FALSE)
+
+paste0(
+'bookdown::gitbook:
+  css: style.css
+  config:
+    sharing: null
+    toc:
+      before: |
+        <li><a href="./">SHORT TITLE HERE</a></li>
+      after: |
+        <li><a
+          href="https://github.com/rstudio/bookdown"
+          target="blank">Published with bookdown</a></li>
+
+') %>% write_lines(
+  file = paste0(bookdown_path,"/_output.yml"),append = FALSE)
+
 
   paste0(
-    'body{ /* Normal  */
+'body{ /* Normal  */
       font-size: 14px;
   }
 td {  /* table  */
@@ -1447,19 +128,128 @@ pre { /* Code block - determines code spacing between lines */
    margin-right: auto;
 }
 
-') %>% readr::write_lines(
-  file = paste0(to,path,"/style.css"), append = FALSE)
+') %>% write_lines(
+  file = paste0(bookdown_path,"/style.css"), append = FALSE)
 
   paste0(
-    '---
+'---
 title: "XXX"
 author: "xxx"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-') %>% readr::write_lines(
-  file = paste0(to,path,"/index.Rmd"),
+# XXX
+
+') %>% write_lines(
+  file = paste0(bookdown_path,"/index.Rmd"),
   append = FALSE)
 
 }
+
+#' @title
+#' Render a bookdown into a bookdown site
+#'
+#' @description
+#' This helper function renders an existing bookdown folder (containing at
+#' least 'index.Rmd file)
+#'
+#' @param bookdown_path A character string identifying the folder path
+#' where the bookdown report files are.
+#'
+#' @param overwrite whether to overwrite existing files. FALSE by default.
+#'
+#' @return
+#' A folder containing htlm files (in docs, ...) generated from a bookdown
+#' report.
+#'
+#' @seealso [bookdown_template()],[bookdown_open()]
+#'
+#' @examples
+#' {
+#'
+#' bookdown_path = tempdir()
+#' bookdown_template(bookdown_path, overwrite = TRUE)
+#' bookdown_render(bookdown_path, overwrite = TRUE)
+#'
+#' }
+#'
+#' @import bookdown
+#' @importFrom xfun in_dir
+#' @importFrom rlang .data
+#' @importFrom readr write_lines
+#' @export
+bookdown_render <- function(bookdown_path, overwrite = FALSE){
+
+  # check input
+  if(!is.logical(overwrite))
+    stop(call. = FALSE,'`overwrite` must be TRUE or FALSE (TRUE by default).')
+
+  if(!is.character(bookdown_path))
+    stop(call. = FALSE,'`bookdown_path` must be a character string.')
+
+  if(!dir.exists(bookdown_path))
+    stop(call. = FALSE, 'The path folder does not exists')
+
+  if(overwrite == FALSE){
+
+    if(length(dir(bookdown_path,
+       pattern =
+       "^docs$")) > 0){
+
+      stop(call. = FALSE,
+'The path folder already exists or is not empty.
+Please provide another name folder or add `overwrite = TRUE` as parameter.')
+
+    }
+  }
+
+  dir_delete(dir(bookdown_path,pattern = "^docs$",full.names = TRUE))
+
+  suppressMessages({
+    in_dir(
+      dir = bookdown_path,
+      expr = render_book(
+        input = paste0("index.Rmd")))
+  })
+
+}
+
+#' @title
+#' Open a bookdown site in a browser
+#'
+#' @description
+#' Opens a previously generated HTML bookdown site This is a shortcut
+#' function to access 'index.html'.
+#'
+#' @seealso [bookdown_template()],[bookdown_open()]
+#'
+#' @param bookdown_path A character string specifying the path of the
+#' bookdown site to be opened.
+#'
+#' @returns
+#' Nothing to be returned. The function opens a web page.
+#'
+#' @examples
+#' {
+#'
+#' bookdown_path = tempdir()
+#' bookdown_template(bookdown_path, overwrite = TRUE)
+#' bookdown_render(bookdown_path, overwrite = TRUE)
+#' bookdown_open(bookdown_path)
+#'
+#'
+#' }
+#'
+#' @import stringr
+#' @importFrom utils browseURL
+#'
+#' @export
+bookdown_open <- function(bookdown_path){
+
+  bookdown_path <- str_remove(paste0(bookdown_path,"/docs/index.html"), '^/')
+  utils::browseURL(bookdown_path)
+
+}
+
+
