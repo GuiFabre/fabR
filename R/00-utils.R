@@ -349,6 +349,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
 
   class_tbl <- toString(class(tbl))
   group_name <- group_vars(tbl)
+  `fabR::start` <- start
 
   tbl_index <-
     data.frame(index = NA_integer_) %>%
@@ -369,7 +370,7 @@ add_index <- function(tbl, name_index = "index", start = 1, .force = FALSE){
   if(length(group_name)) tbl <- group_by_at(tbl, group_name)
 
   tbl <- tbl %>% mutate(across(all_of(name_index),
-                               ~ as.integer(row_number() + start - 1)))
+                               ~ as.integer(row_number() + `fabR::start` - 1)))
 
   if(str_detect(class_tbl,"tbl")) tbl <- tibble(tbl)
 
