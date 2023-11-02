@@ -2,7 +2,16 @@
 
 0 errors | 0 warnings | 0 note
 
-last message for cran submission :
+
+# submission : fabR 2.0.1
+
+- the function add_index has been corrected to handle bug when the
+  tibble in input contains a column named `start`. No change or impact for the 
+  user.
+
+# submission : fabR 2.0.0
+
+message for cran submission :
 > package fabR_2.0.0.1000.tar.gz has been auto-processed. The auto-check found 
 problems when checking the first order strong reverse dependencies.Please 
 reply-all and explain: Is this expected or do you need to fix anything in your 
@@ -26,7 +35,6 @@ all functions plot_xxx() and summary_xxx() have been suppressed in favor of
 [variable_visualize](https://maelstrom-research.github.io/madshapR-documentation/reference/variable_visualize.html)). These functions are in the next CRAN version of madshapR.
 
 
-# Latest submission : fabR 2.0.0
 
 ## Bug fixes and improvements
 

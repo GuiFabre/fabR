@@ -1,7 +1,10 @@
-# fabR (development version)
 
+# fabR 2.0.1
 
-# fabR (development version)
+## Bug fixes and improvements
+
+- the function add_index has been corrected to handle bug when the
+  tibble in input contains a column named `start`.
 
 # fabR 2.0.0
 
