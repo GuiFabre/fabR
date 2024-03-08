@@ -14,7 +14,7 @@ Description: The goal of this package is to provide wrapper functions in the
     material.
 License: GPL-3
 Depends: R (>= 3.4)
-Imports: dplyr,
+Imports: dplyr (>= 1.1.0),
     rlang,
     utils,
     usethis,
