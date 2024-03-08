@@ -13,14 +13,14 @@
 #' {
 #'
 #' # call the help center!
-#' fabR_help()
+#' fabR_website()
 #'
 #' }
 #'
 #' @importFrom utils browseURL
 #'
 #' @export
-fabR_help <- function(){
+fabR_website <- function(){
 
   browseURL("https://guifabre.github.io/fabR-documentation/")
   return(invisible(NULL))
