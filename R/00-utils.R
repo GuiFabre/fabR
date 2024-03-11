@@ -300,7 +300,6 @@ write_excel_allsheets <- function(list, filename){
 #' @export
 read_csv_any_formats <- function(filename){
 
-
   csv_0 <- try(read_csv2(filename),silent = TRUE)
 
   if(class(csv_0)[1] != "try-error"){
@@ -308,7 +307,6 @@ read_csv_any_formats <- function(filename){
     csv   <- read_csv2(filename,guess_max = nrow(csv_0))
     if(ncol(csv) == 1)
       csv <- read_csv(filename,guess_max = nrow(csv_0))
-
 
   }else{
 
