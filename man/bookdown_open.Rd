@@ -2,20 +2,21 @@
 % Please edit documentation in R/03-viz.R
 \name{bookdown_open}
 \alias{bookdown_open}
-\title{Open a bookdown site in a browser}
+\title{Open a a web-based bookdown folder in a browser}
 \usage{
 bookdown_open(bookdown_path)
 }
 \arguments{
-\item{bookdown_path}{A character string specifying the path of the
-bookdown site to be opened.}
+\item{bookdown_path}{A character string identifying the folder path
+containing the files to open the bookdown site.}
 }
 \value{
 Nothing to be returned. The function opens a web page.
 }
 \description{
-Opens a previously generated HTML bookdown site This is a shortcut
-function to access 'index.html'.
+Opens a previously generated HTML bookdown site from files in the specified
+folder. This is a shortcut function to access 'index.html' in the specified
+folder.
 }
 \examples{
 {
@@ -24,7 +25,6 @@ bookdown_path = tempdir()
 bookdown_template(bookdown_path, overwrite = TRUE)
 bookdown_render(bookdown_path, overwrite = TRUE)
 bookdown_open(bookdown_path)
-
 
 }
 
