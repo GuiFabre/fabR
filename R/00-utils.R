@@ -301,15 +301,24 @@ write_excel_allsheets <- function(list, filename){
 read_csv_any_formats <- function(filename){
 
 
-  csv_0 <- read.delim(filename)
-  csv   <- read_csv2(filename,guess_max = nrow(csv_0))
+  csv_0 <- try(read_csv2(filename),silent = TRUE)
 
-  if(ncol(csv) == 1){
-    csv <- read_csv(filename,guess_max = nrow(csv_0))
+  if(class(csv_0)[1] != "try-error"){
+
+    csv   <- read_csv2(filename,guess_max = nrow(csv_0))
+    if(ncol(csv) == 1)
+      csv <- read_csv(filename,guess_max = nrow(csv_0))
+
+
+  }else{
+
+    csv_0 <- read_csv2(filename,locale = locale(encoding ="latin1"))
+    csv   <- read_csv2(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0))
+    if(ncol(csv) == 1)
+      csv <- read_csv(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0))
   }
 
   return(csv)
-
 }
 
 #' @title
