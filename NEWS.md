@@ -1,7 +1,27 @@
-# fabR (development version)
 
+# fabR 2.0.2
+
+2024-04
+
+## Bug fixes and improvements
+
+- The function `read_any_csv()` can handle 3 types of CSV (coma
+  separator, semi column separator and a mix of columns containing
+  both), which works better. The function also handles (a priori) the
+  latin1 encoding Still experimental.
+
+## deprecated functions
+
+To avoid confusion with help(function), the function `fabR_help()` has
+been renamed `fabR_website()`.
+
+## Dependency changes
+
+- set a minimum dplyr dependence to avoid bugs
 
 # fabR 2.0.1
+
+2023-11
 
 ## Bug fixes and improvements
 
@@ -9,6 +29,8 @@
   tibble in input contains a column named `start`.
 
 # fabR 2.0.0
+
+2023-10
 
 ## Creation of NEWS feed !!
 
@@ -56,6 +78,8 @@ of
 [variable_visualize](https://maelstrom-research.github.io/madshapR-documentation/reference/variable_visualize.html))
 
 # fabR 1.1.1
+
+2023-08
 
 This package is a collection of wrapper functions used in data
 pipelines.
