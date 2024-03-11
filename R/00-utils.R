@@ -276,6 +276,7 @@ write_excel_allsheets <- function(list, filename){
 #' Read a csv file using read_csv and avoid errors
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
 #' The csv file is read twice to detect the number of lines to use in
 #' attributing the column type ('guess_max' parameter of read_csv). This avoids
 #' common errors when reading csv files.
@@ -285,7 +286,7 @@ write_excel_allsheets <- function(list, filename){
 #' @return
 #' A tibble corresponding to the csv read.
 #'
-#' @seealso [readr::read_csv()], [readr::read_delim()]
+#' @seealso [readr::read_csv()], [readr::read_csv2()]
 #'
 #' @examples
 #' {
@@ -294,15 +295,21 @@ write_excel_allsheets <- function(list, filename){
 #'
 #' }
 #'
-#' @import readr
+#' @import readr stringr tidyr
 #' @importFrom rlang .data
 #' @export
 read_csv_any_formats <- function(filename){
 
-  guess_max <-nrow(silently_run(read_csv(filename, progress = FALSE)))
-  csv <- read_delim(file = filename, guess_max = guess_max)
+
+  csv_0 <- read.delim(filename)
+  csv   <- read_csv2(filename,guess_max = nrow(csv_0))
+
+  if(ncol(csv) == 1){
+    csv <- read_csv(filename,guess_max = nrow(csv_0))
+  }
 
   return(csv)
+
 }
 
 #' @title
