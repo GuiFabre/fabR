@@ -1,7 +1,7 @@
 Package: fabR
 Type: Package
 Title: Wrapper Functions Collection Used in Data Pipelines 
-Version: 2.0.1.9000
+Version: 2.0.2
 Authors@R: c(
     person("Guillaume", "Fabre", 
         role = c("aut", "cre"),
