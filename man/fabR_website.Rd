@@ -2,22 +2,21 @@
 % Please edit documentation in R/00-utils.R
 \name{fabR_website}
 \alias{fabR_website}
-\title{Call the help center for full documentation}
+\title{Call to online documentation}
 \usage{
 fabR_website()
 }
 \value{
-Nothing to be returned. The function opens a web package.
+Nothing to be returned. The function opens a web page.
 }
 \description{
-This feature is a direct call of the documentation in the repository hosting
-the package. The user accesses the description of the latest version of the
-package, the vignettes, and the list of functions.
+Direct call to the online documentation for the package, which includes a
+description of the latest version of the package, vignettes, user guides,
+and a reference list of functions and help pages.
 }
 \examples{
 {
 
-# call the help center!
 fabR_website()
 
 }

@@ -1,18 +1,17 @@
 #' @title
-#' Call the help center for full documentation
+#' Call to online documentation
 #'
 #' @description
-#' This feature is a direct call of the documentation in the repository hosting
-#' the package. The user accesses the description of the latest version of the
-#' package, the vignettes, and the list of functions.
+#' Direct call to the online documentation for the package, which includes a
+#' description of the latest version of the package, vignettes, user guides,
+#' and a reference list of functions and help pages.
 #'
 #' @return
-#' Nothing to be returned. The function opens a web package.
+#' Nothing to be returned. The function opens a web page.
 #'
 #' @examples
 #' {
 #'
-#' # call the help center!
 #' fabR_website()
 #'
 #' }
