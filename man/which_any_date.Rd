@@ -6,7 +6,7 @@
 \usage{
 which_any_date(
   x,
-  format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "as_date")
+  format = c("ymd", "ydm", "dmy", "myd", "mdy", "dym", "as_date")
 )
 }
 \arguments{
@@ -14,7 +14,8 @@ which_any_date(
 
 \item{format}{A character identifying the format to apply to the object to
 test.
-That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
+That format can be 'ymd','ydm','dmy','myd','mdy','dym' or 'as_date' in that
+specific order ('ymd" will be chose as a default format, then 'ymd', etc.).}
 }
 \value{
 A character string of the possible date formats given a parameter to be
@@ -42,11 +43,12 @@ time <- c(
   "1983-07-19",
   "31 jan 2017",
   "1988/12/17",
-  "31-02-2005",
+  "31-02-05",
   "02-02-02",
   "2017 october the 2nd",
   "02-07-2012",
-  "19-19-1923")
+  "19-07-83",
+  "19-19-19")
 
 which_any_date(time)
 

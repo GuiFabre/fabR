@@ -1,7 +1,5 @@
 
-# fabR 2.0.2
-
-2024-04
+# fabR 2.0.2 (release : 2024-04-01)
 
 ## Bug fixes and improvements
 
@@ -21,16 +19,12 @@ been renamed `fabR_website()`.
 
 # fabR 2.0.1
 
-2023-11
-
 ## Bug fixes and improvements
 
 - the function add_index has been corrected to handle bug when the
   tibble in input contains a column named `start`.
 
 # fabR 2.0.0
-
-2023-10
 
 ## Creation of NEWS feed !!
 
@@ -78,8 +72,6 @@ of
 [variable_visualize](https://maelstrom-research.github.io/madshapR-documentation/reference/variable_visualize.html))
 
 # fabR 1.1.1
-
-2023-08
 
 This package is a collection of wrapper functions used in data
 pipelines.
