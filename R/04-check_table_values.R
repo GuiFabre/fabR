@@ -291,24 +291,25 @@ get_all_na_cols <- function(tbl){
 #' @export
 get_all_na_rows <- function(tbl, id_col = NULL){
 
-  test <- tibble(condition = as.character(), row_number = as.character())
-  if(tbl %>% nrow() == 0) return(test)
+  `{fabR::test}` <- tibble(condition = as.character(), row_number = as.character())
+  if(tbl %>% nrow() == 0) return(`{test}`)
 
   if(is.null(id_col)) {
-    tbl <- tbl %>% ungroup %>% add_index("__Mlstr_index__",.force = TRUE)
+    tbl <- tbl %>% ungroup %>% add_index("{fabR::index}",.force = TRUE)
   }else{
     tbl  <- tbl %>% ungroup %>% select(!! id_col, everything())
   }
 
   # identify participants containing all NA's exept ID
-  test <- tbl %>% select(-1)
-  test <- test %>% mutate(is_na = rowSums(is.na(test)))
-  test <-
-    test %>%
+  `{fabR::test}` <- tbl %>% select(-1)
+  `{fabR::test}` <- `{fabR::test}` %>%
+    mutate(`{fabR::is_na}` = rowSums(is.na(`{fabR::test}`)))
+  `{fabR::test}` <-
+    `{fabR::test}` %>%
     tibble %>%
-    mutate(is_na = ncol(test) - .data$is_na) %>%
+    mutate(is_na = ncol(`{fabR::test}`) - .data$`{fabR::is_na}`) %>%
     bind_cols(tbl[1]) %>%
-    dplyr::filter(.data$is_na == 1) %>%
+    dplyr::filter(.data$`{fabR::is_na}` == 1) %>%
     select(row_number = last_col()) %>%
     mutate(row_number = as.character(.data$`row_number`)) %>%
     mutate(
@@ -316,7 +317,7 @@ get_all_na_rows <- function(tbl, id_col = NULL){
     select("condition", "row_number") %>%
     distinct
 
-  return(test)
+  return(`{fabR::test}`)
 }
 
 
