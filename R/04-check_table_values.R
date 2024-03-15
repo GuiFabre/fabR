@@ -173,8 +173,8 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     rowwise() %>%
     mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
     mutate(across(-1, ~ str_sub(., 1, 5))) %>%
-    unite(-1, col = "row_duplicate", sep = "") %>%
-    group_by(.data$row_duplicate) %>%
+    unite(-1, col = "fabR::row_duplicate", sep = "") %>%
+    group_by(.data$`fabR::row_duplicate`) %>%
     add_count() %>%
     dplyr::filter(.data$`n` > 1)
 
@@ -188,9 +188,9 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
       rowwise() %>%
       mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
       mutate(across(-1, ~ str_sub(., 1, 5))) %>%
-      unite(-1, col = "row_duplicate", sep = "") %>%
+      unite(-1, col = "fabR::row_duplicate", sep = "") %>%
       # select(2, 1) %>%
-      group_by(.data$row_duplicate) %>%
+      group_by(.data$`fabR::row_duplicate`) %>%
       add_count() %>%
       dplyr::filter(n > 1)
 
@@ -201,13 +201,14 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   names(test)[1] <- 'index'
   test <-
     test %>%
-    group_by(.data$row_duplicate) %>%
+    group_by(.data$`fabR::row_duplicate`) %>%
     distinct() %>%
     summarise(
       row_number = paste0(.data$`index`, collapse = " ; ")) %>%
     mutate(condition = "Duplicated observations") %>%
     ungroup() %>% select("condition", "row_number")
 
+  print(test)
   return(test)
 }
 
