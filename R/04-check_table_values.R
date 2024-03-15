@@ -150,25 +150,35 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   if(is.null(id_col)) {
     tbl <-   tbl %>% ungroup %>% add_index("fabR::index",.force = TRUE)
     test <-  tbl
-    id_col <- "__Mlstr_index__"
+    id_col <- "fabR::index"
   }else{
-
     tbl  <- tbl %>% ungroup %>% select(!! id_col, everything())
-    test <- tbl %>% ungroup %>% select(!! id_col, everything())
+    test <- tbl #%>% ungroup %>% select(!! id_col, everything())
   }
 
-  sample_num <- ifelse(ncol(test) > 20,20,ncol(test))
+  # avoid one column
+  if(ncol(tbl) == 1) {
+    tbl <-   tbl %>% add_index("fabR::col_id",.force = TRUE)
+    test <-  tbl
+    id_col <- "fabR::col_id"}
+
+  sample_col <- 1:ifelse(ncol(test) > 20,20,ncol(test))
+
+  if(length(sample_col) == 20)
+    sample_col <- sample(seq_along(1:ncol(test)), sample_num, replace = TRUE)
 
   test1 <-
     test %>%
-    select(1, sample(seq_along(2:ncol(test))+1, sample_num, replace = TRUE)) %>%
+    select(sample_col) %>%
     rowwise() %>%
     mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
     mutate(across(-1, ~ str_sub(., 1, 5))) %>%
     unite(-1, col = "row_duplicate", sep = "") %>%
     group_by(.data$row_duplicate) %>%
     add_count() %>%
-    dplyr::filter(n > 1)
+    dplyr::filter(.data$`n` > 1)
+
+  print(test1)
 
   if(nrow(test1) > 0){
     test2 <-
@@ -192,6 +202,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   test <-
     test %>%
     group_by(.data$row_duplicate) %>%
+    distinct() %>%
     summarise(
       row_number = paste0(.data$`index`, collapse = " ; ")) %>%
     mutate(condition = "Duplicated observations") %>%
@@ -307,7 +318,7 @@ get_all_na_rows <- function(tbl, id_col = NULL){
   `{fabR::test}` <-
     `{fabR::test}` %>%
     tibble %>%
-    mutate(is_na = ncol(`{fabR::test}`) - .data$`{fabR::is_na}`) %>%
+    mutate(`{fabR::is_na}` = ncol(`{fabR::test}`) - .data$`{fabR::is_na}`) %>%
     bind_cols(tbl[1]) %>%
     dplyr::filter(.data$`{fabR::is_na}` == 1) %>%
     select(row_number = last_col()) %>%
