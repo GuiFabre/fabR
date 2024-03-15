@@ -3,10 +3,26 @@
 
 ## Bug fixes and improvements
 
+- The function `get_all_na_rows()` had a bug when a column was named
+  “test”, that has been fixed.
+  <https://github.com/GuiFabre/fabR/issues/13>
+
+- The function `get_duplicated_rows()` had a bug when a tibble had only
+  one column, that has been fixed.
+  <https://github.com/GuiFabre/fabR/issues/14>
+
+- The date functions `as_any_date()`, `as_any_date()`, `as_any_date()`,
+  have a default format setting which is yyyy-mm-dd. Also if there is
+  ambiguity, but 100 % match, the first format will be used as the
+  format for the whole column.
+  <https://github.com/GuiFabre/fabR/issues/12>
+
 - The function `read_any_csv()` can handle 3 types of CSV (coma
   separator, semi column separator and a mix of columns containing
   both), which works better. The function also handles (a priori) the
   latin1 encoding Still experimental.
+  <https://github.com/GuiFabre/fabR/issues/10>
+  <https://github.com/GuiFabre/fabR/issues/9>
 
 ## deprecated functions
 
