@@ -178,8 +178,6 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     add_count() %>%
     dplyr::filter(.data$`n` > 1)
 
-  print(test1)
-
   if(nrow(test1) > 0){
     test2 <-
       test %>%
@@ -208,7 +206,6 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     mutate(condition = "Duplicated observations") %>%
     ungroup() %>% select("condition", "row_number")
 
-  print(test)
   return(test)
 }
 
