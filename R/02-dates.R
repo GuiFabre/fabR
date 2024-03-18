@@ -133,7 +133,7 @@ guess_date_format <- function(tbl, col = NULL){
         test_all <- test_all %>% mutate(ydm = ydm(.data$var, quiet = TRUE))
 
       if(str_detect(toString(test_sample$`Date format`),"dmy"))
-        test_all <- test_all %>% mutate(ymd = ymd(.data$var, quiet = TRUE))
+        test_all <- test_all %>% mutate(dmy = dmy(.data$var, quiet = TRUE))
 
       if(str_detect(toString(test_sample$`Date format`),"myd"))
         test_all <- test_all %>% mutate(myd = myd(.data$var, quiet = TRUE))
