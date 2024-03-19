@@ -117,11 +117,11 @@ guess_date_format <- function(tbl, col = NULL){
       dplyr::filter(.data$`nb_values` == max(.data$`nb_values`))
 
     test_all <- column %>%
-      mutate(ymd = NA_Date_,
-             ydm = NA_Date_,
-             dmy = NA_Date_,
-             myd = NA_Date_,
-             mdy = NA_Date_,
+      mutate(ymd = NA_Date_ ,
+             ydm = NA_Date_ ,
+             dmy = NA_Date_ ,
+             myd = NA_Date_ ,
+             mdy = NA_Date_ ,
              dym = NA_Date_)
 
     if(sum(test_sample$nb_values) != 0){
