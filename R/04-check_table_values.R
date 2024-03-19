@@ -301,7 +301,7 @@ get_all_na_cols <- function(tbl){
 get_all_na_rows <- function(tbl, id_col = NULL){
 
   `{fabR::test}` <- tibble(condition = as.character(), row_number = as.character())
-  if(tbl %>% nrow() == 0) return(`{test}`)
+  if(tbl %>% nrow() == 0) return(`{fabR::test}`)
 
   if(is.null(id_col)) {
     tbl <- tbl %>% ungroup %>% add_index("{fabR::index}",.force = TRUE)

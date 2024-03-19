@@ -114,7 +114,7 @@ guess_date_format <- function(tbl, col = NULL){
         cols = everything(),
         names_to = "Date format",
         values_to = "nb_values") %>%
-      dplyr::filter(nb_values == max(nb_values))
+      dplyr::filter(.data$`nb_values` == max(.data$`nb_values`))
 
     test_all <- column %>%
       mutate(ymd = NA_Date_,
