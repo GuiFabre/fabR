@@ -34,8 +34,10 @@ get_duplicated_cols <- function(tbl){
 
   test <- tibble(condition = as.character(), col_name = as.character())
   if(tbl %>% nrow() == 0) return(test)
+  if(ncol(tbl %>% remove_empty("cols"))) return(test)
 
   sample_num <- ifelse(nrow(tbl) > 500,500,nrow(test))
+
 
   test1 <-
     bind_rows(
@@ -46,7 +48,7 @@ get_duplicated_cols <- function(tbl){
     mutate(across(everything(), ~ digest(.,algo = "md5"))) %>%
     mutate(across(everything(), ~ str_sub(., 1, 5))) %>%
     ungroup() %>%
-    summarise_all(~ paste0(.,collapse = "")) %>%
+    summarise_all(~ paste0(.,collapse = ""))
     pivot_longer(
       everything(),
       names_to = "condition",
