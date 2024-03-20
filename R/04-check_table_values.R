@@ -165,7 +165,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   sample_col <- 1:ifelse(ncol(test) > 20,20,ncol(test))
 
   if(length(sample_col) == 20)
-    sample_col <- sample(seq_along(1:ncol(test)), sample_col, replace = TRUE)
+    sample_col <- sample(1:ncol(test), max(sample_col), replace = TRUE)
 
   test1 <-
     test %>%
