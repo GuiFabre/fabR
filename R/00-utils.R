@@ -568,6 +568,91 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 
 }
 
+
+#' @title
+#' Create objects of type "integer".
+#'
+#' @description
+#' Create or test for objects of type "integer".
+#' This function is a wrapper of the function [as.integer()] and evaluates
+#' if the object to be coerced can be interpreted as a integer. Any object :
+#' NA, NA_integer, NA_Date_, (...),
+#' Boolean, such as 0, 0L, F, FALSE, false, FaLsE, (...),
+#' Any string "1", "+1", "-1", "1.0000"
+#' will be converted as NA or integer. Any other other will return an
+#' error.
+#'
+#' @param x Object to be coerced or tested. Can be a vector.
+#'
+#' @return
+#' An integer object of the same size.
+#'
+#' @seealso
+#' [as.logical()]
+#'
+#' @examples
+#' {
+#'
+#' library(dplyr)
+#'
+#' as_any_integer("1")
+#' as_any_integer(c("1.000","2.0","1","+12","-12"))
+#' try(as_any_integer('foo'))
+#'
+#' tibble(values = c("1.000","2.0","1","+12","-12")) %>%
+#'   mutate(bool_values = as_any_integer(values))
+#'
+#' }
+#'
+#' @import dplyr stringr
+#' @importFrom rlang .data
+#' @importFrom rlang is_integerish
+#'
+#' @export
+as_any_integer <- function(x){
+
+  err <- FALSE
+
+  if(class(x)[[1]] == "Date"){ err <- TRUE }else{
+    if(length(x)     == 0)                     return(as.integer(x))
+    if(all(is.na(x)))                          return(as.integer(x))
+    if(all(str_squish(x) %in% c("","NaN",NA))) return(as.integer(x))
+    if(is_integerish(x))                       return(x)
+  }
+
+  # check if the col is empty
+  if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_integer(x = x[[1]])) }
+
+  # check if the col is a vector
+  if(is.list(x)) stop("'list' object cannot be coerced to type 'integer'")
+
+
+  xtemp_bool <- silently_run(as_any_boolean(x))
+  if(is.logical(xtemp_bool)){
+    x <- as.integer(xtemp_bool)
+    return(x)
+  }
+
+  xtemp_init <- unique(str_squish(x))
+  xtemp_init <- x[!is.na(x)]
+
+  xtemp_num  <- silently_run(as.numeric(xtemp_init))
+  xtemp_int  <- silently_run(as.integer(xtemp_init))
+
+  if(sum(is.na(xtemp_num)) >= 1) err <- TRUE
+  if(sum(is.na(xtemp_int)) >= 1) err <- TRUE
+  if(!all(toString(as.character(xtemp_num)) ==
+          toString(as.character(xtemp_int)))) err <- TRUE
+
+  if(err == TRUE)
+    stop(
+      "x is not in a standard unambiguous format to be coerced into type 'integer'")
+
+  x <- as.integer(x)
+
+  return(x)
+}
+
 #' @title
 #' Create objects of type "logical".
 #'
