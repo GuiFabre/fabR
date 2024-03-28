@@ -27,28 +27,27 @@
 #'
 #' @import dplyr tidyr stringr
 #' @importFrom janitor remove_empty
-#' @importFrom digest digest
 #' @importFrom rlang .data
 #' @export
 get_duplicated_cols <- function(tbl){
 
   test <- tibble(condition = as.character(), col_name = as.character())
   if(tbl %>% nrow() == 0) return(test)
-  if(ncol(tbl %>% remove_empty("cols"))) return(test)
 
-  sample_num <- ifelse(nrow(tbl) > 500,500,nrow(test))
+  test <- tbl %>%
+    remove_empty("cols")
 
+  if(ncol(tbl) < 2) return(test)
 
-  test1 <-
-    bind_rows(
-      tbl %>% remove_empty("cols") %>%
-        mutate(across(everything(), as.character)) %>%
-        slice_sample(n = sample_num, replace = TRUE)) %>%
-    rowwise() %>%
-    mutate(across(everything(), ~ digest(.,algo = "md5"))) %>%
-    mutate(across(everything(), ~ str_sub(., 1, 5))) %>%
-    ungroup() %>%
-    summarise_all(~ paste0(.,collapse = ""))
+  # sample_row <- seq_len(ifelse(nrow(test) > 30000,30000,nrow(test)))
+  #
+  # if(length(sample_row) == 30000)
+  #   sample_row <- sample(seq_len(nrow(test)), max(sample_row), replace = FALSE)
+
+  test <-
+    test %>%
+    mutate(across(everything(), as.character)) %>%
+    reframe(across(everything(), ~ paste0(.,collapse = ""))) %>%
     pivot_longer(
       everything(),
       names_to = "condition",
@@ -56,30 +55,6 @@ get_duplicated_cols <- function(tbl){
     group_by(.data$col_1) %>%
     add_count() %>%
     dplyr::filter(n > 1)
-
-  if(nrow(test1) > 0){
-
-    test2 <-
-      bind_rows(
-        tbl %>%
-          select(all_of(test1$condition)) %>%
-          mutate(across(everything(), as.character))) %>%
-      rowwise() %>%
-      mutate(across(everything(), ~ digest(.,algo = "md5"))) %>%
-      mutate(across(everything(), ~ str_sub(., 1, 5))) %>%
-      ungroup() %>%
-      summarise_all(~ paste0(.,collapse = "")) %>%
-      pivot_longer(
-        everything(),
-        names_to = "condition",
-        values_to = "col_1") %>%
-      group_by(.data$col_1) %>%
-      add_count() %>%
-      dplyr::filter(n > 1)
-
-    test <- test2
-
-  }else{ test <- test1 }
 
   test <-
     test %>%
@@ -138,8 +113,7 @@ get_duplicated_cols <- function(tbl){
 #' }
 #'
 #' @import dplyr stringr tidyr
-#' @importFrom janitor remove_empty
-#' @importFrom digest digest
+#' @importFrom janitor
 #' @importFrom rlang .data
 #' @export
 get_duplicated_rows <- function(tbl, id_col = NULL){
@@ -147,7 +121,9 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
   test <- tibble(condition = as.character(), row_number = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
-  test <- tbl %>% remove_empty("cols")
+  test <- tbl %>%
+    remove_empty("cols") %>%
+    remove_constant()
 
   if(is.null(id_col)) {
     tbl <-   tbl %>% ungroup %>% add_index("fabR::index",.force = TRUE)
@@ -164,39 +140,19 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test <-  tbl
     id_col <- "fabR::col_id"}
 
-  sample_col <- 1:ifelse(ncol(test) > 20,20,ncol(test))
+  # sample_col <- seq_len(ifelse(ncol(test) > 100,100,ncol(test)))
+  #
+  # if(length(sample_col) == 100)
+  #   sample_col <- sample(seq_len(ncol(test)), max(sample_col), replace = FALSE)
 
-  if(length(sample_col) == 20)
-    sample_col <- sample(1:ncol(test), max(sample_col), replace = TRUE)
-
-  test1 <-
+  test <-
     test %>%
-    select(sample_col) %>%
-    rowwise() %>%
-    mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
-    mutate(across(-1, ~ str_sub(., 1, 5))) %>%
-    unite(-1, col = "fabR::row_duplicate", sep = "") %>%
+    # select(all_of(id_col),all_of(sample_col)) %>%
+    mutate(across(-any_of(id_col), ~ as.character(.))) %>%
+    unite(-any_of(id_col), col = "fabR::row_duplicate", sep = "") %>%
     group_by(.data$`fabR::row_duplicate`) %>%
     add_count() %>%
     dplyr::filter(.data$`n` > 1)
-
-  if(nrow(test1) > 0){
-    test2 <-
-      test %>%
-      dplyr::filter(if_any(.cols = 1, ~ . %in% c(unique(test1[[1]])))) %>%
-      # select(-1) %>%
-      rowwise() %>%
-      mutate(across(-1, ~ digest(.,algo = "md5"))) %>%
-      mutate(across(-1, ~ str_sub(., 1, 5))) %>%
-      unite(-1, col = "fabR::row_duplicate", sep = "") %>%
-      # select(2, 1) %>%
-      group_by(.data$`fabR::row_duplicate`) %>%
-      add_count() %>%
-      dplyr::filter(n > 1)
-
-    test <- test2
-
-  }else{ test <- test1 }
 
   names(test)[1] <- 'index'
   test <-
