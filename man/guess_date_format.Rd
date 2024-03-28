@@ -78,7 +78,8 @@ guess_date_format(time)
 }
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
-\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:ymd]{lubridate::myd()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::dym()}},
+\code{\link[lubridate:ymd]{lubridate::my()}} ,\code{\link[lubridate:ymd]{lubridate::ym()}},
 \code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=which_any_date]{which_any_date()}},\code{\link[=as_any_date]{as_any_date()}}
 }

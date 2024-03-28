@@ -6,14 +6,14 @@
 \usage{
 as_any_date(
   x = as.character(),
-  format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "as_date")
+  format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "my", "ym", "as_date")
 )
 }
 \arguments{
 \item{x}{object to be coerced.}
 
 \item{format}{A character identifying the format to apply to the object.
-That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
+That format can be 'ymd','ydm','dym','dmy','mdy','myd','my','ym'.}
 }
 \value{
 A R Object of class 'Date'.
@@ -66,7 +66,8 @@ time \%>\% mutate(new_time = as_any_date(time))
 }
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
-\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:ymd]{lubridate::myd()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::dym()}},
+\code{\link[lubridate:ymd]{lubridate::my()}} ,\code{\link[lubridate:ymd]{lubridate::ym()}},
 \code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=which_any_date]{which_any_date()}}
 }

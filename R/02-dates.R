@@ -22,7 +22,8 @@
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [which_any_date()],[as_any_date()]
 #'
@@ -107,7 +108,9 @@ guess_date_format <- function(tbl, col = NULL){
         dmy = dmy(.data$var, quiet = TRUE),
         myd = myd(.data$var, quiet = TRUE),
         mdy = mdy(.data$var, quiet = TRUE),
-        dym = dym(.data$var, quiet = TRUE)) %>%
+        dym = dym(.data$var, quiet = TRUE),
+        my  =  my(.data$var, quiet = TRUE),
+        ym  =  ym(.data$var, quiet = TRUE)) %>%
       ungroup %>%
       summarise(across(-c("var"), ~ sum(!is.na(.)))) %>%
       pivot_longer(
@@ -122,27 +125,35 @@ guess_date_format <- function(tbl, col = NULL){
              dmy = NA_Date_ ,
              myd = NA_Date_ ,
              mdy = NA_Date_ ,
-             dym = NA_Date_)
+             dym = NA_Date_,
+             my = NA_Date_ ,
+             ym = NA_Date_)
 
     if(sum(test_sample$nb_values) != 0){
 
-      if(str_detect(toString(test_sample$`Date format`),"ymd"))
+      if(sum(test_sample$`Date format` %in% "ymd") == 1)
         test_all <- test_all %>% mutate(ymd = ymd(.data$var, quiet = TRUE))
 
-      if(str_detect(toString(test_sample$`Date format`),"ydm"))
+      if(sum(test_sample$`Date format` %in% "ydm") == 1)
         test_all <- test_all %>% mutate(ydm = ydm(.data$var, quiet = TRUE))
 
-      if(str_detect(toString(test_sample$`Date format`),"dmy"))
+      if(sum(test_sample$`Date format` %in% "dmy") == 1)
         test_all <- test_all %>% mutate(dmy = dmy(.data$var, quiet = TRUE))
 
-      if(str_detect(toString(test_sample$`Date format`),"myd"))
+      if(sum(test_sample$`Date format` %in% "myd") == 1)
         test_all <- test_all %>% mutate(myd = myd(.data$var, quiet = TRUE))
 
-      if(str_detect(toString(test_sample$`Date format`),"mdy"))
+      if(sum(test_sample$`Date format` %in% "mdy") == 1)
         test_all <- test_all %>% mutate(mdy = mdy(.data$var, quiet = TRUE))
 
-      if(str_detect(toString(test_sample$`Date format`),"dym"))
+      if(sum(test_sample$`Date format` %in% "dym") == 1)
         test_all <- test_all %>% mutate(dym = dym(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "my") == 1)
+        test_all <- test_all %>% mutate(my = my(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "ym") == 1)
+        test_all <- test_all %>% mutate(ym = ym(.data$var, quiet = TRUE))
 
     }
 
@@ -178,10 +189,15 @@ guess_date_format <- function(tbl, col = NULL){
       ungroup() %>%
       arrange(-.data$nb_values) %>%
       slice(1) %>%
+
       mutate(
-        `Date format` = ifelse(
-          .data$`% values formated` == 100,
-          str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
+
+        `Date match` = ifelse(str_detect(`Date format`,","),
+          "Ambiguous match",`Date match`)
+
+        # `Date format` = ifelse(
+        #   .data$`% values formated` == 100 & ,
+        #   str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
       ) %>%
       select(-"nb_values")
 
@@ -212,8 +228,9 @@ guess_date_format <- function(tbl, col = NULL){
 #' @param x object to be coerced. Can be a character string or a vector.
 #' @param format A character identifying the format to apply to the object to
 #' test.
-#' That format can be 'ymd','ydm','dmy','myd','mdy','dym' or 'as_date' in that
-#' specific order ('ymd" will be chose as a default format, then 'ymd', etc.).
+#' That format can be 'ymd','ydm','dmy','myd','mdy','dym', 'ym', 'my' or
+#' 'as_date' in that specific order ('ymd" will be chose as a default format,
+#' then 'ymd', etc.).
 #'
 #' @return
 #' A character string of the possible date formats given a parameter to be
@@ -221,7 +238,8 @@ guess_date_format <- function(tbl, col = NULL){
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [guess_date_format()],[as_any_date()]
 #'
@@ -247,7 +265,7 @@ guess_date_format <- function(tbl, col = NULL){
 #' @importFrom rlang .data
 #' @export
 which_any_date <- function(
-    x,format = c("ymd","ydm","dmy","myd","mdy","dym","as_date")){
+    x,format = c("ymd","ydm","dmy","myd","mdy","dym","my", "ym","as_date")){
 
   test <- c()
   x_origin <- x
@@ -268,6 +286,10 @@ which_any_date <- function(
           if("myd" %in% format & !is.na(myd(x[i], quiet = TRUE))) "myd",
           if("mdy" %in% format & !is.na(mdy(x[i], quiet = TRUE))) "mdy",
           if("dym" %in% format & !is.na(dym(x[i], quiet = TRUE))) "dym",
+
+          if("my" %in% format & !is.na(my(x[i], quiet = TRUE))) "my",
+          if("ym" %in% format & !is.na(ym(x[i], quiet = TRUE))) "ym",
+
           if("as_date" %in% format & !is.na(suppressWarnings(as_date(x[i]))))
             "as_date") %>%
         toString }}
@@ -277,6 +299,7 @@ which_any_date <- function(
     na_if("") %>%
     str_remove(pattern = ", as_date")
 
+  test
 
   test <-
     full_join(tibble(x = x_origin),tibble(test, x),by = 'x') %>%
@@ -307,11 +330,12 @@ which_any_date <- function(
 #'
 #' @param x object to be coerced.
 #' @param format A character identifying the format to apply to the object.
-#' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
+#' That format can be 'ymd','ydm','dym','dmy','mdy','myd','my','ym'.
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [guess_date_format()],[which_any_date()]
 #'
@@ -353,7 +377,7 @@ which_any_date <- function(
 #' @export
 as_any_date <- function(
     x = as.character(),
-    format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+    format = c("dmy","dym","ymd","ydm","mdy","myd","my", "ym", "as_date")){
 
   date_guess <- guess_date_format(tibble(x))
 
