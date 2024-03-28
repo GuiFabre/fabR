@@ -112,8 +112,7 @@ get_duplicated_cols <- function(tbl){
 #'
 #' }
 #'
-#' @import dplyr stringr tidyr
-#' @importFrom janitor
+#' @import dplyr stringr tidyr janitor
 #' @importFrom rlang .data
 #' @export
 get_duplicated_rows <- function(tbl, id_col = NULL){

@@ -28,7 +28,6 @@ Imports: dplyr (>= 1.1.0),
     writexl,
     haven,
     lubridate,
-    digest,
     bookdown,
     xfun,
     lifecycle
