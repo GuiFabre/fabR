@@ -192,8 +192,8 @@ guess_date_format <- function(tbl, col = NULL){
 
       mutate(
 
-        `Date match` = ifelse(str_detect(`Date format`,","),
-          "Ambiguous match",`Date match`)
+        `Date match` = ifelse(str_detect(.data$`Date format`,","),
+          "Ambiguous match",.data$`Date match`)
 
         # `Date format` = ifelse(
         #   .data$`% values formated` == 100 & ,
