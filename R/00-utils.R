@@ -299,18 +299,19 @@ write_excel_allsheets <- function(list, filename){
 #' @export
 read_csv_any_formats <- function(filename){
 
-  csv_0 <- try(read_csv2(filename),silent = TRUE)
+  csv_0 <- silently_run(read_csv2(filename))
 
   if(class(csv_0)[1] != "try-error"){
 
-    csv   <- read_csv2(filename,guess_max = nrow(csv_0))
+    csv   <- silently_run(read_csv2(filename,guess_max = nrow(csv_0)))
     if(ncol(csv) == 1)
       csv <- read_csv(filename,guess_max = nrow(csv_0))
 
   }else{
 
-    csv_0 <- read_csv2(filename,locale = locale(encoding ="latin1"))
-    csv   <- read_csv2(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0))
+    # csv_0 <- silently_run(read_csv2(filename,locale = locale(encoding ="latin1")))
+    csv   <- silently_run(read_csv2(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0)))
+
     if(ncol(csv) == 1)
       csv <- read_csv(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0))
   }
@@ -566,210 +567,6 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 
   return(name_list[c(seq_len(length(list_elem)))])
 
-}
-
-
-#' @title
-#' Create objects of type "integer".
-#'
-#' @description
-#' Create or test for objects of type "integer".
-#' This function is a wrapper of the function [as.integer()] and evaluates
-#' if the object to be coerced can be interpreted as a integer. Any object :
-#' NA, NA_integer, NA_Date_, (...),
-#' Boolean, such as 0, 0L, F, FALSE, false, FaLsE, (...),
-#' Any string "1", "+1", "-1", "1.0000"
-#' will be converted as NA or integer. Any other other will return an
-#' error.
-#'
-#' @param x Object to be coerced or tested. Can be a vector.
-#'
-#' @return
-#' An integer object of the same size.
-#'
-#' @seealso
-#' [as.logical()]
-#'
-#' @examples
-#' {
-#'
-#' library(dplyr)
-#'
-#' as_any_integer("1")
-#' as_any_integer(c("1.000","2.0","1","+12","-12"))
-#' try(as_any_integer('foo'))
-#'
-#' tibble(values = c("1.000","2.0","1","+12","-12")) %>%
-#'   mutate(bool_values = as_any_integer(values))
-#'
-#' }
-#'
-#' @import dplyr stringr
-#' @importFrom rlang .data
-#' @importFrom rlang is_integerish
-#'
-#' @export
-as_any_integer <- function(x){
-
-  err <- FALSE
-
-  if(class(x)[[1]] == "Date"){ err <- TRUE }else{
-    if(length(x)     == 0)                     return(as.integer(x))
-    if(all(is.na(x)))                          return(as.integer(x))
-    if(all(str_squish(x) %in% c("","NaN",NA))) return(as.integer(x))
-    if(is_integerish(x))                       return(x)
-  }
-
-  # check if the col is empty
-  if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_integer(x = x[[1]])) }
-
-  # check if the col is a vector
-  if(is.list(x)) stop("'list' object cannot be coerced to type 'integer'")
-
-
-  xtemp_bool <- silently_run(as_any_boolean(x))
-  if(is.logical(xtemp_bool)){
-    x <- as.integer(xtemp_bool)
-    return(x)
-  }
-
-  xtemp_init <- unique(str_squish(x))
-  xtemp_init <- x[!is.na(x)]
-
-  xtemp_num  <- silently_run(as.numeric(xtemp_init))
-  xtemp_int  <- silently_run(as.integer(xtemp_init))
-
-  if(sum(is.na(xtemp_num)) >= 1) err <- TRUE
-  if(sum(is.na(xtemp_int)) >= 1) err <- TRUE
-  if(!all(toString(as.character(xtemp_num)) ==
-          toString(as.character(xtemp_int)))) err <- TRUE
-
-  if(err == TRUE)
-    stop(
-      "x is not in a standard unambiguous format to be coerced into type 'integer'")
-
-  x <- as.integer(x)
-
-  return(x)
-}
-
-#' @title
-#' Create objects of type "logical".
-#'
-#' @description
-#' Create or test for objects of type "logical", and the basic logical
-#' constants.
-#' This function is a wrapper of the function [as.logical()] and evaluates
-#' if the object to be coerced can be interpreted as a boolean. Any object :
-#' NA, NA_integer, NA_Date_, (...),
-#' 0, 0L, F, FALSE, false, FaLsE, (...),
-#' 1, 1L,T,  TRUE,  true, TrUe, (...),
-#' will be converted as NA, FALSE and TRUE. Any other other will return an
-#' error.
-#'
-#' @param x Object to be coerced or tested. Can be a vector.
-#'
-#' @return
-#' An logical object of the same size.
-#'
-#' @seealso
-#' [as.logical()]
-#'
-#' @examples
-#' {
-#'
-#' library(dplyr)
-#'
-#' as_any_boolean("TRUE")
-#' as_any_boolean(c("1"))
-#' as_any_boolean(0L)
-#' try(as_any_boolean(c('foo')))
-#' as_any_boolean(c(0,1L,0,TRUE,"t","F","FALSE"))
-#' tibble(values = c(0,1L,0,TRUE,"t","F","FALSE")) %>%
-#'   mutate(bool_values = as_any_boolean(values))
-#'
-#' }
-#'
-#' @import dplyr stringr
-#' @importFrom rlang .data
-#'
-#' @export
-as_any_boolean <- function(x){
-
-  if(length(x)     == 0)         return(as.logical(x))
-  if(all(is.na(x)))              return(as.logical(x))
-  if(typeof(x)     == "logical") return(x)
-
-  # check if the col is empty
-  if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_boolean(x = x[[1]])) }
-
-  # check if the col is a vector
-  if(is.list(x)) stop("'list' object cannot be coerced to type 'logical'")
-
-  x <- str_squish(x)
-
-  xtemp <- tibble(x = unique(x), xtemp = unique(x))
-  for(i in seq_len(nrow(xtemp))){
-    # stop()}
-
-    if(is.na(xtemp$xtemp[i]))
-      xtemp$xtemp[i] <- NA_character_ else
-    if(toString(tolower(xtemp$xtemp[i])) %in% c("1","t","true"))
-      xtemp$xtemp[i] <- "TRUE" else
-    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "1")
-      xtemp$xtemp[i] <- "TRUE" else
-    if(toString(tolower(xtemp$xtemp[i])) %in% c("0", "f","false"))
-      xtemp$xtemp[i] <- "FALSE" else
-    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "0")
-      xtemp$xtemp[i] <- "FALSE" else xtemp$xtemp[i] <- "NaN"
-
-    if(toString(xtemp$xtemp[i]) == "NaN")
-      stop("x is not in a standard unambiguous format")
-  }
-
-  xtemp <- tibble(x = x) %>% left_join(xtemp,by = 'x') %>% pull('xtemp')
-
-  x <- as.logical(xtemp)
-  return(x)
-}
-
-
-#' @title
-#' Create objects of type "symbol"
-#'
-#' @description
-#' Create or test for objects of type "symbol".
-#'
-#' @param x Object to be coerced or tested. Can be a vector, a character string,
-#' a symbol.
-#'
-#' @return
-#' Object of type "symbol".
-#'
-#' @examples
-#' {
-#'
-#' as_any_symbol(coucou)
-#' as_any_symbol("coucou")
-#'
-#' }
-#'
-#' @import dplyr stringr
-#' @importFrom rlang .data
-#' @export
-as_any_symbol <- function(x){
-
-  if(class(try(eval(x),silent = TRUE))[1] == "try-error"){
-    x <- substitute(x)
-  }else if(class(try(as.symbol(x),silent = TRUE))[1] == "try-error"){
-    x <- as.symbol(as.list(match.call(expand.dots = TRUE))[['x']])
-  }else{
-    x <- as.symbol(x)}
-
-  if(as.symbol(x) == 'x' & typeof(substitute(x)) == "symbol"){
-    x <- substitute(x)}
-
-  return(x)
 }
 
 #' @title
