@@ -309,7 +309,7 @@ read_csv_any_formats <- function(filename){
 
   }else{
 
-    # csv_0 <- silently_run(read_csv2(filename,locale = locale(encoding ="latin1")))
+    csv_0 <- silently_run(read_csv2(filename,locale = locale(encoding ="latin1")))
     csv   <- silently_run(read_csv2(filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0)))
 
     if(ncol(csv) == 1)
