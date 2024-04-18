@@ -39,11 +39,6 @@ get_duplicated_cols <- function(tbl){
 
   if(ncol(tbl) < 2) return(test)
 
-  # sample_row <- seq_len(ifelse(nrow(test) > 30000,30000,nrow(test)))
-  #
-  # if(length(sample_row) == 30000)
-  #   sample_row <- sample(seq_len(nrow(test)), max(sample_row), replace = FALSE)
-
   test <-
     test %>%
     mutate(across(everything(), as.character)) %>%
@@ -138,11 +133,6 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     tbl <-   tbl %>% add_index("fabR::col_id",.force = TRUE)
     test <-  tbl
     id_col <- "fabR::col_id"}
-
-  # sample_col <- seq_len(ifelse(ncol(test) > 100,100,ncol(test)))
-  #
-  # if(length(sample_col) == 100)
-  #   sample_col <- sample(seq_len(ncol(test)), max(sample_col), replace = FALSE)
 
   test <-
     test %>%
@@ -257,7 +247,8 @@ get_all_na_cols <- function(tbl){
 #' @export
 get_all_na_rows <- function(tbl, id_col = NULL){
 
-  `{fabR::test}` <- tibble(condition = as.character(), row_number = as.character())
+  `{fabR::test}` <-
+    tibble(condition = as.character(), row_number = as.character())
   if(tbl %>% nrow() == 0) return(`{fabR::test}`)
 
   if(is.null(id_col)) {

@@ -38,7 +38,7 @@ template_visual_report <- function(...) {
 fabR_help <- function(...) {
 
   deprecate_warn(
-    "2.0.2", "fabR_help()", "fabR_website()")
+    "2.1.0", "fabR_help()", "fabR_website()")
 
   # Unquote-splice to avoid argument matching
 

@@ -184,8 +184,8 @@ as_any_integer <- function(x){
           toString(as.character(xtemp_int)))) err <- TRUE
 
   if(err == TRUE)
-    stop(
-      "x is not in a standard unambiguous format to be coerced into type 'integer'")
+    stop(call. = FALSE,
+"x is not in a standard unambiguous format to be coerced into type 'integer'")
 
   x <- as.integer(x)
 

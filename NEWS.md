@@ -1,7 +1,14 @@
 
-# fabR 2.0.2 (release : 2024-04-01)
+# fabR 2.1.0 (release : 2024-04-18)
 
 ## Bug fixes and improvements
+
+- `as_any_date()` handles `lubridate::ym` and `lubridate::my`. Still,
+  some ambiguous formats are not detected (“19 July” returns 2019-07-01)
+  <https://github.com/GuiFabre/fabR/issues/15>
+
+- enhance performance of `get_duplicated_cols()` and
+  `get_duplicated_rows()`.
 
 - The function `get_all_na_rows()` had a bug when a column was named
   “test”, that has been fixed.
@@ -24,6 +31,11 @@
   <https://github.com/GuiFabre/fabR/issues/10>
   <https://github.com/GuiFabre/fabR/issues/9>
 
+## New functions
+
+- `as_any_integer()` which allows to coerce a vector compatible to
+  integer. Text, boolean and numerics which are homogeneous to integers.
+
 ## deprecated functions
 
 To avoid confusion with help(function), the function `fabR_help()` has
@@ -32,6 +44,7 @@ been renamed `fabR_website()`.
 ## Dependency changes
 
 - set a minimum dplyr dependence to avoid bugs
+- digest package is no longer needed in the package
 
 # fabR 2.0.1
 
