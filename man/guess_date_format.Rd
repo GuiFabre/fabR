@@ -22,7 +22,7 @@ format for the whole column. The best matching format is tested across seven
 different formats provided by the lubridate library. Along with the format,
 the percentage of matching is given in the output tibble. The information of
 the best matching format can be used to mutate a column using
-\code{\link[=as_any_date]{as_any_date()}}.
+\code{\link[=as_any_date]{as_any_date()}}. The default format is yyyy-mm-dd.
 }
 \details{
 Contrary to lubridate library or \code{\link[=as.Date]{as.Date()}}, the function evaluates
@@ -50,20 +50,13 @@ time <-
 guess_date_format(time)
 
 ##### Example 2 -------------------------------------------------------------
-# Ambiguous dates --------------------------------------------------------
+# Ambiguous dates ----------------------------------------------------
 time <-
-  tibble(time = c(
-  "2023-12-12",
-  "2009-09-03",
-  "1809-01-01"))
-guess_date_format(time)
-
-time <-
-  tibble(time = c(
-  "1983-19-07",
-  "1983-10-13",
-  "2009-09-03",
-  "1509-11-30"))
+ tibble(time = c(
+ "1983-19-07",
+ "1983-10-13",
+ "2009-09-03",
+ "1509-11-30"))
 guess_date_format(time)
 
 
@@ -75,8 +68,8 @@ time <-
   "200-01-14",
   "201-09-29",
   "202-12-12",
-  "200-09-03",
-  "150-11-30",
+  "2000-09-03",
+  "150-11-3d0",
   "180-01-01"))
 guess_date_format(time)
 
@@ -85,7 +78,8 @@ guess_date_format(time)
 }
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
-\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:ymd]{lubridate::myd()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::dym()}},
+\code{\link[lubridate:ymd]{lubridate::my()}} ,\code{\link[lubridate:ymd]{lubridate::ym()}},
 \code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=which_any_date]{which_any_date()}},\code{\link[=as_any_date]{as_any_date()}}
 }

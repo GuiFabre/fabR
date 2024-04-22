@@ -31,5 +31,5 @@ github web site:
 
 ``` r
 library(fabR)
-fabR_help()
+fabR_website()
 ```

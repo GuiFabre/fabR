@@ -13,6 +13,7 @@ read_csv_any_formats(filename)
 A tibble corresponding to the csv read.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 The csv file is read twice to detect the number of lines to use in
 attributing the column type ('guess_max' parameter of read_csv). This avoids
 common errors when reading csv files.
@@ -26,5 +27,5 @@ try(read_csv_any_formats(filename = tempfile()),silent = TRUE)
 
 }
 \seealso{
-\code{\link[readr:read_delim]{readr::read_csv()}}, \code{\link[readr:read_delim]{readr::read_delim()}}
+\code{\link[readr:read_delim]{readr::read_csv()}}, \code{\link[readr:read_delim]{readr::read_csv2()}}
 }

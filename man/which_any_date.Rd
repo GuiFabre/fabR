@@ -6,7 +6,7 @@
 \usage{
 which_any_date(
   x,
-  format = c("dmy", "dym", "ymd", "ydm", "mdy", "myd", "as_date")
+  format = c("ymd", "ydm", "dmy", "myd", "mdy", "dym", "my", "ym", "as_date")
 )
 }
 \arguments{
@@ -14,7 +14,9 @@ which_any_date(
 
 \item{format}{A character identifying the format to apply to the object to
 test.
-That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.}
+That format can be 'ymd','ydm','dmy','myd','mdy','dym', 'ym', 'my' or
+'as_date' in that specific order ('ymd" will be chose as a default format,
+then 'ymd', etc.).}
 }
 \value{
 A character string of the possible date formats given a parameter to be
@@ -42,11 +44,12 @@ time <- c(
   "1983-07-19",
   "31 jan 2017",
   "1988/12/17",
-  "31-02-2005",
+  "31-02-05",
   "02-02-02",
   "2017 october the 2nd",
   "02-07-2012",
-  "19-19-1923")
+  "19-07-83",
+  "19-19-19")
 
 which_any_date(time)
 
@@ -55,7 +58,8 @@ which_any_date(time)
 }
 \seealso{
 \code{\link[lubridate:ymd]{lubridate::ymd()}},\code{\link[lubridate:ymd]{lubridate::ydm()}},\code{\link[lubridate:ymd]{lubridate::dmy()}},
-\code{\link[lubridate:ymd]{lubridate::dym()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::myd()}},
+\code{\link[lubridate:ymd]{lubridate::myd()}},\code{\link[lubridate:ymd]{lubridate::mdy()}},\code{\link[lubridate:ymd]{lubridate::dym()}},
+\code{\link[lubridate:ymd]{lubridate::my()}} ,\code{\link[lubridate:ymd]{lubridate::ym()}},
 \code{\link[lubridate:as_date]{lubridate::as_date()}},\code{\link[=as.Date]{as.Date()}},
 \code{\link[=guess_date_format]{guess_date_format()}},\code{\link[=as_any_date]{as_any_date()}}
 }

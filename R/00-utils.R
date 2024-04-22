@@ -1,26 +1,25 @@
 #' @title
-#' Call the help center for full documentation
+#' Call to online documentation
 #'
 #' @description
-#' This feature is a direct call of the documentation in the repository hosting
-#' the package. The user accesses the description of the latest version of the
-#' package, the vignettes, and the list of functions.
+#' Direct call to the online documentation for the package, which includes a
+#' description of the latest version of the package, vignettes, user guides,
+#' and a reference list of functions and help pages.
 #'
 #' @return
-#' Nothing to be returned. The function opens a web package.
+#' Nothing to be returned. The function opens a web page.
 #'
 #' @examples
 #' {
 #'
-#' # call the help center!
-#' fabR_help()
+#' fabR_website()
 #'
 #' }
 #'
 #' @importFrom utils browseURL
 #'
 #' @export
-fabR_help <- function(){
+fabR_website <- function(){
 
   browseURL("https://guifabre.github.io/fabR-documentation/")
   return(invisible(NULL))
@@ -276,6 +275,7 @@ write_excel_allsheets <- function(list, filename){
 #' Read a csv file using read_csv and avoid errors
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
 #' The csv file is read twice to detect the number of lines to use in
 #' attributing the column type ('guess_max' parameter of read_csv). This avoids
 #' common errors when reading csv files.
@@ -285,7 +285,7 @@ write_excel_allsheets <- function(list, filename){
 #' @return
 #' A tibble corresponding to the csv read.
 #'
-#' @seealso [readr::read_csv()], [readr::read_delim()]
+#' @seealso [readr::read_csv()], [readr::read_csv2()]
 #'
 #' @examples
 #' {
@@ -294,13 +294,32 @@ write_excel_allsheets <- function(list, filename){
 #'
 #' }
 #'
-#' @import readr
+#' @import readr stringr tidyr
 #' @importFrom rlang .data
 #' @export
 read_csv_any_formats <- function(filename){
 
-  guess_max <-nrow(silently_run(read_csv(filename, progress = FALSE)))
-  csv <- read_delim(file = filename, guess_max = guess_max)
+  csv_0 <- silently_run(read_csv2(filename))
+
+  if(class(csv_0)[1] != "try-error"){
+
+    csv   <- silently_run(read_csv2(filename,guess_max = nrow(csv_0)))
+    if(ncol(csv) == 1)
+      csv <- read_csv(filename,guess_max = nrow(csv_0))
+
+  }else{
+
+    csv_0 <-
+      silently_run(read_csv2(
+        filename,locale = locale(encoding ="latin1")))
+    csv   <-
+      silently_run(read_csv2(
+        filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0)))
+
+    if(ncol(csv) == 1)
+      csv <- read_csv(
+        filename,locale = locale(encoding ="latin1"),guess_max = nrow(csv_0))
+  }
 
   return(csv)
 }
@@ -553,125 +572,6 @@ Please verify the names of your elements and reparse.\n", call. = FALSE)
 
   return(name_list[c(seq_len(length(list_elem)))])
 
-}
-
-#' @title
-#' Create objects of type "logical".
-#'
-#' @description
-#' Create or test for objects of type "logical", and the basic logical
-#' constants.
-#' This function is a wrapper of the function [as.logical()] and evaluates
-#' if the object to be coerced can be interpreted as a boolean. Any object :
-#' NA, NA_integer, NA_Date_, (...),
-#' 0, 0L, F, FALSE, false, FaLsE, (...),
-#' 1, 1L,T,  TRUE,  true, TrUe, (...),
-#' will be converted as NA, FALSE and TRUE. Any other other will return an
-#' error.
-#'
-#' @param x Object to be coerced or tested. Can be a vector.
-#'
-#' @return
-#' An logical object of the same size.
-#'
-#' @seealso
-#' [as.logical()]
-#'
-#' @examples
-#' {
-#'
-#' library(dplyr)
-#'
-#' as_any_boolean("TRUE")
-#' as_any_boolean(c("1"))
-#' as_any_boolean(0L)
-#' try(as_any_boolean(c('foo')))
-#' as_any_boolean(c(0,1L,0,TRUE,"t","F","FALSE"))
-#' tibble(values = c(0,1L,0,TRUE,"t","F","FALSE")) %>%
-#'   mutate(bool_values = as_any_boolean(values))
-#'
-#' }
-#'
-#' @import dplyr stringr
-#' @importFrom rlang .data
-#'
-#' @export
-as_any_boolean <- function(x){
-
-  if(length(x)     == 0)         return(as.logical(x))
-  if(all(is.na(x)))              return(as.logical(x))
-  if(typeof(x)     == "logical") return(x)
-
-  # check if the col is empty
-  if(is.list(x) & nrow(x) %>% sum <= 1){ return(as_any_boolean(x = x[[1]])) }
-
-  # check if the col is a vector
-  if(is.list(x)) stop("'list' object cannot be coerced to type 'logical'")
-
-  x <- str_squish(x)
-
-  xtemp <- tibble(x = unique(x), xtemp = unique(x))
-  for(i in seq_len(nrow(xtemp))){
-    # stop()}
-
-    if(is.na(xtemp$xtemp[i]))
-      xtemp$xtemp[i] <- NA_character_ else
-    if(toString(tolower(xtemp$xtemp[i])) %in% c("1","t","true"))
-      xtemp$xtemp[i] <- "TRUE" else
-    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "1")
-      xtemp$xtemp[i] <- "TRUE" else
-    if(toString(tolower(xtemp$xtemp[i])) %in% c("0", "f","false"))
-      xtemp$xtemp[i] <- "FALSE" else
-    if(silently_run(toString(as.numeric(xtemp$xtemp[i]))) == "0")
-      xtemp$xtemp[i] <- "FALSE" else xtemp$xtemp[i] <- "NaN"
-
-    if(toString(xtemp$xtemp[i]) == "NaN")
-      stop("x is not in a standard unambiguous format")
-  }
-
-  xtemp <- tibble(x = x) %>% left_join(xtemp,by = 'x') %>% pull('xtemp')
-
-  x <- as.logical(xtemp)
-  return(x)
-}
-
-
-#' @title
-#' Create objects of type "symbol"
-#'
-#' @description
-#' Create or test for objects of type "symbol".
-#'
-#' @param x Object to be coerced or tested. Can be a vector, a character string,
-#' a symbol.
-#'
-#' @return
-#' Object of type "symbol".
-#'
-#' @examples
-#' {
-#'
-#' as_any_symbol(coucou)
-#' as_any_symbol("coucou")
-#'
-#' }
-#'
-#' @import dplyr stringr
-#' @importFrom rlang .data
-#' @export
-as_any_symbol <- function(x){
-
-  if(class(try(eval(x),silent = TRUE))[1] == "try-error"){
-    x <- substitute(x)
-  }else if(class(try(as.symbol(x),silent = TRUE))[1] == "try-error"){
-    x <- as.symbol(as.list(match.call(expand.dots = TRUE))[['x']])
-  }else{
-    x <- as.symbol(x)}
-
-  if(as.symbol(x) == 'x' & typeof(substitute(x)) == "symbol"){
-    x <- substitute(x)}
-
-  return(x)
 }
 
 #' @title

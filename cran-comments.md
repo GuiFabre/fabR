@@ -2,6 +2,52 @@
 
 0 errors | 0 warnings | 0 note
 
+# submission fabR 2.1.0
+
+## Bug fixes and improvements
+
+* `as_any_date()` handles `lubridate::ym` and `lubridate::my`. Still,
+  some ambiguous formats are not detected (“19 July” returns 2019-07-01)
+  <https://github.com/GuiFabre/fabR/issues/15>
+
+* enhance performance of `get_duplicated_cols()` and
+  `get_duplicated_rows()`.
+
+* The function `get_all_na_rows()` had a bug when a column was named
+  “test”, that has been fixed.
+  <https://github.com/GuiFabre/fabR/issues/13>
+
+* The function `get_duplicated_rows()` had a bug when a tibble had only
+  one column, that has been fixed.
+  <https://github.com/GuiFabre/fabR/issues/14>
+
+* The date functions `as_any_date()`, `as_any_date()`, `as_any_date()`,
+  have a default format setting which is yyyy-mm-dd. Also if there is
+  ambiguity, but 100 % match, the first format will be used as the
+  format for the whole column.
+  <https://github.com/GuiFabre/fabR/issues/12>
+
+* The function `read_any_csv()` can handle 3 types of CSV (coma
+  separator, semi column separator and a mix of columns containing
+  both), which works better. The function also handles (a priori) the
+  latin1 encoding Still experimental.
+  <https://github.com/GuiFabre/fabR/issues/10>
+  <https://github.com/GuiFabre/fabR/issues/9>
+
+## New functions
+
+* `as_any_integer()` which allows to coerce a vector compatible to
+  integer. Text, boolean and numerics which are homogeneous to integers.
+
+## deprecated functions
+
+To avoid confusion with help(function), the function `fabR_help()` has
+been renamed `fabR_website()`.
+
+## Dependency changes
+
+* set a minimum dplyr dependence to avoid bugs
+- digest package is no longer needed in the package
 
 # submission : fabR 2.0.1
 

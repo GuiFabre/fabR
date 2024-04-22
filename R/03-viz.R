@@ -216,16 +216,17 @@ Please provide another name folder or add `overwrite = TRUE` as parameter.')
 }
 
 #' @title
-#' Open a bookdown site in a browser
+#' Open a a web-based bookdown folder in a browser
 #'
 #' @description
-#' Opens a previously generated HTML bookdown site This is a shortcut
-#' function to access 'index.html'.
+#' Opens a previously generated HTML bookdown site from files in the specified
+#' folder. This is a shortcut function to access 'index.html' in the specified
+#' folder.
 #'
 #' @seealso [bookdown_template()],[bookdown_open()]
 #'
-#' @param bookdown_path A character string specifying the path of the
-#' bookdown site to be opened.
+#' @param bookdown_path A character string identifying the folder path
+#' containing the files to open the bookdown site.
 #'
 #' @returns
 #' Nothing to be returned. The function opens a web page.
@@ -237,7 +238,6 @@ Please provide another name folder or add `overwrite = TRUE` as parameter.')
 #' bookdown_template(bookdown_path, overwrite = TRUE)
 #' bookdown_render(bookdown_path, overwrite = TRUE)
 #' bookdown_open(bookdown_path)
-#'
 #'
 #' }
 #'

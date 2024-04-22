@@ -40,7 +40,7 @@ To see all functions and their documentation, please go and visit the github web
 site:
 ```{r example}
 library(fabR)
-fabR_help()
+fabR_website()
 
 ```
 

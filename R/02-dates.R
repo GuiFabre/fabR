@@ -8,7 +8,7 @@
 #' different formats provided by the lubridate library. Along with the format,
 #' the percentage of matching is given in the output tibble. The information of
 #' the best matching format can be used to mutate a column using
-#' [as_any_date()].
+#' [as_any_date()]. The default format is yyyy-mm-dd.
 #'
 #' @details
 #' Contrary to lubridate library or [as.Date()], the function evaluates
@@ -22,7 +22,8 @@
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [which_any_date()],[as_any_date()]
 #'
@@ -49,20 +50,13 @@
 #' guess_date_format(time)
 #'
 #' ##### Example 2 -------------------------------------------------------------
-#' # Ambiguous dates --------------------------------------------------------
+#' # Ambiguous dates ----------------------------------------------------
 #' time <-
-#'   tibble(time = c(
-#'   "2023-12-12",
-#'   "2009-09-03",
-#'   "1809-01-01"))
-#' guess_date_format(time)
-#'
-#' time <-
-#'   tibble(time = c(
-#'   "1983-19-07",
-#'   "1983-10-13",
-#'   "2009-09-03",
-#'   "1509-11-30"))
+#'  tibble(time = c(
+#'  "1983-19-07",
+#'  "1983-10-13",
+#'  "2009-09-03",
+#'  "1509-11-30"))
 #' guess_date_format(time)
 #'
 #'
@@ -74,8 +68,8 @@
 #'   "200-01-14",
 #'   "201-09-29",
 #'   "202-12-12",
-#'   "200-09-03",
-#'   "150-11-30",
+#'   "2000-09-03",
+#'   "150-11-3d0",
 #'   "180-01-01"))
 #' guess_date_format(time)
 #'
@@ -97,57 +91,118 @@ guess_date_format <- function(tbl, col = NULL){
   for(i in tbl %>% names){
     # stop()}
 
-    test <-
-      bind_rows(
-        test,
-        tbl %>%
-          select(var = all_of(i)) %>%
-          dplyr::filter(!is.na(.data$var)) %>%
-          distinct() %>%
-          rowwise() %>%
-          mutate(
-            dmy = dmy(.data$var, quiet = TRUE),
-            dym = dym(.data$var, quiet = TRUE),
-            ymd = ymd(.data$var, quiet = TRUE),
-            ydm = ydm(.data$var, quiet = TRUE),
-            mdy = mdy(.data$var, quiet = TRUE),
-            myd = myd(.data$var, quiet = TRUE)) %>%
-          ungroup %>%
-          summarise(across(-.data$`var`, ~ sum(!is.na(.)))) %>%
-          pivot_longer(
-            cols = everything(),
-            names_to = "Date format",
-            values_to = "nb_values") %>%
-          mutate(
-            name_var = i,
-            `% values formated` =
-              round(100*(.data$nb_values / (
-                tbl %>% select(var = all_of(i)) %>%
-                  distinct %>% dplyr::filter(!is.na(.data$var)) %>% nrow)),2),
-            `% values formated` =
-              ifelse(is.na(.data$`% values formated`),
-                     0,.data$`% values formated`),
-            `Date match` = case_when(
-              .data$`% values formated` == 0   ~ "No match",
-              .data$`% values formated` == 100 ~ paste0("Exact match"),
-              TRUE                       ~ paste0("Ambiguous match")),
-          ) %>%
-          group_by(
-            .data$name_var,.data$`Date match`,.data$`% values formated`,
-            .data$nb_values) %>%
-          summarise(
-            "Date format" = paste0(.data$`Date format`,collapse = ", "),
-            .groups = 'keep') %>%
-          ungroup() %>%
-          arrange(-.data$nb_values) %>%
-          slice(1) %>%
-          mutate(
-            `Date match` = ifelse(
-              str_detect(.data$`Date format`,'\\,') &
-                .data$`% values formated` != 0,
-              "Ambiguous match",.data$`Date match`)) %>%
-          select(-"nb_values")
-    )}
+    column <-
+      tbl %>%
+      select(var = all_of(i)) %>%
+      dplyr::filter(!is.na(.data$var)) %>%
+      distinct()
+
+    test_sample <-
+      column %>%
+      sample_n(min(nrow(column), 100)) %>%
+      distinct() %>%
+      rowwise() %>%
+      mutate(
+        ymd = ymd(.data$var, quiet = TRUE),
+        ydm = ydm(.data$var, quiet = TRUE),
+        dmy = dmy(.data$var, quiet = TRUE),
+        myd = myd(.data$var, quiet = TRUE),
+        mdy = mdy(.data$var, quiet = TRUE),
+        dym = dym(.data$var, quiet = TRUE),
+        my  =  my(.data$var, quiet = TRUE),
+        ym  =  ym(.data$var, quiet = TRUE)) %>%
+      ungroup %>%
+      summarise(across(-c("var"), ~ sum(!is.na(.)))) %>%
+      pivot_longer(
+        cols = everything(),
+        names_to = "Date format",
+        values_to = "nb_values") %>%
+      dplyr::filter(.data$`nb_values` == max(.data$`nb_values`))
+
+    test_all <- column %>%
+      mutate(ymd = NA_Date_ ,
+             ydm = NA_Date_ ,
+             dmy = NA_Date_ ,
+             myd = NA_Date_ ,
+             mdy = NA_Date_ ,
+             dym = NA_Date_,
+             my = NA_Date_ ,
+             ym = NA_Date_)
+
+    if(sum(test_sample$nb_values) != 0){
+
+      if(sum(test_sample$`Date format` %in% "ymd") == 1)
+        test_all <- test_all %>% mutate(ymd = ymd(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "ydm") == 1)
+        test_all <- test_all %>% mutate(ydm = ydm(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "dmy") == 1)
+        test_all <- test_all %>% mutate(dmy = dmy(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "myd") == 1)
+        test_all <- test_all %>% mutate(myd = myd(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "mdy") == 1)
+        test_all <- test_all %>% mutate(mdy = mdy(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "dym") == 1)
+        test_all <- test_all %>% mutate(dym = dym(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "my") == 1)
+        test_all <- test_all %>% mutate(my = my(.data$var, quiet = TRUE))
+
+      if(sum(test_sample$`Date format` %in% "ym") == 1)
+        test_all <- test_all %>% mutate(ym = ym(.data$var, quiet = TRUE))
+
+    }
+
+
+    test_col <-
+      test_all %>%
+      # ungroup %>%
+      summarise(across(-'var', ~ sum(!is.na(.)))) %>%
+      pivot_longer(
+        cols = everything(),
+        names_to = "Date format",
+        values_to = "nb_values") %>%
+      mutate(
+        name_var = i,
+        `% values formated` =
+          round(100*(.data$nb_values / (
+            tbl %>% select(var = all_of(i)) %>%
+              distinct %>% dplyr::filter(!is.na(.data$var)) %>% nrow)),2),
+        `% values formated` =
+          ifelse(is.na(.data$`% values formated`),
+                 0,.data$`% values formated`),
+        `Date match` = case_when(
+          .data$`% values formated` == 0   ~ "No match",
+          .data$`% values formated` == 100 ~ paste0("Exact match"),
+          TRUE                       ~ paste0("Ambiguous match")),
+      ) %>%
+      group_by(
+        .data$name_var,.data$`Date match`,.data$`% values formated`,
+        .data$nb_values) %>%
+      summarise(
+        "Date format" = paste0(.data$`Date format`,collapse = ", "),
+        .groups = 'keep') %>%
+      ungroup() %>%
+      arrange(-.data$nb_values) %>%
+      slice(1) %>%
+
+      mutate(
+
+        `Date match` = ifelse(str_detect(.data$`Date format`,","),
+          "Ambiguous match",.data$`Date match`)
+
+        # `Date format` = ifelse(
+        #   .data$`% values formated` == 100 & ,
+        #   str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
+      ) %>%
+      select(-"nb_values")
+
+    test <- bind_rows(test,test_col)
+  }
 
   return(test)
 }
@@ -173,7 +228,9 @@ guess_date_format <- function(tbl, col = NULL){
 #' @param x object to be coerced. Can be a character string or a vector.
 #' @param format A character identifying the format to apply to the object to
 #' test.
-#' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
+#' That format can be 'ymd','ydm','dmy','myd','mdy','dym', 'ym', 'my' or
+#' 'as_date' in that specific order ('ymd" will be chose as a default format,
+#' then 'ymd', etc.).
 #'
 #' @return
 #' A character string of the possible date formats given a parameter to be
@@ -181,7 +238,8 @@ guess_date_format <- function(tbl, col = NULL){
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [guess_date_format()],[as_any_date()]
 #'
@@ -192,11 +250,12 @@ guess_date_format <- function(tbl, col = NULL){
 #'   "1983-07-19",
 #'   "31 jan 2017",
 #'   "1988/12/17",
-#'   "31-02-2005",
+#'   "31-02-05",
 #'   "02-02-02",
 #'   "2017 october the 2nd",
 #'   "02-07-2012",
-#'   "19-19-1923")
+#'   "19-07-83",
+#'   "19-19-19")
 #'
 #' which_any_date(time)
 #'
@@ -206,7 +265,7 @@ guess_date_format <- function(tbl, col = NULL){
 #' @importFrom rlang .data
 #' @export
 which_any_date <- function(
-    x,format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+    x,format = c("ymd","ydm","dmy","myd","mdy","dym","my", "ym","as_date")){
 
   test <- c()
   x_origin <- x
@@ -220,12 +279,17 @@ which_any_date <- function(
     else{
 
       test[i] <-
-        c(if("dmy" %in% format & !is.na(dmy(x[i], quiet = TRUE))) "dmy",
-          if("dym" %in% format & !is.na(dym(x[i], quiet = TRUE))) "dym",
+        c(
           if("ymd" %in% format & !is.na(ymd(x[i], quiet = TRUE))) "ymd",
           if("ydm" %in% format & !is.na(ydm(x[i], quiet = TRUE))) "ydm",
-          if("mdy" %in% format & !is.na(mdy(x[i], quiet = TRUE))) "mdy",
+          if("dmy" %in% format & !is.na(dmy(x[i], quiet = TRUE))) "dmy",
           if("myd" %in% format & !is.na(myd(x[i], quiet = TRUE))) "myd",
+          if("mdy" %in% format & !is.na(mdy(x[i], quiet = TRUE))) "mdy",
+          if("dym" %in% format & !is.na(dym(x[i], quiet = TRUE))) "dym",
+
+          if("my" %in% format & !is.na(my(x[i], quiet = TRUE))) "my",
+          if("ym" %in% format & !is.na(ym(x[i], quiet = TRUE))) "ym",
+
           if("as_date" %in% format & !is.na(suppressWarnings(as_date(x[i]))))
             "as_date") %>%
         toString }}
@@ -235,7 +299,13 @@ which_any_date <- function(
     na_if("") %>%
     str_remove(pattern = ", as_date")
 
-  test <- full_join(tibble(x = x_origin),tibble(test, x),by = 'x')$test
+  test
+
+  test <-
+    full_join(tibble(x = x_origin),tibble(test, x),by = 'x') %>%
+    mutate(test = ifelse(str_detect(.data$`test`,"ymd"),"ymd",.data$`test`)) %>%
+    pull(.data$`test`)
+
   return(test)
 }
 
@@ -260,11 +330,12 @@ which_any_date <- function(
 #'
 #' @param x object to be coerced.
 #' @param format A character identifying the format to apply to the object.
-#' That format can be 'ymd','ydm','dym','dmy','mdy' or 'myd'.
+#' That format can be 'ymd','ydm','dym','dmy','mdy','myd','my','ym'.
 #'
 #' @seealso
 #' [lubridate::ymd()],[lubridate::ydm()],[lubridate::dmy()],
-#' [lubridate::dym()],[lubridate::mdy()],[lubridate::myd()],
+#' [lubridate::myd()],[lubridate::mdy()],[lubridate::dym()],
+#' [lubridate::my()] ,[lubridate::ym()],
 #' [lubridate::as_date()],[as.Date()],
 #' [guess_date_format()],[which_any_date()]
 #'
@@ -292,6 +363,8 @@ which_any_date <- function(
 #'   "14-01-1925",
 #'   "12/13/2015",
 #'   "2009-09-13",
+#'   "17-12-12",
+#'   "coucou",
 #'   "2025 jan the 30th",
 #'   "1809-01-19"))
 #'
@@ -304,12 +377,12 @@ which_any_date <- function(
 #' @export
 as_any_date <- function(
     x = as.character(),
-    format = c("dmy","dym","ymd","ydm","mdy","myd","as_date")){
+    format = c("dmy","dym","ymd","ydm","mdy","myd","my", "ym", "as_date")){
 
-  date_test <- guess_date_format(tibble(x))
+  date_guess <- guess_date_format(tibble(x))
 
-  if(date_test$`Date match` == "Exact match"){
-    date_test <- rep(date_test$`Date format`,length(x))
+  if(date_guess$`Date match` == "Exact match"){
+    date_test <- rep(date_guess$`Date format`,length(x))
   }else{
     date_test <- which_any_date(x, format)
   }
@@ -317,7 +390,7 @@ as_any_date <- function(
   wrn3 <- wrn4 <- 0
 
   for(i in seq_len(length(date_test))){
-    # stop()}
+  # stop()}
 
     if(!is.na(date_test[i]) & length(x) == 0){date_test <- as.character(x)}
     else if(
@@ -326,9 +399,24 @@ as_any_date <- function(
       is.na(date_test[i]) & !is.na(x[i])){date_test[i] <- NA_Date_;wrn3 <- i}
     else if(
       str_detect(date_test[i], ",")){date_test[i] <- NA_Date_;wrn4 <- i}
-    else {date_test[i] <- do.call(date_test[i], list(x[i])) %>% as.character}
-
   }
+
+  if(date_guess$`Date match` == "Exact match"){
+    date_test <- as.character(do.call(date_test[1], list(x)))
+  }else{
+
+    date_test <-
+      tibble(x,date_test) %>%
+      rowwise() %>%
+      mutate(
+        x = ifelse(is.na(.data$`date_test`),
+                   NA_character_,
+                   as.character(eval(parse(text =
+                   paste0("lubridate::",.data$`date_test`,"('",.data$`x`,"')")
+        ))))) %>%
+      pull(.data$`x`)
+  }
+
 
   if(wrn3 > 0)
     warning(
