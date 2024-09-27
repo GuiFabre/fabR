@@ -271,9 +271,10 @@ which_any_date <- function(
   x_origin <- x
   x <- unique(x)
 
-  if(length(x) == 0) return("ymd")
+  if(length(x) == 0) return(as.Date())
 
   for(i in seq_len(length(x))){
+    # stop()}
 
     if(is.na(x[i])){ test[i] <- NA_character_ }
     else{
@@ -378,6 +379,8 @@ which_any_date <- function(
 as_any_date <- function(
     x = as.character(),
     format = c("dmy","dym","ymd","ydm","mdy","myd","my", "ym", "as_date")){
+
+  if(length(x) == 0) return(as.Date())
 
   date_guess <- guess_date_format(tibble(x))
 
