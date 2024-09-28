@@ -97,6 +97,7 @@ guess_date_format <- function(tbl, col = NULL){
       dplyr::filter(!is.na(.data$var)) %>%
       distinct()
 
+    nb_test <- 8
     test_sample <-
       column %>%
       sample_n(min(nrow(column), 100)) %>%
@@ -189,16 +190,17 @@ guess_date_format <- function(tbl, col = NULL){
       slice(1) %>%
 
       mutate(
+        `Date format` = ifelse(
+          str_count(.data$`Date format`,",") == nb_test - 1, "All formats",.data$`Date format`),
 
         `Date match` = ifelse(str_detect(.data$`Date format`,","),
-        #  & .data$`% values formated` != 0
           "Ambiguous match",.data$`Date match`)
 
         # `Date format` = ifelse(
         #   .data$`% values formated` == 100 & ,
         #   str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
       ) %>%
-      select(-"nb_values")
+      select(c("name_var","Date format","% values formated","Date match"))
 
     test <- bind_rows(test,test_col)
   }
