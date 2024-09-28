@@ -112,7 +112,7 @@ guess_date_format <- function(tbl, col = NULL){
         my  =  my(.data$var, quiet = TRUE),
         ym  =  ym(.data$var, quiet = TRUE)) %>%
       ungroup %>%
-      summarise(across(-c("var"), ~ sum(!is.na(.)))) %>%
+      reframe(across(-c("var"), ~ sum(!is.na(.)))) %>%
       pivot_longer(
         cols = everything(),
         names_to = "Date format",
@@ -161,7 +161,7 @@ guess_date_format <- function(tbl, col = NULL){
     test_col <-
       test_all %>%
       # ungroup %>%
-      summarise(across(-'var', ~ sum(!is.na(.)))) %>%
+      reframe(across(-'var', ~ sum(!is.na(.)))) %>%
       pivot_longer(
         cols = everything(),
         names_to = "Date format",
@@ -183,16 +183,15 @@ guess_date_format <- function(tbl, col = NULL){
       group_by(
         .data$name_var,.data$`Date match`,.data$`% values formated`,
         .data$nb_values) %>%
-      summarise(
-        "Date format" = paste0(.data$`Date format`,collapse = ", "),
-        .groups = 'keep') %>%
-      ungroup() %>%
+      reframe(
+        "Date format" = paste0(.data$`Date format`,collapse = ", ")) %>%
       arrange(-.data$nb_values) %>%
       slice(1) %>%
 
       mutate(
 
         `Date match` = ifelse(str_detect(.data$`Date format`,","),
+        #  & .data$`% values formated` != 0
           "Ambiguous match",.data$`Date match`)
 
         # `Date format` = ifelse(

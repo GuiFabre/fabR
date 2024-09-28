@@ -54,11 +54,11 @@ get_duplicated_cols <- function(tbl){
   test <-
     test %>%
     group_by(.data$col_1) %>%
-    summarise(
+    reframe(
       across(
         everything(),
         ~ paste("Possible duplicated columns:",
-                paste0(., collapse = " ; "))),.groups = "drop") %>%
+                paste0(., collapse = " ; ")))) %>%
     ungroup() %>% select("condition") %>%
     separate(
       col = "condition",
@@ -148,7 +148,7 @@ get_duplicated_rows <- function(tbl, id_col = NULL){
     test %>%
     group_by(.data$`fabR::row_duplicate`) %>%
     distinct() %>%
-    summarise(
+    reframe(
       row_number = paste0(.data$`index`, collapse = " ; ")) %>%
     mutate(condition = "Duplicated observations") %>%
     ungroup() %>% select("condition", "row_number")
@@ -195,7 +195,7 @@ get_all_na_cols <- function(tbl){
 
   # identify columns containing all NA's
   test <-
-    tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
+    tbl %>% reframe(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
     pivot_longer(
       cols = everything(),
       names_to = "col_name", values_to = "condition") %>%
@@ -320,7 +320,8 @@ get_unique_value_cols <- function(tbl){
 
   # identify columns containing one value
   test <-
-    tbl %>% summarise(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
+    tbl %>%
+    reframe(across(everything(), ~ n_distinct(., na.rm = TRUE))) %>%
     pivot_longer(
       cols = everything(),
       names_to = "col_name",
