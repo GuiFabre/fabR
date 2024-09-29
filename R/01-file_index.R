@@ -49,10 +49,13 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
     file_type = NA_character_,
     to_eval = NA_character_)
 
-  all_files_list <-
-    str_subset(
-      list.files(folder, full.names = TRUE, recursive = TRUE),
-      pattern = pattern, negate = negate)
+  if(is_file(path_abs(folder))){
+    all_files_list <- folder
+  }else{
+    all_files_list <-
+      str_subset(
+        list.files(folder, full.names = TRUE, recursive = TRUE),
+        pattern = pattern, negate = negate)}
 
   if(is_empty(all_files_list)){
     message("Your folder is empty or do not exists.")
