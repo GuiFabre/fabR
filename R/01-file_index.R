@@ -82,7 +82,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
           extension %in%c("sas","sas7bdat") ~
             paste0("haven::read_sas('",.data$file_path,"')"),
           extension == "xlsx"               ~
-            paste0("read_excel_allsheets('",.data$file_path,"')"),
+            paste0("read_excel_allsheets('",.data$file_path,"',keep_as_list = TRUE)"),
           extension == "csv"                ~
             paste0("suppressMessages(
                    read_csv_any_formats('",.data$file_path,"'))"),
