@@ -97,6 +97,9 @@ guess_date_format <- function(tbl, col = NULL){
       dplyr::filter(!is.na(.data$var)) %>%
       distinct()
 
+    # If the column is NA
+    if(nrow(column) == 0) column <- tibble(var = "1983-07-19")
+
     nb_test <- 8
     test_sample <-
       column %>%
@@ -170,9 +173,7 @@ guess_date_format <- function(tbl, col = NULL){
       mutate(
         name_var = i,
         `% values formated` =
-          round(100*(.data$nb_values / (
-            tbl %>% select(var = all_of(i)) %>%
-              distinct %>% dplyr::filter(!is.na(.data$var)) %>% nrow)),2),
+          round(100*(.data$nb_values / nrow(column)),2),
         `% values formated` =
           ifelse(is.na(.data$`% values formated`),
                  0,.data$`% values formated`),
@@ -272,12 +273,12 @@ which_any_date <- function(
   x_origin <- x
   x <- unique(x)
 
-  if(length(x) == 0) return(as.Date())
+  if(length(x) == 0) return("ymd")
 
   for(i in seq_len(length(x))){
     # stop()}
 
-    if(is.na(x[i])){ test[i] <- NA_character_ }
+    if(is.na(x[i])){ test[i] <- "ymd" }
     else{
 
       test[i] <-
@@ -300,8 +301,6 @@ which_any_date <- function(
     test %>%
     na_if("") %>%
     str_remove(pattern = ", as_date")
-
-  test
 
   test <-
     full_join(tibble(x = x_origin),tibble(test, x),by = 'x') %>%
@@ -381,7 +380,7 @@ as_any_date <- function(
     x = as.character(),
     format = c("dmy","dym","ymd","ydm","mdy","myd","my", "ym", "as_date")){
 
-  if(length(x) == 0) return(as.Date())
+  if(length(x) == 0) return(as.Date(x))
 
   date_guess <- guess_date_format(tibble(x))
 
