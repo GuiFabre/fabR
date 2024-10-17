@@ -40,11 +40,11 @@
 #' # Non-ambiguous dates ----------------------------------------------------
 #' time <-
 #'   tibble(time = c(
+#'   "2009-09-03",
 #'   "1983-07-19",
 #'   "2003-01-14",
 #'   "2010-09-29",
 #'   "2023-12-12",
-#'   "2009-09-03",
 #'   "1509-11-30",
 #'   "1809-01-01"))
 #' guess_date_format(time)
@@ -79,6 +79,10 @@
 #' @importFrom rlang .data
 #' @export
 guess_date_format <- function(tbl, col = NULL){
+
+
+  default = "ymd"
+  if(toString(default) == '') default <- "none"
 
   if(is.null(col)) col <- tbl %>% names
   tbl <- tbl %>% select(all_of(col))
@@ -194,12 +198,12 @@ guess_date_format <- function(tbl, col = NULL){
         `Date format` = ifelse(
           str_count(.data$`Date format`,",") == nb_test - 1, "All formats",.data$`Date format`),
 
-        `Date match` = ifelse(str_detect(.data$`Date format`,","),
-          "Ambiguous match",.data$`Date match`)
+        `Date format` = ifelse(
+          .data$`% values formated` == 100 & str_detect(.data$`Date format`, toString(default)),
+          default,.data$`Date format`),
 
-        # `Date format` = ifelse(
-        #   .data$`% values formated` == 100 & ,
-        #   str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
+        `Date match` = ifelse(str_detect(.data$`Date format`,","),
+                              "Ambiguous match",.data$`Date match`)
       ) %>%
       select(c("name_var","Date format","% values formated","Date match"))
 
