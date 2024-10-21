@@ -34,7 +34,7 @@ get_duplicated_cols <- function(tbl){
   test <- tibble(condition = as.character(), col_name = as.character())
   if(tbl %>% nrow() == 0) return(test)
 
-  test <- tbl %>%
+  test <- ungroup(tbl) %>%
     remove_empty("cols")
 
   if(ncol(tbl) < 2) return(test)
