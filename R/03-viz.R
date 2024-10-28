@@ -128,6 +128,12 @@ pre { /* Code block - determines code spacing between lines */
    margin-right: auto;
 }
 
+/* Styles for section anchors */
+a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
+.hasAnchor:hover a.anchor-section {visibility: hidden;}
+ul > li > .anchor-section {display: none;}
+
+
 ') %>% write_lines(
   file = paste0(bookdown_path,"/style.css"), append = FALSE)
 
