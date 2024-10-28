@@ -93,8 +93,22 @@ h1 { /* Header 1 */
   font-size: 22px;
   color: DarkBlue;
 }
+
+/* Header 1 (main title + each title of each page + about the dataset*/
+
+.book.font-size-2 .book-body .page-inner section{
+  font-size: 0.9rem;
+}
+
+/* main title (dataset) */
+.title {
+  color: DarkRed;
+}
+h1 {
+  color: DarkBlue;
+}
 h2 { /* Header 2 */
-    font-size: 14px;
+
   color: DarkBlue;
 }
 h3 { /* Header 3 */
