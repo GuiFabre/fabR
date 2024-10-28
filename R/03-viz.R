@@ -80,7 +80,7 @@ paste0(
 
   paste0(
 'body{ /* Normal  */
-      font-size: 14px;
+      font-size: 12px;
   }
 td {  /* table  */
   font-size: 12px;
@@ -97,7 +97,7 @@ h1 { /* Header 1 */
 /* Header 1 (main title + each title of each page + about the dataset*/
 
 .book.font-size-2 .book-body .page-inner section{
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* main title (dataset) */
