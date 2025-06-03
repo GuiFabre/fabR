@@ -11,12 +11,12 @@
 - Bug in `as_any_integer()` has been corrected
   <https://github.com/GuiFabre/fabR/issues/20>
 
-- deprecated usage of summarise
+- deprecated usage of summarize
   <https://github.com/GuiFabre/fabR/issues/22>
 
 - allow `file_index_create()` to read one file only.
 
-- in `bookdown_template()`, hide hanchor when mouse over and better CSS
+- in `bookdown_template()`, hide anchor when mouse over and better CSS
   for titles and sections.
 
 - default behavior of `read_excel_allsheets()` is to keep file in a list
