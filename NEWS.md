@@ -22,12 +22,6 @@
 - default behavior of `read_excel_allsheets()` is to keep file in a list
   when being read.
 
-## New functions
-
-## deprecated functions
-
-## Dependency changes
-
 # fabR 2.1.0
 
 ## Bug fixes and improvements
