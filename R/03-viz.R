@@ -80,7 +80,7 @@ paste0(
 
   paste0(
 'body{ /* Normal  */
-      font-size: 14px;
+      font-size: 12px;
   }
 td {  /* table  */
   font-size: 12px;
@@ -93,8 +93,22 @@ h1 { /* Header 1 */
   font-size: 22px;
   color: DarkBlue;
 }
+
+/* Header 1 (main title + each title of each page + about the dataset*/
+
+.book.font-size-2 .book-body .page-inner section{
+  font-size: 1rem;
+}
+
+/* main title (dataset) */
+.title {
+  color: DarkRed;
+}
+h1 {
+  color: DarkBlue;
+}
 h2 { /* Header 2 */
-    font-size: 14px;
+
   color: DarkBlue;
 }
 h3 { /* Header 3 */
@@ -127,6 +141,12 @@ pre { /* Code block - determines code spacing between lines */
    display: flex;
    margin-right: auto;
 }
+
+/* Styles for section anchors */
+a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
+.hasAnchor:hover a.anchor-section {visibility: hidden;}
+ul > li > .anchor-section {display: none;}
+
 
 ') %>% write_lines(
   file = paste0(bookdown_path,"/style.css"), append = FALSE)

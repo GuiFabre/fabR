@@ -156,7 +156,7 @@ as_any_integer <- function(x){
     if(length(x)     == 0)                     return(as.integer(x))
     if(all(is.na(x)))                          return(as.integer(x))
     if(all(str_squish(x) %in% c("","NaN",NA))) return(as.integer(x))
-    if(is_integerish(x))                       return(x)
+    if(is_integerish(x))                       return(as.integer(x))
   }
 
   # check if the col is empty

@@ -40,11 +40,11 @@
 #' # Non-ambiguous dates ----------------------------------------------------
 #' time <-
 #'   tibble(time = c(
+#'   "2009-09-03",
 #'   "1983-07-19",
 #'   "2003-01-14",
 #'   "2010-09-29",
 #'   "2023-12-12",
-#'   "2009-09-03",
 #'   "1509-11-30",
 #'   "1809-01-01"))
 #' guess_date_format(time)
@@ -80,6 +80,10 @@
 #' @export
 guess_date_format <- function(tbl, col = NULL){
 
+
+  default = "ymd"
+  if(toString(default) == '') default <- "none"
+
   if(is.null(col)) col <- tbl %>% names
   tbl <- tbl %>% select(all_of(col))
 
@@ -97,6 +101,10 @@ guess_date_format <- function(tbl, col = NULL){
       dplyr::filter(!is.na(.data$var)) %>%
       distinct()
 
+    # If the column is NA
+    if(nrow(column) == 0) column <- tibble(var = "1983-07-19")
+
+    nb_test <- 8
     test_sample <-
       column %>%
       sample_n(min(nrow(column), 100)) %>%
@@ -112,7 +120,7 @@ guess_date_format <- function(tbl, col = NULL){
         my  =  my(.data$var, quiet = TRUE),
         ym  =  ym(.data$var, quiet = TRUE)) %>%
       ungroup %>%
-      summarise(across(-c("var"), ~ sum(!is.na(.)))) %>%
+      reframe(across(-c("var"), ~ sum(!is.na(.)))) %>%
       pivot_longer(
         cols = everything(),
         names_to = "Date format",
@@ -161,7 +169,7 @@ guess_date_format <- function(tbl, col = NULL){
     test_col <-
       test_all %>%
       # ungroup %>%
-      summarise(across(-'var', ~ sum(!is.na(.)))) %>%
+      reframe(across(-'var', ~ sum(!is.na(.)))) %>%
       pivot_longer(
         cols = everything(),
         names_to = "Date format",
@@ -169,9 +177,7 @@ guess_date_format <- function(tbl, col = NULL){
       mutate(
         name_var = i,
         `% values formated` =
-          round(100*(.data$nb_values / (
-            tbl %>% select(var = all_of(i)) %>%
-              distinct %>% dplyr::filter(!is.na(.data$var)) %>% nrow)),2),
+          round(100*(.data$nb_values / nrow(column)),2),
         `% values formated` =
           ifelse(is.na(.data$`% values formated`),
                  0,.data$`% values formated`),
@@ -183,23 +189,23 @@ guess_date_format <- function(tbl, col = NULL){
       group_by(
         .data$name_var,.data$`Date match`,.data$`% values formated`,
         .data$nb_values) %>%
-      summarise(
-        "Date format" = paste0(.data$`Date format`,collapse = ", "),
-        .groups = 'keep') %>%
-      ungroup() %>%
+      reframe(
+        "Date format" = paste0(.data$`Date format`,collapse = ", ")) %>%
       arrange(-.data$nb_values) %>%
       slice(1) %>%
 
       mutate(
+        `Date format` = ifelse(
+          str_count(.data$`Date format`,",") == nb_test - 1, "All formats",.data$`Date format`),
+
+        `Date format` = ifelse(
+          .data$`% values formated` == 100 & str_detect(.data$`Date format`, toString(default)),
+          default,.data$`Date format`),
 
         `Date match` = ifelse(str_detect(.data$`Date format`,","),
-          "Ambiguous match",.data$`Date match`)
-
-        # `Date format` = ifelse(
-        #   .data$`% values formated` == 100 & ,
-        #   str_split_1(.data$`Date format`,",")[[1]],.data$`Date format`),
+                              "Ambiguous match",.data$`Date match`)
       ) %>%
-      select(-"nb_values")
+      select(c("name_var","Date format","% values formated","Date match"))
 
     test <- bind_rows(test,test_col)
   }
@@ -274,8 +280,9 @@ which_any_date <- function(
   if(length(x) == 0) return("ymd")
 
   for(i in seq_len(length(x))){
+    # stop()}
 
-    if(is.na(x[i])){ test[i] <- NA_character_ }
+    if(is.na(x[i])){ test[i] <- "ymd" }
     else{
 
       test[i] <-
@@ -298,8 +305,6 @@ which_any_date <- function(
     test %>%
     na_if("") %>%
     str_remove(pattern = ", as_date")
-
-  test
 
   test <-
     full_join(tibble(x = x_origin),tibble(test, x),by = 'x') %>%
@@ -378,6 +383,8 @@ which_any_date <- function(
 as_any_date <- function(
     x = as.character(),
     format = c("dmy","dym","ymd","ydm","mdy","myd","my", "ym", "as_date")){
+
+  if(length(x) == 0) return(as.Date(x))
 
   date_guess <- guess_date_format(tibble(x))
 

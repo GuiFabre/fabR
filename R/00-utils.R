@@ -657,20 +657,20 @@ collect_roxygen <- function(folder_r = "R"){
              ifelse(
                .data$`class` == 'TITLE',
                paste0("function_",.data$`index`), NA)) %>%
-    fill(.data$`class_2`,.direction = "down") %>%
-    fill(.data$`class`,.direction = "down") %>%
-    select(-.data$`index`)
+    fill("class_2",.direction = "down") %>%
+    fill("class",.direction = "down") %>%
+    select(-"index")
 
   # pivot
   doc <-
     doc %>%
     group_by(.data$`class_2`, .data$`class`, .data$`page`) %>%
-    summarise(
+    reframe(
       value = paste0(.data$`value`,collapse = "\n"),.groups = "keep") %>%
     pivot_wider(names_from = .data$`class`, values_from = .data$`value`) %>%
     ungroup %>%
     select(
-      `page` = .data$`page`,
+      `page` = "page",
       matches('FUNCTION'   ),
       matches('TITLE'      ),
       matches('DESCRIPTION'),

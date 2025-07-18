@@ -49,10 +49,13 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
     file_type = NA_character_,
     to_eval = NA_character_)
 
-  all_files_list <-
-    str_subset(
-      list.files(folder, full.names = TRUE, recursive = TRUE),
-      pattern = pattern, negate = negate)
+  if(is_file(path_abs(folder))){
+    all_files_list <- folder
+  }else{
+    all_files_list <-
+      str_subset(
+        list.files(folder, full.names = TRUE, recursive = TRUE),
+        pattern = pattern, negate = negate)}
 
   if(is_empty(all_files_list)){
     message("Your folder is empty or do not exists.")
@@ -82,7 +85,7 @@ file_index_create <- function(folder = getwd(), pattern = "^", negate = FALSE){
           extension %in%c("sas","sas7bdat") ~
             paste0("haven::read_sas('",.data$file_path,"')"),
           extension == "xlsx"               ~
-            paste0("read_excel_allsheets('",.data$file_path,"')"),
+            paste0("read_excel_allsheets('",.data$file_path,"',keep_as_list = TRUE)"),
           extension == "csv"                ~
             paste0("suppressMessages(
                    read_csv_any_formats('",.data$file_path,"'))"),
